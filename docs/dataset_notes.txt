@@ -1,0 +1,67 @@
+TorWIC-SLAM MVP: Week 1 ingestion notes
+Date: October 5, 2026
+
+Source: https://github.com/Viky397/TorWICDataset
+Dataset root: data/raw/torwic_slam
+Actual extracted paths have two repeated directory levels. The manifest preserves
+these paths; no raw files were renamed or moved.
+
+Confirmed sequence splits
+Train: Aisle_CCW_Run_1/Aisle_CCW_Run_1, June 15, 2022, 1,136 frames.
+Validation: Aisle_CW_Run_1/Aisle_CW_Run_1, June 23, 2022, 1,037 frames.
+Test: Aisle_CCW/Aisle_CCW, October 12, 2022, 915 frames.
+Dates confirmed by the user. Split by whole trajectory; no neighboring-frame shuffle.
+
+Ingestion contract
+RGB: uint8, 1280x720, left and right cameras.
+Depth: uint16 PNG, raw values multiplied by 0.001 for metres. Zero pixels are
+masked; floating-point depth uses NaN at invalid pixels.
+Semantics: grayscale integer class IDs 0-15. Do not normalize these like RGB
+or treat the colored visualization as a class-index target. Trajectory masks
+are model predictions, not manual ground truth.
+LiDAR: binary PCD, little-endian float32 x/y/z, no intensity field in checked
+files. Filter nonfinite and zero XYZ points before statistics or projection.
+Pose: timestamp followed by xyz and quaternion xyzw, associated with os_sensor.
+Frame times: relative sequence times; use their actual values, not assumed 10 Hz.
+IMU: raw seven-column streams. The core loader does not interpolate IMU.
+
+Checks completed
+All 3,088 frame IDs match the expected image, depth, LiDAR and semantic IDs.
+Every pose timestamp matches its frame timestamp. Pose quaternion norms pass.
+First/middle/last samples from all three sequences decoded successfully for
+both cameras and LiDAR: nine representative samples, not a full-file scan.
+The test split was inspected for ingestion integrity only; no model evaluation
+or synthetic-parameter selection was performed on it.
+
+Calibration interpretation
+Camera poses relative to os_sensor must be inverted for LiDAR-to-camera use:
+p_camera = R.T @ (p_os - t).
+Beginning/middle/end training frames support this direction for both cameras.
+Inverse-transform median axial-depth residuals: about 0.019-0.042 metres across
+the tested distorted/undistorted projection variants. Direct-transform residuals:
+about 0.82-3.07 metres. These are overlapping-pixel diagnostics, not independent
+calibration error measurements. Distortion improves median residuals in these
+samples but has mixed effects on the fraction within 0.10 m; preserve the
+distortion parameters and validate the image convention before production use.
+Occlusion, range limits, reflective surfaces and moving objects affect residuals.
+
+Data caveats
+Aisle_CCW has 158 frame intervals over 0.15 seconds, maximum about 0.402 seconds.
+One backward timestamp interval occurs in its left IMU stream and in both
+Aisle_CCW_Run_1 IMU streams. Preserve raw data; any sorting belongs in a loader
+with explicit ordering and logging. The first three Aisle_CCW frames and first
+two Aisle_CW_Run_1 frames precede the corresponding IMU time spans.
+Positive depth coverage and usable LiDAR counts vary greatly between frames.
+Do not generalize the first checked sample into a dataset-wide degradation rule.
+
+Week 1 completion gate
+The local installation exists. The finalizer must rerun ingestion and checks
+using the project's .venv, then commit and push the source and these notes.
+The assistant's representative checks used the bundled runtime because its
+sandbox cannot launch the project's base Python executable.
+
+Next milestone
+Profile training data only: RGB brightness/blur, depth coverage/range, LiDAR
+valid counts/range, semantic class coverage, and their variation along the route.
+Use that evidence to define small reproducible synthetic degradations. Keep
+validation separate and reserve the test trajectory for final evaluation.
