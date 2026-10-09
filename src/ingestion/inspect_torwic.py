@@ -1,4 +1,5 @@
 """Read-only TorWIC inventory. Run from your project root; no packages needed."""
+
 import argparse
 import json
 import os
@@ -12,14 +13,18 @@ def main():
     """Inventory raw files and ZIP contents, save a report, and return an exit code."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path("data/raw/torwic_slam"))
-    parser.add_argument("--report", type=Path, default=Path("reports/dataset_inventory.json"))
+    parser.add_argument(
+        "--report", type=Path, default=Path("reports/dataset_inventory.json")
+    )
     args = parser.parse_args()
     root = args.root.resolve()
     print(f"Python: {sys.executable}")
     print(f"Virtual environment: {sys.prefix != sys.base_prefix}")
     print(f"Dataset: {root}")
     if not root.is_dir():
-        parser.exit(1, "Dataset folder missing. Run from the amr-synthetic-mvp project root.\n")
+        parser.exit(
+            1, "Dataset folder missing. Run from the amr-synthetic-mvp project root.\n"
+        )
 
     extensions = Counter()
     folder_counts = Counter()
@@ -57,24 +62,38 @@ def main():
             lower = name.lower()
             # These are candidates for later inspection, not validated metadata.
             if suffix in {".txt", ".csv", ".yaml", ".yml", ".json"} or any(
-                token in lower for token in ("timestamp", "frame_time", "traj", "pose", "imu", "calib")
+                token in lower
+                for token in ("timestamp", "frame_time", "traj", "pose", "imu", "calib")
             ):
                 metadata.append(relative)
             if suffix == ".zip":
                 try:
                     # Read only the member listing; never extract into the raw dataset.
                     with zipfile.ZipFile(path) as archive:
-                        members = [member for member in archive.infolist() if not member.is_dir()]
-                        archives.append({
-                            "path": relative,
-                            "file_count": len(members),
-                            "uncompressed_bytes": sum(member.file_size for member in members),
-                            "extension_counts": dict(Counter(
-                                Path(member.filename).suffix.lower() or "[no extension]"
-                                for member in members
-                            )),
-                            "first_20_members": [member.filename for member in members[:20]],
-                        })
+                        members = [
+                            member
+                            for member in archive.infolist()
+                            if not member.is_dir()
+                        ]
+                        archives.append(
+                            {
+                                "path": relative,
+                                "file_count": len(members),
+                                "uncompressed_bytes": sum(
+                                    member.file_size for member in members
+                                ),
+                                "extension_counts": dict(
+                                    Counter(
+                                        Path(member.filename).suffix.lower()
+                                        or "[no extension]"
+                                        for member in members
+                                    )
+                                ),
+                                "first_20_members": [
+                                    member.filename for member in members[:20]
+                                ],
+                            }
+                        )
                 except (OSError, zipfile.BadZipFile) as error:
                     errors.append(f"{relative}: {error}")
 
@@ -82,7 +101,10 @@ def main():
         "root": str(root),
         "python": sys.executable,
         "virtual_environment": sys.prefix != sys.base_prefix,
-        "support_files": {name: (root / name).is_file() for name in ("calibrations.txt", "groundtruth_map.ply")},
+        "support_files": {
+            name: (root / name).is_file()
+            for name in ("calibrations.txt", "groundtruth_map.ply")
+        },
         "top_level_entries": sorted(p.name for p in root.iterdir()),
         "total_files": total_files,
         "total_bytes": total_bytes,

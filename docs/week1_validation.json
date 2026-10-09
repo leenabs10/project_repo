@@ -1,0 +1,36 @@
+{
+  "review_date": "2026-10-09",
+  "week1_ingestion_gate": "passed",
+  "scope": "TorWIC trajectory ingestion for depth-only prototype; not production sensor fusion",
+  "frames_checked": 3088,
+  "frames_passed": 3088,
+  "sensor_payloads_checked": 21616,
+  "errors": 0,
+  "split_counts": {
+    "test": 915,
+    "train": 1136,
+    "validation": 1037
+  },
+  "representative_samples_passed": 9,
+  "manifest_sha256": "fe77b9efd233e44e45d620841b7055118b6f9c44e4f2d26ac47464a72fb56f2e",
+  "rebuilt_manifest_matches_project": true,
+  "environment": "Project .venv recorded in the full audit and representative checks",
+  "test_split_usage": "Read-only integrity inspection; no model evaluation or tuning",
+  "evidence_paths": [
+    "reports/week1_audit_2026-10-09/full_payload_checks.json",
+    "reports/week1_audit_2026-10-09/representative/week1_checks.json",
+    "reports/week1_audit_2026-10-09/ingestion/ingestion_summary.json"
+  ],
+  "source_sha256": {
+    "src/ingestion/inspect_torwic.py": "ea473dc6f8249047cd4ec33e77963471f36e27684b7ea238bcfba339bf70f3f6",
+    "src/ingestion/torwic_loader.py": "15ec6a3c7b7ffadbf4e57f48c52725ab5a3b1a39dbdf2a92952594cd48a9189a",
+    "src/validation/full_ingestion_checks.py": "0b8b41389e0ed125da150b04bfe17c00d412f98d0cd164a40d4f9c1deb832acc",
+    "src/validation/week1_checks.py": "2a37acbf448cfb1f2567547751e4753f917374a3a36c92145f004076f92b43ea"
+  },
+  "follow_up_requirements": [
+    "Handle documented IMU backward timestamps and out-of-span frames before IMU fusion.",
+    "Resolve distortion conventions and validate registration before camera-LiDAR fusion.",
+    "Trajectory semantic masks are pseudo-labels, not human ground truth.",
+    "Extra annotated-set and ground-truth map payload audits are outside this trajectory-ingestion gate."
+  ]
+}

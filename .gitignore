@@ -1,4 +1,4 @@
-﻿
+ï»¿
 # AMR local files: do not upload datasets, environments, or credentials
 .venv/
 venv/
@@ -31,3 +31,7 @@ secrets*.json
 *.log
 Thumbs.db
 .DS_Store
+
+# Optional project-local runtime and development tools
+.venv-mvp/
+.tools/
