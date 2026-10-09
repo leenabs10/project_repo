@@ -8,9 +8,11 @@ import argparse
 import ast
 import json
 from pathlib import Path
+
 import numpy as np
 from PIL import Image
 
+# Manifest field names map to the publisher's folders and file extensions.
 MODALITIES = {
     'rgb_path': ('image_left', '.png'),
     'depth_path': ('depth_left', '.png'),
@@ -20,16 +22,31 @@ MODALITIES = {
     'depth_right_path': ('depth_right', '.png'),
     'semantic_right_path': ('segmentation_greyscale_right', '.png'),
 }
+# Applied only when the caller explicitly confirms the collection dates.
 CONFIRMED_SPLITS = {
     'Aisle_CCW_Run_1': ('train', '2022-06-15'),
     'Aisle_CW_Run_1': ('validation', '2022-06-23'),
     'Aisle_CCW': ('test', '2022-10-12'),
 }
-CLASSES = ['Background', 'Driveable Ground', 'Ceiling', 'Ego Vehicle',
-           'Wall/Fence/Pillar', 'Miscellaneous Static Feature', 'Rack/Shelf',
-           'Goods Materials', 'Fixed Machinery', 'Cart/Pallet Jack', 'Pylons',
-           'Text Region', 'Miscellaneous Non-Static Feature', 'Person',
-           'Forklift/Truck', 'Miscellaneous Dynamic Feature']
+# List positions are the integer IDs stored in the grayscale semantic masks.
+CLASSES = [
+    'Background',
+    'Driveable Ground',
+    'Ceiling',
+    'Ego Vehicle',
+    'Wall/Fence/Pillar',
+    'Miscellaneous Static Feature',
+    'Rack/Shelf',
+    'Goods Materials',
+    'Fixed Machinery',
+    'Cart/Pallet Jack',
+    'Pylons',
+    'Text Region',
+    'Miscellaneous Non-Static Feature',
+    'Person',
+    'Forklift/Truck',
+    'Miscellaneous Dynamic Feature',
+]
 
 
 def calibration(root):
@@ -41,6 +58,7 @@ def calibration(root):
             continue
         key, value = line.split('=' if '=' in line else ':', 1)
         try:
+            # Accept Python literals (including lists), without executing file contents.
             result[key.strip()] = ast.literal_eval(value.strip())
         except (ValueError, SyntaxError):
             raise ValueError(f'Unsupported calibration entry: {key}')
@@ -52,7 +70,11 @@ def calibration(root):
 
 
 def read_xyz(path):
-    """Read this dataset's binary float32 XYZ PCD layout; reject other layouts."""
+    """Return filtered XYZ points and a validity mask over the original PCD rows.
+
+    Only this dataset's binary float32 XYZ layout is supported. The mask retains
+    the original point count even though the returned XYZ array drops invalid rows.
+    """
     header = {}
     with path.open('rb') as stream:
         while True:
@@ -66,12 +88,18 @@ def read_xyz(path):
             header[key] = values
             if key == 'DATA':
                 break
-        expected = {'FIELDS': ['x', 'y', 'z'], 'SIZE': ['4'] * 3,
-                    'TYPE': ['F'] * 3, 'COUNT': ['1'] * 3, 'DATA': ['binary']}
+        expected = {
+            'FIELDS': ['x', 'y', 'z'],
+            'SIZE': ['4'] * 3,
+            'TYPE': ['F'] * 3,
+            'COUNT': ['1'] * 3,
+            'DATA': ['binary'],
+        }
         if any(header.get(key) != value for key, value in expected.items()):
             raise ValueError(f'Unsupported PCD layout: {path}')
         payload = stream.read()
     count = int(header['POINTS'][0])
+    # Each point contains three 4-byte floats; '<f4' explicitly selects little endian.
     if len(payload) != count * 12:
         raise ValueError(f'PCD payload/header mismatch: {path}')
     xyz = np.frombuffer(payload, dtype='<f4').reshape(count, 3)
@@ -93,11 +121,14 @@ def lidar_to_camera(xyz, cal, side='left'):
     if not np.isfinite(q).all() or np.linalg.norm(q) == 0:
         raise ValueError('Invalid calibration quaternion')
     x, y, z, w = q / np.linalg.norm(q)
-    R = np.array([[1-2*(y*y+z*z), 2*(x*y-z*w), 2*(x*z+y*w)],
-                  [2*(x*y+z*w), 1-2*(x*x+z*z), 2*(y*z-x*w)],
-                  [2*(x*z-y*w), 2*(y*z+x*w), 1-2*(x*x+y*y)]])
-    t = np.array([cal[f'{prefix}.p{a}'] for a in 'xyz'])
-    return (np.asarray(xyz) - t) @ R
+    rotation_matrix = np.array([
+        [1 - 2 * (y*y + z*z), 2 * (x*y - z*w), 2 * (x*z + y*w)],
+        [2 * (x*y + z*w), 1 - 2 * (x*x + z*z), 2 * (y*z - x*w)],
+        [2 * (x*z - y*w), 2 * (y*z + x*w), 1 - 2 * (x*x + y*y)],
+    ])
+    translation = np.array([cal[f'{prefix}.p{a}'] for a in 'xyz'])
+    # Points are row vectors, so right-multiplication by R implements R.T @ p.
+    return (np.asarray(xyz) - translation) @ rotation_matrix
 
 
 def load_sample(root, record, cal=None):
@@ -111,11 +142,12 @@ def load_sample(root, record, cal=None):
     arrays = {}
     for key in ('rgb_path', 'depth_path', 'semantic_path'):
         path = (root / record[key]).resolve()
+        # Resolve before checking containment so '..' and symlinks cannot escape root.
         if not path.is_relative_to(root):
             raise ValueError('Manifest path escapes dataset root')
-        with Image.open(path) as im:
-            im.load()
-            arrays[key] = np.array(im)
+        with Image.open(path) as image:
+            image.load()
+            arrays[key] = np.array(image)
     rgb, depth, semantic = (arrays[k] for k in ('rgb_path', 'depth_path', 'semantic_path'))
     shape = (int(cal['Camera1.height']), int(cal['Camera1.width']))
     if rgb.shape != (*shape, 3) or depth.shape != shape or semantic.shape != shape:
@@ -128,18 +160,34 @@ def load_sample(root, record, cal=None):
     if not lidar_path.is_relative_to(root):
         raise ValueError('Manifest path escapes dataset root')
     xyz, valid_xyz = read_xyz(lidar_path)
+    # Zero is the depth sensor's invalid sentinel; preserve raw values alongside metres.
     depth_valid = depth > 0
     depth_m = depth.astype(np.float32) * .001
     depth_m[~depth_valid] = np.nan
-    return {'sample_id': record['sample_id'], 'sequence_id': record['sequence_id'],
-            'timestamp_seconds': record['timestamp_seconds'], 'rgb': rgb,
-            'depth_raw': depth, 'depth_m': depth_m, 'depth_valid': depth_valid,
-            'lidar_xyz': xyz, 'lidar_valid': valid_xyz, 'semantic_ids': semantic,
-            'pose_xyz_qxyzw': np.array(record['pose_xyz_qxyzw'], dtype=np.float64),
-            'calibration': cal, 'split': record['split']}
+    return {
+        'sample_id': record['sample_id'],
+        'sequence_id': record['sequence_id'],
+        'timestamp_seconds': record['timestamp_seconds'],
+        'rgb': rgb,
+        'depth_raw': depth,
+        'depth_m': depth_m,
+        'depth_valid': depth_valid,
+        'lidar_xyz': xyz,
+        'lidar_valid': valid_xyz,
+        'semantic_ids': semantic,
+        'pose_xyz_qxyzw': np.array(record['pose_xyz_qxyzw'], dtype=np.float64),
+        'calibration': cal,
+        'split': record['split'],
+    }
 
 
 def build_manifest(root, confirm_dates=False):
+    """Validate sequence metadata and return frame records, summaries, and calibration.
+
+    Modality filenames must cover every frame exactly. Image and PCD contents are
+    decoded separately by load_sample; this scan checks metadata and file presence.
+    Splits remain unassigned unless confirm_dates is enabled.
+    """
     root = Path(root).resolve()
     cal = calibration(root)
     if not (root / 'groundtruth_map.ply').is_file():
@@ -149,6 +197,7 @@ def build_manifest(root, confirm_dates=False):
         seq = time_file.parent
         times = np.loadtxt(time_file, ndmin=1)
         poses = np.loadtxt(seq / 'traj_gt.txt', ndmin=2)
+        # Pose columns are timestamp, xyz, then quaternion xyzw.
         if len(times) < 2 or poses.shape != (len(times), 8):
             raise ValueError(f'Timestamp/pose row count or format mismatch: {seq}')
         if not np.isfinite(times).all() or not np.all(np.diff(times) > 0):
@@ -162,38 +211,68 @@ def build_manifest(root, confirm_dates=False):
             actual = {p.stem for p in (seq / folder).glob(f'*{ext}')}
             if actual != set(ids):
                 raise ValueError(f'Missing or extra modality indices: {seq / folder}')
-        split, date = CONFIRMED_SPLITS.get(seq.name, ('unassigned', None)) if confirm_dates else ('unassigned', None)
+        split, date = (
+            CONFIRMED_SPLITS.get(seq.name, ('unassigned', None))
+            if confirm_dates else ('unassigned', None)
+        )
         imu_bounds, imu_warnings = {}, {}
+        # Report ordering issues without sorting or changing the raw IMU streams.
         for side in ('left', 'right'):
             rows = np.loadtxt(seq / f'imu_{side}.txt', ndmin=2)
             if rows.shape[1] != 7 or not np.isfinite(rows).all():
                 raise ValueError(f'Invalid IMU rows: {seq}, {side}')
             imu_bounds[side] = (rows[:, 0].min(), rows[:, 0].max())
-            imu_warnings[side] = {'backward_timestamp_intervals': int(np.sum(np.diff(rows[:, 0]) < 0)), 'duplicate_timestamp_intervals': int(np.sum(np.diff(rows[:, 0]) == 0))}
+            imu_warnings[side] = {
+                'backward_timestamp_intervals': int(np.sum(np.diff(rows[:, 0]) < 0)),
+                'duplicate_timestamp_intervals': int(np.sum(np.diff(rows[:, 0]) == 0)),
+            }
         for i, frame in enumerate(ids):
-            row = {'schema_version': 1, 'sample_id': f'{seq.name}/{frame}',
-                   'sequence_id': seq.name, 'frame_id': frame,
-                   'collection_date': date, 'split': split,
-                   'timestamp_seconds': float(times[i]), 'timestamp_basis': 'sequence_relative',
-                   'pose_xyz_qxyzw': poses[i, 1:].tolist(), 'pose_sensor_frame': 'os_sensor',
-                   'calibration_id': 'torwic_azure_os_sensor', 'calibration_path': 'calibrations.txt',
-                   'source': 'TorWIC-SLAM', 'semantic_source': 'provided_model_prediction',
-                   'depth_scale_to_metres': .001,
-                   'imu_left_path': (seq / 'imu_left.txt').relative_to(root).as_posix(),
-                   'imu_right_path': (seq / 'imu_right.txt').relative_to(root).as_posix(),
-                   'imu_time_span_contains_frame': {side: bool(low <= times[i] <= high) for side, (low, high) in imu_bounds.items()}}
-            row.update({key: (seq / folder / f'{frame}{ext}').relative_to(root).as_posix() for key, (folder, ext) in MODALITIES.items()})
+            # Store portable paths relative to the dataset root, including nested folders.
+            row = {
+                'schema_version': 1,
+                'sample_id': f'{seq.name}/{frame}',
+                'sequence_id': seq.name,
+                'frame_id': frame,
+                'collection_date': date,
+                'split': split,
+                'timestamp_seconds': float(times[i]),
+                'timestamp_basis': 'sequence_relative',
+                'pose_xyz_qxyzw': poses[i, 1:].tolist(),
+                'pose_sensor_frame': 'os_sensor',
+                'calibration_id': 'torwic_azure_os_sensor',
+                'calibration_path': 'calibrations.txt',
+                'source': 'TorWIC-SLAM',
+                'semantic_source': 'provided_model_prediction',
+                'depth_scale_to_metres': .001,
+                'imu_left_path': (seq / 'imu_left.txt').relative_to(root).as_posix(),
+                'imu_right_path': (seq / 'imu_right.txt').relative_to(root).as_posix(),
+                'imu_time_span_contains_frame': {
+                    side: bool(low <= times[i] <= high)
+                    for side, (low, high) in imu_bounds.items()
+                },
+            }
+            row.update({
+                key: (seq / folder / f'{frame}{ext}').relative_to(root).as_posix()
+                for key, (folder, ext) in MODALITIES.items()
+            })
             records.append(row)
-        summaries.append({'sequence_id': seq.name, 'relative_directory': seq.relative_to(root).as_posix(),
-                          'frames': len(times), 'split': split, 'collection_date': date,
-                          'duration_seconds': float(times[-1] - times[0]), 'frame_intervals_over_0_15_seconds': int(np.sum(np.diff(times) > .15)),
-                          'imu_order_warnings': imu_warnings})
+        summaries.append({
+            'sequence_id': seq.name,
+            'relative_directory': seq.relative_to(root).as_posix(),
+            'frames': len(times),
+            'split': split,
+            'collection_date': date,
+            'duration_seconds': float(times[-1] - times[0]),
+            'frame_intervals_over_0_15_seconds': int(np.sum(np.diff(times) > .15)),
+            'imu_order_warnings': imu_warnings,
+        })
     if not records or len({row['sample_id'] for row in records}) != len(records):
         raise ValueError('Empty manifest or duplicate sample IDs')
     return records, summaries, cal
 
 
 def main():
+    """Build the manifest, smoke-test one training frame, and write ingestion reports."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', type=Path, required=True)
     parser.add_argument('--output', type=Path, default=Path('reports/ingestion'))
@@ -209,6 +288,7 @@ def main():
         raise ValueError('Invalid LiDAR points survived filtering')
     args.output.mkdir(parents=True, exist_ok=True)
     manifest = args.output / 'manifest.jsonl'
+    # Replace only after writing every record, avoiding a partially written manifest.
     temporary = manifest.with_suffix('.jsonl.tmp')
     with temporary.open('w', encoding='utf-8') as stream:
         for row in records:
@@ -218,19 +298,32 @@ def main():
         reloaded = [json.loads(line) for line in stream]
     if len(reloaded) != len(records):
         raise ValueError('Manifest round-trip count mismatch')
-    summary = {'total_samples': len(records), 'split_dates_confirmed_by_caller': args.confirm_planned_dates,
-               'sequences': summaries, 'class_ids': dict(enumerate(CLASSES)),
-               'loader_smoke_test': {'sample_id': sample['sample_id'], 'rgb_shape': list(sample['rgb'].shape),
-                                     'depth_dtype': str(sample['depth_raw'].dtype), 'positive_depth_fraction': float(sample['depth_valid'].mean()),
-                                     'stored_lidar_points': len(sample['lidar_valid']), 'filtered_lidar_points': len(sample['lidar_xyz']),
-                                     'semantic_class_ids': np.unique(sample['semantic_ids']).tolist(),
-                                     'invalid_depth_mask_check': 'passed', 'lidar_filter_check': 'passed', 'manifest_round_trip': 'passed'},
-               'limitations': ['Only demo image and PCD payloads decoded; whole-dataset decoding remains to do.',
-                               'Transform inverse is implemented; use week1_checks.py for spatial diagnostics. Calibration accuracy and distortion handling need application-specific validation.',
-                               'IMU arrays are not sorted or interpolated by this loader.',
-                               'Zero XYZ points are filtered; nonzero outliers need a separate documented rule.',
-                               'Dates and splits remain unassigned unless explicitly confirmed.'],
-               'publisher_documentation': 'https://github.com/Viky397/TorWICDataset'}
+    summary = {
+        'total_samples': len(records),
+        'split_dates_confirmed_by_caller': args.confirm_planned_dates,
+        'sequences': summaries,
+        'class_ids': dict(enumerate(CLASSES)),
+        'loader_smoke_test': {
+            'sample_id': sample['sample_id'],
+            'rgb_shape': list(sample['rgb'].shape),
+            'depth_dtype': str(sample['depth_raw'].dtype),
+            'positive_depth_fraction': float(sample['depth_valid'].mean()),
+            'stored_lidar_points': len(sample['lidar_valid']),
+            'filtered_lidar_points': len(sample['lidar_xyz']),
+            'semantic_class_ids': np.unique(sample['semantic_ids']).tolist(),
+            'invalid_depth_mask_check': 'passed',
+            'lidar_filter_check': 'passed',
+            'manifest_round_trip': 'passed',
+        },
+        'limitations': [
+            'Only demo image and PCD payloads decoded; whole-dataset decoding remains to do.',
+            'Transform inverse is implemented; use week1_checks.py for spatial diagnostics. Calibration accuracy and distortion handling need application-specific validation.',
+            'IMU arrays are not sorted or interpolated by this loader.',
+            'Zero XYZ points are filtered; nonzero outliers need a separate documented rule.',
+            'Dates and splits remain unassigned unless explicitly confirmed.',
+        ],
+        'publisher_documentation': 'https://github.com/Viky397/TorWICDataset',
+    }
     (args.output / 'ingestion_summary.json').write_text(json.dumps(summary, indent=2), encoding='utf-8')
     (args.output / 'sample_record.json').write_text(json.dumps(demo_record, indent=2), encoding='utf-8')
     print(json.dumps(summary, indent=2))

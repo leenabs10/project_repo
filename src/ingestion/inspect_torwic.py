@@ -9,6 +9,7 @@ from pathlib import Path
 
 
 def main():
+    """Inventory raw files and ZIP contents, save a report, and return an exit code."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path("data/raw/torwic_slam"))
     parser.add_argument("--report", type=Path, default=Path("reports/dataset_inventory.json"))
@@ -30,9 +31,11 @@ def main():
     total_files = 0
 
     def walk_error(error):
+        """Keep unreadable-directory errors in the report while scanning other folders."""
         errors.append(str(error))
 
     for parent, dirs, names in os.walk(root, onerror=walk_error, followlinks=False):
+        # Sort traversal and filenames so report ordering is reproducible.
         dirs.sort()
         for name in sorted(names):
             path = Path(parent) / name
@@ -52,20 +55,25 @@ def main():
             if len(examples[suffix]) < 5:
                 examples[suffix].append(relative)
             lower = name.lower()
+            # These are candidates for later inspection, not validated metadata.
             if suffix in {".txt", ".csv", ".yaml", ".yml", ".json"} or any(
                 token in lower for token in ("timestamp", "frame_time", "traj", "pose", "imu", "calib")
             ):
                 metadata.append(relative)
             if suffix == ".zip":
                 try:
+                    # Read only the member listing; never extract into the raw dataset.
                     with zipfile.ZipFile(path) as archive:
-                        members = [m for m in archive.infolist() if not m.is_dir()]
+                        members = [member for member in archive.infolist() if not member.is_dir()]
                         archives.append({
                             "path": relative,
                             "file_count": len(members),
-                            "uncompressed_bytes": sum(m.file_size for m in members),
-                            "extension_counts": dict(Counter(Path(m.filename).suffix.lower() or "[no extension]" for m in members)),
-                            "first_20_members": [m.filename for m in members[:20]],
+                            "uncompressed_bytes": sum(member.file_size for member in members),
+                            "extension_counts": dict(Counter(
+                                Path(member.filename).suffix.lower() or "[no extension]"
+                                for member in members
+                            )),
+                            "first_20_members": [member.filename for member in members[:20]],
                         })
                 except (OSError, zipfile.BadZipFile) as error:
                     errors.append(f"{relative}: {error}")
@@ -95,6 +103,7 @@ def main():
         print(f"{extension}: {count:,}; example: {examples[extension][0]}")
     print(f"Report: {args.report.resolve()}")
     if errors:
+        # Preserve the completed inventory but signal that some paths could not be read.
         print(f"WARNING: {len(errors)} read errors; see report.")
         return 2
     return 0
