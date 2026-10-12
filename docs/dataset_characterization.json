@@ -1,0 +1,513 @@
+{
+  "review_date": "2026-10-12",
+  "branch": "dev",
+  "main_integration_authorized": false,
+  "tests_passed": 8,
+  "training_profile": {
+    "status": "passed",
+    "split": "train",
+    "sequence": "Aisle_CCW_Run_1",
+    "frames_profiled": 1136,
+    "sensor_payloads_decoded": 7952,
+    "test_sensor_files_opened": 0,
+    "validation_sensor_files_opened": 0,
+    "manifest_sha256": "fe77b9efd233e44e45d620841b7055118b6f9c44e4f2d26ac47464a72fb56f2e",
+    "calibration_sha256": "e96f48296497b6f45f5092074635db1ae5e1777d9eb1db328af1b9716150be65",
+    "profile_source_sha256": "314b10a94d576063c2c638373b3717fa64da93f8e3235e1a72bd8eba5498b43c",
+    "cameras": {
+      "left": {
+        "luma_mean_8bit": {
+          "min": 106.21746853298612,
+          "p01": 107.40986149088542,
+          "p10": 117.34168457031251,
+          "p50": 128.26435980902778,
+          "p90": 141.71007703993055,
+          "p99": 151.6440357530382,
+          "max": 153.87123046875
+        },
+        "luma_std_8bit": {
+          "min": 28.97110468864955,
+          "p01": 35.90682364939109,
+          "p10": 45.71841265415735,
+          "p50": 53.35830391910922,
+          "p90": 59.14768318296015,
+          "p99": 61.65211323568136,
+          "max": 63.152345750052355
+        },
+        "dark_luma_fraction": {
+          "min": 0.0,
+          "p01": 0.0,
+          "p10": 0.0,
+          "p50": 0.0,
+          "p90": 0.0,
+          "p99": 1.0850694444444445e-05,
+          "max": 3.472222222222222e-05
+        },
+        "bright_luma_fraction": {
+          "min": 0.0,
+          "p01": 0.00024381510416666665,
+          "p10": 0.0015239800347222224,
+          "p50": 0.009662000868055555,
+          "p90": 0.017688259548611113,
+          "p99": 0.02630718315972224,
+          "max": 0.04323567708333333
+        },
+        "laplacian_variance_320x180": {
+          "min": 256.32916259765625,
+          "p01": 324.1824447631836,
+          "p10": 653.4881591796875,
+          "p50": 1142.9481811523438,
+          "p90": 1561.3721923828125,
+          "p99": 1727.2518432617187,
+          "max": 1802.61767578125
+        },
+        "valid_depth_fraction": {
+          "min": 0.3353450520833333,
+          "p01": 0.34891368272569445,
+          "p10": 0.37884928385416666,
+          "p50": 0.5008246527777778,
+          "p90": 0.5989708116319444,
+          "p99": 0.791324924045139,
+          "max": 0.9381618923611111
+        },
+        "per_frame_depth_p99_metres": {
+          "min": 0.581000030040741,
+          "p01": 1.8667000651359558,
+          "p10": 2.2870001792907715,
+          "p50": 4.367000102996826,
+          "p90": 5.4780004024505615,
+          "p99": 7.393150305747996,
+          "max": 8.166000366210938
+        },
+        "pixels_over_20m": 0,
+        "semantic_classes": {
+          "0": {
+            "name": "Background",
+            "pixel_fraction": 8.195330839201878e-07,
+            "frames_present": 3
+          },
+          "1": {
+            "name": "Driveable Ground",
+            "pixel_fraction": 0.4231767184596293,
+            "frames_present": 1136
+          },
+          "2": {
+            "name": "Ceiling",
+            "pixel_fraction": 0.07674089649660114,
+            "frames_present": 1045
+          },
+          "3": {
+            "name": "Ego Vehicle",
+            "pixel_fraction": 0.00011743393302523474,
+            "frames_present": 94
+          },
+          "4": {
+            "name": "Wall/Fence/Pillar",
+            "pixel_fraction": 0.13017465892905175,
+            "frames_present": 1136
+          },
+          "5": {
+            "name": "Miscellaneous Static Feature",
+            "pixel_fraction": 0.032768774375855826,
+            "frames_present": 1136
+          },
+          "6": {
+            "name": "Rack/Shelf",
+            "pixel_fraction": 0.09822775206468848,
+            "frames_present": 1133
+          },
+          "7": {
+            "name": "Goods Materials",
+            "pixel_fraction": 0.19713909214837638,
+            "frames_present": 1136
+          },
+          "8": {
+            "name": "Fixed Machinery",
+            "pixel_fraction": 0.0021536603518681535,
+            "frames_present": 620
+          },
+          "9": {
+            "name": "Cart/Pallet Jack",
+            "pixel_fraction": 0.006097075890673905,
+            "frames_present": 1064
+          },
+          "10": {
+            "name": "Pylons",
+            "pixel_fraction": 0.00047654893663194445,
+            "frames_present": 326
+          },
+          "11": {
+            "name": "Text Region",
+            "pixel_fraction": 6.432570575361894e-05,
+            "frames_present": 357
+          },
+          "12": {
+            "name": "Miscellaneous Non-Static Feature",
+            "pixel_fraction": 0.007758934247848201,
+            "frames_present": 943
+          },
+          "13": {
+            "name": "Person",
+            "pixel_fraction": 0.0007966721225792253,
+            "frames_present": 379
+          },
+          "14": {
+            "name": "Forklift/Truck",
+            "pixel_fraction": 0.0012529075276310642,
+            "frames_present": 476
+          },
+          "15": {
+            "name": "Miscellaneous Dynamic Feature",
+            "pixel_fraction": 0.02305372927670188,
+            "frames_present": 644
+          }
+        }
+      },
+      "right": {
+        "luma_mean_8bit": {
+          "min": 68.79927083333334,
+          "p01": 83.96984781901041,
+          "p10": 117.0005929904514,
+          "p50": 127.83307562934027,
+          "p90": 140.6378938802083,
+          "p99": 145.0032750651042,
+          "max": 149.35485677083332
+        },
+        "luma_std_8bit": {
+          "min": 33.404251881147545,
+          "p01": 38.023170472313474,
+          "p10": 43.40809650606046,
+          "p50": 52.53809764237508,
+          "p90": 58.22962722936189,
+          "p99": 62.105047074111184,
+          "max": 64.15930005955525
+        },
+        "dark_luma_fraction": {
+          "min": 0.0,
+          "p01": 0.0,
+          "p10": 0.0,
+          "p50": 0.0,
+          "p90": 1.0850694444444444e-06,
+          "p99": 2.5282118055555755e-05,
+          "max": 8.572048611111111e-05
+        },
+        "bright_luma_fraction": {
+          "min": 0.00020616319444444444,
+          "p01": 0.0007356228298611112,
+          "p10": 0.0019639756944444444,
+          "p50": 0.008429904513888888,
+          "p90": 0.020111219618055558,
+          "p99": 0.03570876736111112,
+          "max": 0.03738606770833333
+        },
+        "laplacian_variance_320x180": {
+          "min": 216.98558044433594,
+          "p01": 290.05503845214844,
+          "p10": 598.9856567382812,
+          "p50": 949.6101684570312,
+          "p90": 1494.0632934570312,
+          "p99": 1760.4674316406254,
+          "max": 2087.904052734375
+        },
+        "valid_depth_fraction": {
+          "min": 0.3271256510416667,
+          "p01": 0.33347401258680553,
+          "p10": 0.3703705512152778,
+          "p50": 0.49207194010416666,
+          "p90": 0.6854351128472222,
+          "p99": 0.7950828993055555,
+          "max": 0.8406271701388889
+        },
+        "per_frame_depth_p99_metres": {
+          "min": 1.2690000534057617,
+          "p01": 1.818000078201294,
+          "p10": 2.1356950592994757,
+          "p50": 4.030500173568726,
+          "p90": 5.653000354766846,
+          "p99": 6.736600232124336,
+          "max": 7.242000579833984
+        },
+        "pixels_over_20m": 0,
+        "semantic_classes": {
+          "0": {
+            "name": "Background",
+            "pixel_fraction": 2.005850205399061e-07,
+            "frames_present": 7
+          },
+          "1": {
+            "name": "Driveable Ground",
+            "pixel_fraction": 0.4006671094819787,
+            "frames_present": 1136
+          },
+          "2": {
+            "name": "Ceiling",
+            "pixel_fraction": 0.09444280919894366,
+            "frames_present": 980
+          },
+          "3": {
+            "name": "Ego Vehicle",
+            "pixel_fraction": 0.00013331931148523083,
+            "frames_present": 125
+          },
+          "4": {
+            "name": "Wall/Fence/Pillar",
+            "pixel_fraction": 0.12618791702580937,
+            "frames_present": 1136
+          },
+          "5": {
+            "name": "Miscellaneous Static Feature",
+            "pixel_fraction": 0.02842439606715816,
+            "frames_present": 1136
+          },
+          "6": {
+            "name": "Rack/Shelf",
+            "pixel_fraction": 0.06850425469483568,
+            "frames_present": 1112
+          },
+          "7": {
+            "name": "Goods Materials",
+            "pixel_fraction": 0.2242293571269195,
+            "frames_present": 1136
+          },
+          "8": {
+            "name": "Fixed Machinery",
+            "pixel_fraction": 0.0038767955224838615,
+            "frames_present": 679
+          },
+          "9": {
+            "name": "Cart/Pallet Jack",
+            "pixel_fraction": 0.004642621489571107,
+            "frames_present": 1093
+          },
+          "10": {
+            "name": "Pylons",
+            "pixel_fraction": 0.0011305936476061229,
+            "frames_present": 376
+          },
+          "11": {
+            "name": "Text Region",
+            "pixel_fraction": 0.0003844699053697183,
+            "frames_present": 369
+          },
+          "12": {
+            "name": "Miscellaneous Non-Static Feature",
+            "pixel_fraction": 0.016981222185543817,
+            "frames_present": 1080
+          },
+          "13": {
+            "name": "Person",
+            "pixel_fraction": 0.0014014302285064555,
+            "frames_present": 514
+          },
+          "14": {
+            "name": "Forklift/Truck",
+            "pixel_fraction": 0.0022415805870378523,
+            "frames_present": 547
+          },
+          "15": {
+            "name": "Miscellaneous Dynamic Feature",
+            "pixel_fraction": 0.026751922941730243,
+            "frames_present": 779
+          }
+        }
+      }
+    },
+    "lidar_usable_points": {
+      "min": 187187.0,
+      "p01": 188474.45,
+      "p10": 192355.5,
+      "p50": 203907.0,
+      "p90": 219901.5,
+      "p99": 225463.4,
+      "max": 226204.0
+    },
+    "lidar_usable_fraction": {
+      "min": 0.7140617370605469,
+      "p01": 0.7189729690551758,
+      "p10": 0.7337779998779297,
+      "p50": 0.7778434753417969,
+      "p90": 0.8388576507568359,
+      "p99": 0.8600746154785156,
+      "max": 0.8628997802734375
+    },
+    "per_frame_lidar_range_p99_metres": {
+      "min": 10.004755401611323,
+      "p01": 10.471154255867004,
+      "p10": 13.432161550521855,
+      "p50": 18.50160618782044,
+      "p90": 21.498418922424314,
+      "p99": 23.167430295944214,
+      "max": 23.8680436706543
+    },
+    "frame_interval_seconds": {
+      "min": 0.08013057708740234,
+      "p01": 0.08862070083618163,
+      "p10": 0.09336204528808593,
+      "p50": 0.09995007514953613,
+      "p90": 0.10675554275512696,
+      "p99": 0.11237653732299807,
+      "max": 0.12424111366271973
+    },
+    "imu": {
+      "left": {
+        "rows": 23398,
+        "backward_raw_intervals": 1,
+        "duplicate_timestamps": 0,
+        "sorting_requested": true,
+        "rows_reordered": true,
+        "time_span_seconds": [
+          0.0,
+          113.59665560722351
+        ],
+        "interval_seconds_p50_p99_max": [
+          0.004855155944824219,
+          0.004973897933959961,
+          0.005677461624145508
+        ],
+        "measurements_interpolated": false,
+        "frames_outside_span": 0,
+        "covered_frame_bracket_gap_seconds": {
+          "min": 0.004748821258544922,
+          "p01": 0.004813480377197266,
+          "p10": 0.004843950271606445,
+          "p50": 0.004855155944824219,
+          "p90": 0.004856109619140625,
+          "p99": 0.004981470108032227,
+          "max": 0.00545501708984375
+        }
+      },
+      "right": {
+        "rows": 23445,
+        "backward_raw_intervals": 1,
+        "duplicate_timestamps": 0,
+        "sorting_requested": true,
+        "rows_reordered": true,
+        "time_span_seconds": [
+          0.0014634132385253906,
+          113.59423184394836
+        ],
+        "interval_seconds_p50_p99_max": [
+          0.004844188690185547,
+          0.004944562911987305,
+          0.0057866573333740234
+        ],
+        "measurements_interpolated": false,
+        "frames_outside_span": 0,
+        "covered_frame_bracket_gap_seconds": {
+          "min": 0.004742145538330078,
+          "p01": 0.004801762104034424,
+          "p10": 0.0048329830169677734,
+          "p50": 0.004843950271606445,
+          "p90": 0.004845142364501953,
+          "p99": 0.004935455322265626,
+          "max": 0.005139350891113281
+        }
+      }
+    },
+    "trajectory_path_length_metres": 81.04104656029769,
+    "pose_translation_speed_metres_per_second": {
+      "min": 0.001791109783905036,
+      "p01": 0.005222869919354648,
+      "p10": 0.021715297164604463,
+      "p50": 0.871899313194633,
+      "p90": 1.029887152692624,
+      "p99": 1.1308345947198406,
+      "max": 1.2051948978980236
+    },
+    "runtime_seconds": 63.98866049999924,
+    "workers": 4,
+    "limitations": [
+      "Luma is an image proxy, not physical illumination; Laplacian variance also depends on scene texture.",
+      "Frame-level percentiles are not pooled pixel/point distributions.",
+      "Trajectory semantic masks are model predictions, not human ground truth.",
+      "No sensor-noise calibration, augmentation tuning or test evaluation is performed.",
+      "IMU vectors retained without interpreting column units; bracketing does not interpolate or establish hardware timing accuracy."
+    ]
+  },
+  "alignment_review": {
+    "frames_reviewed": 16,
+    "summary": {
+      "left_pinhole": {
+        "all_overlap": {
+          "per_frame_median_error_metres_min_median_max": [
+            0.00907365432304491,
+            0.026477084440528154,
+            0.03906717878544774
+          ],
+          "overlap_pixels": 289135
+        },
+        "stable_overlap": {
+          "per_frame_median_error_metres_min_median_max": [
+            0.00904911881593759,
+            0.0263117449126771,
+            0.03840133056214412
+          ],
+          "overlap_pixels": 283071
+        }
+      },
+      "left_distorted": {
+        "all_overlap": {
+          "per_frame_median_error_metres_min_median_max": [
+            0.011788787417247593,
+            0.022497096434734715,
+            0.03250451896811046
+          ],
+          "overlap_pixels": 307685
+        },
+        "stable_overlap": {
+          "per_frame_median_error_metres_min_median_max": [
+            0.011742301782811992,
+            0.022041427916538625,
+            0.03165308259677835
+          ],
+          "overlap_pixels": 300929
+        }
+      },
+      "right_pinhole": {
+        "all_overlap": {
+          "per_frame_median_error_metres_min_median_max": [
+            0.02069921903938804,
+            0.03815980555812723,
+            0.05405476976388235
+          ],
+          "overlap_pixels": 305317
+        },
+        "stable_overlap": {
+          "per_frame_median_error_metres_min_median_max": [
+            0.020491708388384544,
+            0.03759229011146051,
+            0.05356873923687666
+          ],
+          "overlap_pixels": 298608
+        }
+      },
+      "right_distorted": {
+        "all_overlap": {
+          "per_frame_median_error_metres_min_median_max": [
+            0.01936690300007493,
+            0.025094333488903137,
+            0.04185193389684594
+          ],
+          "overlap_pixels": 290374
+        },
+        "stable_overlap": {
+          "per_frame_median_error_metres_min_median_max": [
+            0.01902036785440786,
+            0.024741477939373535,
+            0.04151017046567512
+          ],
+          "overlap_pixels": 284020
+        }
+      }
+    },
+    "distortion_convention_resolved": false,
+    "production_registration_certified": false,
+    "limitations": [
+      "Projection overlap is not independent calibration ground truth.",
+      "Occlusion, finite LiDAR beams, depth failures, object motion and residual timing affect comparisons.",
+      "Both distortion variants retained; no sensor parameters fitted or test data used.",
+      "Publisher reports RGB-aligned depth and PTP-synchronized mounted cameras/LiDAR; per-sensor timing accuracy is not measured here."
+    ],
+    "publisher_source": "https://github.com/Viky397/TorWICDataset#torwic-slam-faq"
+  }
+}

@@ -1,0 +1,40 @@
+Training-data characterization and sensor-alignment review
+
+Frames profiled: 1136; payloads decoded: 7952.
+Only the confirmed June 15 training trajectory was opened; no validation/test sensors.
+Profiling runtime: 64.0 seconds with 4 workers.
+Trajectory length from provided poses: 81.04 metres.
+
+Depth and image metrics
+left: valid depth min/median/max 33.53/50.08/93.82%.
+left: frame-mean luma p10/p50/p90 117.34/128.26/141.71.
+left: predicted classes absent from training: none.
+right: valid depth min/median/max 32.71/49.21/84.06%.
+right: frame-mean luma p10/p50/p90 117.00/127.83/140.64.
+right: predicted classes absent from training: none.
+Usable LiDAR count min/median/max 187187/203907/226204.
+
+IMU timing contracts
+left: 1 backward raw interval(s), 0 training frames outside IMU span. Stable sorting is explicit and logged; no raw rewrite or interpolation.
+right: 1 backward raw interval(s), 0 training frames outside IMU span. Stable sorting is explicit and logged; no raw rewrite or interpolation.
+
+Spatial overlap diagnostics
+left_pinhole: stable-region per-frame median residual min/median/max 0.90/2.63/3.84 cm.
+left_distorted: stable-region per-frame median residual min/median/max 1.17/2.20/3.17 cm.
+right_pinhole: stable-region per-frame median residual min/median/max 2.05/3.76/5.36 cm.
+right_distorted: stable-region per-frame median residual min/median/max 1.90/2.47/4.15 cm.
+
+Readiness and interpretation
+Training-data characterization completed; IMU timestamp contracts implemented and tested.
+Alignment reviewed at native resolution on 16 evenly spaced frames and both cameras.
+Residuals measure axial-depth agreement, not independent calibration accuracy.
+Distortion convention is still unresolved; production camera-LiDAR fusion is not certified.
+No augmentation parameters were fitted and no physically realistic sensor noise was certified.
+Brightness and sharpness are image proxies, influenced by scene content and texture.
+Semantic coverage describes model predictions rather than manual labels.
+
+Next actions
+Resolve the exported RGB distortion convention before applying camera-LiDAR fusion.
+Use full training distributions to set documented augmentation proposals; do not infer a calibrated noise model from local variation.
+Assess source and split provenance of extra human-labeled data before using it.
+Continue on dev. Integration into main requires explicit user permission.

@@ -1,0 +1,22 @@
+Development workflow
+
+Repository: dubaidata/data-synthesis
+Development branch: dev (tracks data-synthesis/dev)
+Integration branch: main
+
+All implementation, testing, and development commits belong on dev. main must
+remain unchanged until the user explicitly approves a reviewed integration.
+Passing tests, finishing a milestone, or requesting a push to dev is not merge
+authorization. No merge into main is performed by this workflow.
+
+Use descriptive names based on the function of a module or artifact, such as
+dataset_profile, sensor_alignment, or imu_timing. Historical evidence names are
+retained to preserve links and hashes; new work uses professional names.
+
+Before a development commit, review the diff, run applicable tests, and confirm
+that datasets, generated reports, model weights, environments and credentials
+are excluded. Commit portable aggregate evidence and reproducible source.
+
+When work is ready for main, present the concrete diff, validation evidence and
+remaining risks, then request explicit user permission. Until approval, continue
+on dev and leave main unchanged.

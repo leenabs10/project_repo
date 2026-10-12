@@ -41,3 +41,33 @@ checks and a byte-identical rebuilt manifest. See
 Raw datasets and local reports remain excluded from Git. This completes ingestion
 for the depth-only prototype; sensor registration and IMU handling must be
 validated before adding fusion. October was inspected only for data integrity.
+
+## Dataset characterization
+
+Development takes place on `dev`. Integration into `main` always requires the
+user's explicit permission; see [development rules](AGENTS.md).
+
+The training-only profiler covers both cameras, measured depth, semantic
+predictions, LiDAR usability/range, trajectory intervals and IMU span/order.
+The alignment review compares native-resolution projection with and without
+the supplied distortion coefficients. It does not fit calibration parameters.
+
+```powershell
+.\.venv\Scripts\python.exe src\profiling\dataset_profile.py --root data\raw\torwic_slam --manifest data\manifests\manifest.jsonl --output reports\dataset_profile --workers 4
+.\.venv\Scripts\python.exe src\validation\sensor_alignment_review.py --root data\raw\torwic_slam --manifest data\manifests\manifest.jsonl --output reports\sensor_alignment --samples 16
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
+See [characterization findings](docs/dataset_characterization.txt) and
+[portable evidence](docs/dataset_characterization.json). Reports and overlays are
+derived artifacts and remain excluded from Git. Full profiling decoded 7,952
+training payloads; validation and test sensors were not opened.
+
+`imu_timing.load_imu` rejects backward order by default. Explicit `sort=True`
+returns a sorted copy with anomaly information; duplicates are rejected.
+`bracket_frames` returns validity masks and never extrapolates. No vector
+interpolation or implicit timestamp correction is performed.
+
+Production camera-LiDAR registration and the exported RGB distortion convention
+remain unresolved. Native overlap residuals are diagnostics, not independent
+calibration accuracy. Semantic masks remain pseudo-labels.
