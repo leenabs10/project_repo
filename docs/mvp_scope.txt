@@ -1,0 +1,35 @@
+Warehouse goods dataset MVP scope
+
+Target user assumption: a robotics perception/data engineer who needs additional
+warehouse examples of goods moved into an aisle. No customer interviews have been
+performed or implied. Validate these assumptions with 2-3 possible users later.
+
+First task: segment visible boxes/crates/goods in the left Azure camera view.
+The initial TorWIC target is predicted semantic class 7, converted to binary
+0=other and 1=goods. Treat it as a pseudo-label, not independent ground truth.
+One image cannot establish change over time or safe aisle passage from this mask
+alone. Synthetic scenario labels describe added goods geometry; operational
+blockage/change labels need a separate reviewed protocol.
+
+Required product behavior: choose a scenario, generate native images plus matching
+marked regions, inspect quality, then export a dataset with settings and provenance.
+Keep one aisle and a bounded batch initially. Physical geometry, labels and clean
+references must be checked before scale or training admission.
+
+Formats: lossless 1280x720 RGB PNG, uint8 semantic PNG, binary goods PNG, float32
+axial depth in metres with validity mask when included, and JSON camera/pose/seed
+metadata. The three-sample renderer ZIP is an engineering pilot, not training-ready.
+
+Split: complete June 15 training (1136), June 23 development validation (1037),
+October 12 held-out test (915). Freeze membership and candidate/protocol before
+final testing. Do not fit camera appearance or synthesis parameters to October.
+
+Proposed success criteria, to validate with users: zero accepted export/alignment
+failures; a usable repeatable dataset-generation flow; and at least 3 percentage
+points improvement in goods IoU over an equal-budget real-only baseline on an
+independent human-reviewed real reference, measured with 3 seeds. Report uncertainty
+and regressions. Current pseudo-labels cannot establish that success criterion.
+
+Out of current proof: autonomous navigation safety, production sensor fusion,
+spinning-LiDAR/IMU simulation, calibrated Azure noise, and cross-warehouse accuracy.
+Existing depth restoration experiments remain separate evidence and are preserved.

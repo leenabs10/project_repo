@@ -1,0 +1,173 @@
+{
+  "review_date": "2026-10-12",
+  "branch": "dev",
+  "head": "254fd99cf81a4241d8301c8bda4d93e1398409a2",
+  "committed": false,
+  "pushed": false,
+  "merged_into_main": false,
+  "plan_source": {
+    "path": "C:\\Users\\lb_10\\Documents\\Codex\\2026-09-27\\referenced-chatgpt-conversation-this-is-an\\outputs\\Warehouse_Synthetic_Data_MVP_Plan.docx",
+    "sha256": "3c69f8c83515584fe6b0b84eeff00c03e26884f0f4c1595b4674646005fa5682",
+    "scope": "Recovered eight-week warehouse image/label MVP plan; no daily subplan is specified"
+  },
+  "requirements_status": "Assumptions and proposed success criteria documented; no customer interviews claimed",
+  "core_ingestion_status": "passed",
+  "imu_bracketing_status": "passed_with_explicit_invalid_coverage",
+  "optional_imu_fusion_status": "blocked_pending_verified_export_metadata",
+  "data_understanding_day_one_status": "complete_for_defined_task_camera_examples_and_split_scope",
+  "independent_reference_label_status": "pending",
+  "renderer_geometry_status": "geometry_and_export_integrity_passed",
+  "renderer_appearance_status": "reviewed_as_prototype_only; physical/domain realism not certified",
+  "tests_passed": 47,
+  "frames_audited": 3088,
+  "payloads_audited": 21616,
+  "imu_queries_audited": 6176,
+  "manifest_sha256": "fe77b9efd233e44e45d620841b7055118b6f9c44e4f2d26ac47464a72fb56f2e",
+  "native_camera": "left Azure reference K, 1280x720",
+  "task": "goods segmentation; publisher class 7 mapped to binary target 1",
+  "split_counts": {
+    "test": 915,
+    "train": 1136,
+    "validation": 1037
+  },
+  "training_examples_reviewed": 6,
+  "task_preparation_validation_test_sensor_files_opened": 0,
+  "raw_source_hashes_unchanged": true,
+  "extra_annotations_quarantined": 237,
+  "imu_calibration_frames_available": {
+    "left": {
+      "declared_frame_id": "azure_left_imu",
+      "declared_parent_frame_id": "azure_left_camera",
+      "translation": [
+        -0.0286307,
+        -0.0031187,
+        -0.0472054
+      ],
+      "quaternion_xyzw": [
+        -0.4987278,
+        0.5010531,
+        0.50066704,
+        0.49954869
+      ],
+      "source": "calibrations.txt IMU frame and extrinsic entries",
+      "export_vector_frame_binding_verified": false,
+      "frame_conversion_accuracy_verified": false
+    },
+    "right": {
+      "declared_frame_id": "azure_right_imu",
+      "declared_parent_frame_id": "azure_right_camera",
+      "translation": [
+        -0.0285823,
+        -0.0032089,
+        -0.0470858
+      ],
+      "quaternion_xyzw": [
+        -0.4981531,
+        0.49746627,
+        0.50380434,
+        0.5005516
+      ],
+      "source": "calibrations.txt IMU frame and extrinsic entries",
+      "export_vector_frame_binding_verified": false,
+      "frame_conversion_accuracy_verified": false
+    }
+  },
+  "label_findings": [
+    {
+      "sample_ids": [
+        "Aisle_CCW_Run_1/000000",
+        "Aisle_CCW_Run_1/001135"
+      ],
+      "finding": "Large foreground wooden crate on the AMR is not covered by the predicted goods overlay.",
+      "status": "likely false negative under the proposed goods task; needs human reference annotation"
+    },
+    {
+      "sample_ids": [
+        "Aisle_CCW_Run_1/000908"
+      ],
+      "finding": "Some predicted goods regions lie on the robot edge and a bright ceiling artifact.",
+      "status": "likely false positives; needs human review"
+    },
+    {
+      "sample_ids": [
+        "Aisle_CCW_Run_1/000000",
+        "Aisle_CCW_Run_1/000227",
+        "Aisle_CCW_Run_1/000454",
+        "Aisle_CCW_Run_1/000681",
+        "Aisle_CCW_Run_1/000908",
+        "Aisle_CCW_Run_1/001135"
+      ],
+      "finding": "Real views include low/angled viewpoints and clutter. The symmetric pilot aisle and camera height are not yet a matched scene model.",
+      "status": "domain appearance/pose review pending; synthetic training eligibility remains false"
+    }
+  ],
+  "renderer": {
+    "samples": 3,
+    "resolution": [
+      1280,
+      720
+    ],
+    "max_samples": 256,
+    "device": {
+      "backend": "OPTIX",
+      "devices": [
+        "NVIDIA GeForce RTX 5070 Laptop GPU"
+      ],
+      "rgb_denoising": true,
+      "labels_and_depth_denoised": false
+    },
+    "scene_assembly_seconds": 0.10247290000006615,
+    "render_seconds_including_export": [
+      11.746041799999148,
+      14.450244399999065,
+      15.63032480000038
+    ],
+    "fixture": {
+      "expected_axial_metres": 9.99,
+      "hypothesis_max_error_metres": {
+        "euclidean_ray_range": 3.6002745628356934,
+        "axial_z": 0.0
+      },
+      "verified_depth_pass_convention": "axial_z",
+      "render_seconds_including_export": 6.167869999999311
+    },
+    "interior_geometry_rays": 768,
+    "interior_semantic_agreement": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "max_interior_depth_error_metres": 0.0001925368923529902,
+    "mean_luma": [
+      140.48344292534722,
+      139.94526692708334,
+      139.30934678819443
+    ],
+    "training_eligible": false,
+    "physical_sensor_realism_certified": false,
+    "archive_bytes": 6669445,
+    "archive_sha256": "332577853cc07911e3b7931575e4b2d8e0edec9ff61a35253ff0c266b7438112"
+  },
+  "evidence_hashes": {
+    "reports/dataset_readiness/full_payload_checks.json": "54e1ceb383effe00a5c7c6a1d93b4fc375204f946df380ead2b3c7043720fe2b",
+    "reports/dataset_readiness/imu_timing_review.json": "490fba6454b3aa4e1162e9f85d5aa975b5d9ab41263bb511243eb8d882024081",
+    "reports/dataset_readiness/sensor_metadata_review.json": "574635517c5fd074c54fe8477d9a221f088799737edb5a25ab0d544b65324cb1",
+    "reports/task_dataset_review/summary.json": "a007ebc3ebeaf2e57a704f3216fada8a6758c21b5410a88dad6437d80aea9d70",
+    "reports/task_dataset_review/evaluation_protocol.json": "e31bb98e39b2f55b4670c0efa1f1b8f1d4279d9f508f22bd559135bcc4b7d8ee",
+    "reports/warehouse_renderer_optimized_verified/render_summary.json": "cdf898f9efd496a39bad16a8ed6292677aee4a9ec4bc4e79cb3d5132a408693a",
+    "reports/warehouse_goods_pilot_package/validation_summary.json": "347c56e5935408aa0c2213ff2f6511f1247abb44c50983a9b177fd0798eae6d6"
+  },
+  "new_source_hashes": {
+    "src/synthesis/warehouse_renderer.py": "efa3c390674ee9fd546c36dbc3cad7b71d839d200350c7af9cc5e5d7d8eb4b8b",
+    "src/synthesis/renderer_geometry.py": "1b65b6aa6dbe457f5c476f104cff98bf0ca8dd0b221f400bb7161d5a128dfeb2",
+    "src/profiling/task_dataset_review.py": "81a40c2b84846b9d665bdd1855eb322bba4b1473a01e1185267d505bec0f0116",
+    "src/validation/renderer_pilot_checks.py": "6620fee9344d1a57c65f57f9b8e8e1a42b6947ae2c1e9ef4f4666caa700b4a59"
+  },
+  "remaining_work": [
+    "Human reference masks and quality triage for the chosen goods task; pseudo-label agreement is not independent accuracy.",
+    "Match camera viewpoint, scene variety and materials to training-only real examples before expanding synthetic batches.",
+    "Verify the Azure IMU export columns/units/frame binding/clock and image convention for optional fusion.",
+    "Resolve collection/split provenance of extra annotations before admitting them to training.",
+    "Freeze comparison budgets/seeds and independent evaluation protocol before real-versus-real-plus-synthetic training."
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "review_date": "2026-10-12",
+  "branch": "dev",
+  "committed": false,
+  "pushed": false,
+  "merged_into_main": false,
+  "tests_passed": 37,
+  "new_measurement_policy_tests": 8,
+  "status": "protections_verified_metadata_pending",
+  "alignment_implementation": "Linear SI-vector resampling in a verified measurement frame, tested with synthetic fixtures only",
+  "real_data_interpolation_enabled": false,
+  "camera_lidar_fusion_enabled": false,
+  "extra_annotation_training_eligible": false,
+  "raw_imu_streams_verified": 6,
+  "annotation_json_files_reviewed": 258,
+  "annotation_json_types": {
+    "raw_labels_2d.json": 237,
+    "source_image.json": 21
+  },
+  "candidate_provenance_fields_found": 0,
+  "raw_imu_hashes_match": true,
+  "trajectory_image_files_opened": 0,
+  "publisher_repository_tree_sha": "5e1839f8db73dee784737c53103a4fb06a3fed1d",
+  "publisher_sources": [
+    {
+      "name": "README.md.txt",
+      "url": "https://raw.githubusercontent.com/Viky397/TorWICDataset/main/README.md",
+      "sha256": "5cf101da1ea262b43ec4ea3535816dac468c3d26917b3cb470f45aca8b8703b7",
+      "status": "retrieved",
+      "git_blob_sha": "edb24f704f62c77f68408f017df80aab6101d7f8",
+      "matches_captured_repository_tree": true
+    },
+    {
+      "name": "imu.py.txt",
+      "url": "https://raw.githubusercontent.com/Viky397/TorWICDataset/main/utils/imu.py",
+      "sha256": "62f38f0a084c6f671ff98697595a0e4b9facd3bd15de312fd558bf719d04276e",
+      "status": "retrieved",
+      "git_blob_sha": "8428e81a6cc7317ab8ebef97d2a6a7e8e9d2025b",
+      "matches_captured_repository_tree": true
+    },
+    {
+      "name": "data_loader.py.txt",
+      "url": "https://raw.githubusercontent.com/Viky397/TorWICDataset/main/utils/data_loader.py",
+      "sha256": "c2a9e11662a1ad8a49634e21cbfb202553e0b3afac40879b314ea21ad947c95e",
+      "status": "retrieved",
+      "git_blob_sha": "2cbee09b99a1ed701766900d82ee6d0ce4056b6e",
+      "matches_captured_repository_tree": true
+    },
+    {
+      "name": "convert_rosbag_to_files.py.txt",
+      "url": "https://raw.githubusercontent.com/Viky397/TorWICDataset/main/utils/convert_rosbag_to_files.py",
+      "sha256": "1e69e3834f61fbb1a0f2372fe67b21645bc4bd70f9a115f7b259a858fe812cb3",
+      "status": "retrieved",
+      "git_blob_sha": "17f1d6b78af65d54e10486bd54f49ba1daf73bd5",
+      "matches_captured_repository_tree": true
+    }
+  ],
+  "review_report_sha256": "70e9e903b7e2b96813ff185e1d75df53549fa12770dfff6f98f47f429d737f27",
+  "code_hashes": {
+    "imu_measurements.py": "747cd75738f6484aa9325576ebe339bd7c8a2d01b8214bbb0b9213287956b5e3",
+    "sensor_metadata_review.py": "6472ec2f30fc413fca17565eee534a53b5a01fb7aafc884c333371ba9a92723d"
+  },
+  "contract_hashes": {
+    "imu": "0fd09db44e32e6d06aa7b854c8f039b6f1ccd4f60c5a8f05625da91fc1e412ee",
+    "geometry": "c69d7373e99f83f8bb2ece1b80998a9707ab3cd8e731854b275076489d691cac"
+  },
+  "requirements": [
+    "Azure SLAM export or verified header showing the six measurement columns and SI units.",
+    "Azure IMU coordinate-frame metadata and confirmed frame/IMU timestamp relationship.",
+    "A declared and validated IMU resampling gap policy; inspection thresholds are not certification.",
+    "Azure exported-image convention and matching camera_info/intrinsics.",
+    "Extra annotation source collections and independent held-out overlap verification."
+  ]
+}

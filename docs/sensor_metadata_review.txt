@@ -1,0 +1,59 @@
+Sensor metadata and verified alignment review
+Review date: 2026-10-12. Local dev changes; no commit, push or main integration.
+
+Implemented and tested
+- imu_measurements.require_measurement_policy rejects disabled/unconfirmed
+  streams, missing evidence, duplicate/invalid column mappings, unsupported
+  units, unknown frame/clock basis, invalid gap limits and stale source hashes.
+- align_verified_measurements performs linear XYZ resampling only after that
+  gate passes. Outputs are SI vectors in the documented sensor frame, with NaN
+  arrays, -1 indices and reasons for invalid coverage. Exact readings are retained.
+- Sorting remains opt-in. No coordinate conversion, preintegration, clock
+  correction, sensor fusion or physical accuracy certification is implemented.
+- configs/imu_measurements.json binds all six real streams to source hashes,
+  preserves unknown metadata as null and leaves interpolation disabled.
+- sensor_metadata_review checks those hashes and expected disabled gates, scans
+  annotation JSON fields and writes a fresh report outside raw sources.
+- 37 tests passed, including eight new measurement policy/alignment tests. The
+  alignment tests use known synthetic fixtures, not assumed TorWIC vector units.
+  New code compiles, is formatted and passes Git whitespace checks.
+
+Metadata investigation
+- The publisher's utils/convert_rosbag_to_files.py uses /front/realsense topics
+  and writes IMU columns: id, seconds, nanoseconds, ax, ay, az, wx, wy, wz.
+- Its utils/imu.py wrapper expects the eight remaining columns after removing id.
+  These utilities do not establish the seven-column Azure SLAM export schema.
+- The publisher README identifies imu_left/right as Azure raw IMU, depth as
+  RGB-aligned, and mounted sensors as synchronized. It does not specify the
+  complete text-column schema or establish exported-image rectification.
+- Four public source files were cached read-only for review and verified against
+  the captured Git tree's blob hashes. No downloaded source was executed.
+- Reviewed all 258 local annotation JSON files: 237 raw_labels_2d.json and 21
+  source_image.json. No timestamp/collection/trajectory/date/sequence/filename
+  fields were found by the metadata-key scan. source_image.json contains polygon
+  annotations. This does not clear transformed or cropped held-out overlap.
+- Six real IMU source hashes match the previous ingestion review. This audit
+  opened no trajectory image files and changed no raw streams or labels.
+
+Remaining evidence needed
+1. Original Azure SLAM export/header specifying measurement column order, SI
+   units, IMU frame and how timestamps relate to frame_times.txt.
+2. Matching Azure camera_info/export settings specifying raw versus rectified
+   exported RGB, depth convention and the intrinsics used for those exports.
+3. Annotation collection mapping for the 79 groups, plus held-out overlap review.
+4. A validated resampling gap policy for the intended task. The previous 20 ms
+   inspection tolerance is not automatically a production fusion policy.
+
+Next independent work
+Prepare a small renderer pilot with native RGB, clean depth and semantic labels,
+explicit camera geometry, poses and reproducible seeds. Establish geometric and
+label integrity before appearance review, then benchmark quality and speed before
+scaling. Real IMU fusion and extra-annotation training stay blocked until evidence
+is verified. No claimed physical realism follows from linear IMU resampling.
+
+Primary sources
+https://github.com/Viky397/TorWICDataset#torwic-slam-data-directory-structure
+https://github.com/Viky397/TorWICDataset#torwic-slam-faq
+https://github.com/Viky397/TorWICDataset/blob/main/utils/imu.py
+https://github.com/Viky397/TorWICDataset/blob/main/utils/convert_rosbag_to_files.py
+https://github.com/Viky397/TorWICDataset#ground-truth-segmentation-for-fine-tuning

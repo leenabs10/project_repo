@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "purpose": "Bounded paired RGB/depth/semantic geometry pilot for warehouse goods segmentation",
+  "samples": 256,
+  "adaptive_threshold": 0.01,
+  "seed": 20261012,
+  "camera": {
+    "width": 1280,
+    "height": 720,
+    "fx": 621.397474650905,
+    "fy": 620.649424677401,
+    "cx": 649.644481364277,
+    "cy": 367.908146431575
+  },
+  "reference_calibration_sha256": "e96f48296497b6f45f5092074635db1ae5e1777d9eb1db328af1b9716150be65",
+  "synthetic_image_convention": "pinhole_zero_distortion; independent of unknown real image convention",
+  "world_units": "metres",
+  "scene_budget": "One aisle, fixed shelves and lighting, three controlled goods scenarios",
+  "scenarios": [
+    {
+      "name": "clear_aisle",
+      "goods": [],
+      "scenario_intent": "No added goods in the central aisle"
+    },
+    {
+      "name": "partial_blockage",
+      "goods": [
+        {
+          "center_metres": [
+            1.1,
+            1.0,
+            0.5
+          ],
+          "size_metres": [
+            1.15,
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "scenario_intent": "Goods moved partly into the aisle; operational blockage not safety-certified"
+    },
+    {
+      "name": "wide_blockage",
+      "goods": [
+        {
+          "center_metres": [
+            0.0,
+            2.5,
+            0.6
+          ],
+          "size_metres": [
+            2.85,
+            1.0,
+            1.2
+          ]
+        }
+      ],
+      "scenario_intent": "Wide goods footprint across the aisle; operational blockage not safety-certified"
+    }
+  ],
+  "training_eligible": false,
+  "physical_sensor_realism_certified": false,
+  "exposure_ev": -1.4,
+  "exposure_basis": "Pilot appearance review against training-only brightness distributions; not sensor photometric calibration"
+}

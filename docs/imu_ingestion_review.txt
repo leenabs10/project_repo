@@ -1,0 +1,49 @@
+IMU ingestion and timing review
+Review date: 2026-10-12. Local dev changes; not committed, pushed or merged.
+
+Implemented
+- SequenceImu loads each side once per trajectory. load_sample optionally attaches
+  both sides' timestamp brackets; default sensor loading does not open IMU files.
+- Strict ordering stays the default. Explicit sorting uses copies and logs the
+  three backward intervals across six streams. All raw IMU hashes are unchanged.
+- Duplicate timestamps are rejected, including non-adjacent duplicates in the
+  manifest builder. Reports cannot be written inside the raw dataset root.
+- Every IMU query requires an explicit gap tolerance. Out-of-span or excessive-gap
+  brackets return valid=False, -1 indices and NaN measurements, with a reason.
+- Original measurement columns are retained unchanged. No vector interpolation,
+  clock correction or assumed accelerometer/gyroscope axes were introduced.
+- IMU reader reuse rejects changed roots, trajectories, side paths and escaping
+  paths. Returned arrays/reports do not mutate cached observations.
+
+Verified
+- 29 contract tests passed, including 10 new IMU integration/regression tests.
+- All 3,088 frames / 6,176 frame-side timestamp queries reviewed; nine native
+  beginning/middle/end samples decoded with IMU attached.
+- Full both-camera image/LiDAR audit passed: 21,616 payloads, zero errors.
+- Rebuilt manifest is byte-identical; dates, splits and frame records unchanged.
+- Code compiles; formatting and Git whitespace checks pass.
+
+Coverage at explicit 20 ms inspection tolerance
+Sequence                 Frames   Valid left   Valid right   Valid both
+Aisle_CCW_Run_1 (train)     1136       1136          1136          1136
+Aisle_CW_Run_1 (validation) 1037       1035          1035          1035
+Aisle_CCW (held-out test)    915        767           771           767
+
+The first two validation frames and first three test frames are outside both IMU
+spans. Test has 145 left / 141 right frame queries across gaps over 20 ms. Its
+longest raw intervals are about 234 / 237 ms. These are integrity findings, not
+model scores or timing-policy tuning. The 20 ms tolerance is not fusion-certified.
+All training brackets fit that tolerance. Sorting does not recover missing data.
+
+Remaining work
+1. Verify IMU column meanings, units, coordinate frames/extrinsics and clock basis;
+   only then implement gap-limited vector alignment and frame-conversion tests.
+2. Resolve Azure image export convention and matching intrinsics; keep fusion
+   disabled until the geometry contract has confirmed evidence.
+3. Establish collection/split provenance and held-out overlap for the 237 extra
+   annotated pairs. Instance remapping is implemented; all remain quarantined.
+4. Prepare a bounded native-resolution renderer pilot, verify paired geometry,
+   units, poses and labels, then measure quality and speed before scaling.
+
+Basic trajectory ingestion and safe IMU timestamp access are validated. Physical
+sensor fusion and realistic synthetic-data generation are still separate gates.

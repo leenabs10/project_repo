@@ -1,0 +1,59 @@
+Data-quality review and controlled augmentation pilot
+
+All changes remain local on dev. No commit, push or merge into main.
+19 contract tests passed in the project environment.
+
+Image geometry
+Public dataset notes establish RGB-aligned depth but do not unambiguously identify
+whether the Azure RGB exports are raw-distorted or rectified. Available utility
+scripts reference RealSense cameras and cannot resolve that Azure convention.
+Projection comparisons favor applying distortion in typical residuals, but they
+are hypotheses with occlusion/timing/depth limitations, not independent confirmation.
+configs/image_geometry.json disables fusion. require_projection_policy rejects
+disabled, unknown, evidence-free or calibration-mismatched geometry contracts.
+Confirmation requires the Azure export source or matching camera_info metadata.
+Publisher source: https://github.com/Viky397/TorWICDataset#torwic-slam-faq
+
+Extra annotation schema and provenance
+All 237 pairs / 79 groups passed metadata-based instance-to-semantic validation.
+158 source images are 848x480 and 79 are 1280x720; all have unknown split provenance.
+215 pairs require semantic remapping. Even instance values below 16 can belong
+to a different class. Each raw_labels_2d.json labelMapping is therefore used to
+translate instance IDs into the fixed semantic taxonomy; originals are unchanged.
+Unmapped IDs and conflicting category mappings are rejected. This normalizer is
+for extra annotated masks, not the already semantic trajectory masks.
+No duplicate source pixel identities occurred within the extra set.
+A limited lookup against cached June left-RGB file hashes found no exact-byte
+matches; re-encoded, cropped, right-camera or held-out overlap is not ruled out.
+All annotations remain quarantined: zero were used or admitted for training.
+The initial direct-class-ID report is retained as superseded evidence; its schema
+interpretation was corrected before any annotations were used.
+
+Training-derived augmentation proposal
+left: RGB gain proposal 0.9148-1.1048; accepted depth coverage 37.88-59.90%.
+right: RGB gain proposal 0.9153-1.1002; accepted depth coverage 37.04-68.54%.
+Bounds use training percentiles only and are data-envelope filters, not physical calibration.
+Noise, blur, LiDAR thinning and geometric warps remain disabled in this policy.
+36 native-resolution pilot variants attempted; 25 accepted, 11 rejected and logged.
+Retained measured depths unchanged; unknown depths not invented; clean RGB/depth/
+semantic references byte-identical. Exported input PNGs round-trip exactly.
+Metadata includes source paths/hashes, calibration/code/policy hashes, timestamp,
+pose, side, donor ID, seed, parameters and rejection reasons. Labels remain
+measured sensor depth and provided semantic predictions, not new ground truth.
+Only training sensors were opened for augmentation. No validation/test tuning.
+Visual appearance and envelope acceptance do not certify physical sensor realism.
+
+Reproducible files
+configs/augmentation_policy.json and configs/image_geometry.json
+reports/augmentation_pilot_verified/summary.json and pilot_manifest.jsonl
+reports/annotation_provenance_review/summary.json and annotation_manifest.jsonl
+src/synthesis/augmentation_policy.py and paired_augmentation_review.py
+src/validation/annotation_provenance.py and image_geometry.py
+
+Remaining release evidence
+Obtain Azure export/rectification metadata before camera-LiDAR fusion.
+Verify annotation collection groups/dates and possible transformed test overlap
+before semantic training. Folder numbers alone are not trajectory IDs.
+Real sensor-noise calibration remains required before calling stress data sensor-realistic.
+After review of the current local batch, request user publication authorization.
+Main integration always requires separate explicit permission.

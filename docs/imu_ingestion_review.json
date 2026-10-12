@@ -1,0 +1,143 @@
+{
+  "review_date": "2026-10-12",
+  "branch": "dev",
+  "head": "254fd99cf81a4241d8301c8bda4d93e1398409a2",
+  "committed": false,
+  "pushed": false,
+  "merged_into_main": false,
+  "contract_status": "passed",
+  "coverage_status": "partial",
+  "tests_passed": 29,
+  "new_imu_regression_tests": 10,
+  "frame_side_queries_checked": 6176,
+  "full_payload_audit": {
+    "frames": 3088,
+    "payloads": 21616,
+    "errors": 0
+  },
+  "representative_loader_samples": 9,
+  "explicit_inspection_gap_limit_seconds": 0.02,
+  "fusion_gap_limit_certified": false,
+  "raw_imu_hashes_unchanged": true,
+  "manifest_rebuild_byte_identical": true,
+  "manifest_sha256": "fe77b9efd233e44e45d620841b7055118b6f9c44e4f2d26ac47464a72fb56f2e",
+  "calibration_sha256": "e96f48296497b6f45f5092074635db1ae5e1777d9eb1db328af1b9716150be65",
+  "source_hashes": {
+    "torwic_loader.py": "abcdea5c41380cb97ce052c1f0434d82e2ff08be2681b5dfed4739313ca44c08",
+    "imu_timing.py": "00e4508a2deeccc530fad5cabc22d27832dc26df4960be0775878ffff69d748b",
+    "imu_ingestion_review.py": "caff3c2755785aeb2ca13d1f610b4b25a2a0cc1cf983a02c2f981814aa11eac1"
+  },
+  "test_source_sha256": "88adb333d909c3b9408a26acdc68cee08ef416d6013e8f5824bfcc33b5e9d5d8",
+  "timing_report_sha256": "490fba6454b3aa4e1162e9f85d5aa975b5d9ab41263bb511243eb8d882024081",
+  "payload_report_sha256": "54e1ceb383effe00a5c7c6a1d93b4fc375204f946df380ead2b3c7043720fe2b",
+  "sequences": [
+    {
+      "sequence_id": "Aisle_CCW",
+      "split": "test",
+      "frames": 915,
+      "frames_with_both_brackets": 767,
+      "sides": {
+        "left": {
+          "raw_rows": 17391,
+          "source_path": "Aisle_CCW/Aisle_CCW/imu_left.txt",
+          "source_sha256": "d8c511acf93e0fdd2b60a765164c899dd7648a25f970522216f9fbc243a7f91c",
+          "backward_raw_intervals": 1,
+          "duplicates": 0,
+          "covered_frames": 767,
+          "coverage_counts": {
+            "outside_span": 3,
+            "bracketed": 767,
+            "gap_exceeds_limit": 145
+          },
+          "max_raw_interval_seconds": 0.23385238647460938
+        },
+        "right": {
+          "raw_rows": 17416,
+          "source_path": "Aisle_CCW/Aisle_CCW/imu_right.txt",
+          "source_sha256": "abb5c2dae3afa1cf75245e17e01fb6bd9e5c03c0ad8d90a2e259a12ce4e812cb",
+          "backward_raw_intervals": 0,
+          "duplicates": 0,
+          "covered_frames": 771,
+          "coverage_counts": {
+            "outside_span": 3,
+            "bracketed": 771,
+            "gap_exceeds_limit": 141
+          },
+          "max_raw_interval_seconds": 0.23749232292175293
+        }
+      }
+    },
+    {
+      "sequence_id": "Aisle_CCW_Run_1",
+      "split": "train",
+      "frames": 1136,
+      "frames_with_both_brackets": 1136,
+      "sides": {
+        "left": {
+          "raw_rows": 23398,
+          "source_path": "Aisle_CCW_Run_1/Aisle_CCW_Run_1/imu_left.txt",
+          "source_sha256": "30c0782ed01e7d50f04c0d77901a6b4b132e7b2504a274f6d1ba7cf62291d937",
+          "backward_raw_intervals": 1,
+          "duplicates": 0,
+          "covered_frames": 1136,
+          "coverage_counts": {
+            "bracketed": 1136
+          },
+          "max_raw_interval_seconds": 0.005677461624145508
+        },
+        "right": {
+          "raw_rows": 23445,
+          "source_path": "Aisle_CCW_Run_1/Aisle_CCW_Run_1/imu_right.txt",
+          "source_sha256": "f60d3c3f9227d9baf3ab3ed4178b7c8e5ee87fd4401f03d4c155eb7786b74d76",
+          "backward_raw_intervals": 1,
+          "duplicates": 0,
+          "covered_frames": 1136,
+          "coverage_counts": {
+            "bracketed": 1136
+          },
+          "max_raw_interval_seconds": 0.0057866573333740234
+        }
+      }
+    },
+    {
+      "sequence_id": "Aisle_CW_Run_1",
+      "split": "validation",
+      "frames": 1037,
+      "frames_with_both_brackets": 1035,
+      "sides": {
+        "left": {
+          "raw_rows": 21355,
+          "source_path": "Aisle_CW_Run_1/Aisle_CW_Run_1/imu_left.txt",
+          "source_sha256": "80e5e3e94081dde4d751439bc247d1e2fa17c59bd22d6b9d18545d9439002948",
+          "backward_raw_intervals": 0,
+          "duplicates": 0,
+          "covered_frames": 1035,
+          "coverage_counts": {
+            "outside_span": 2,
+            "bracketed": 1035
+          },
+          "max_raw_interval_seconds": 0.0056841373443603516
+        },
+        "right": {
+          "raw_rows": 21400,
+          "source_path": "Aisle_CW_Run_1/Aisle_CW_Run_1/imu_right.txt",
+          "source_sha256": "4e5c6b7da0d06bdb99355d54e4c3f0fc0c9e2e8315ef548c00c889f2b992ccf1",
+          "backward_raw_intervals": 0,
+          "duplicates": 0,
+          "covered_frames": 1035,
+          "coverage_counts": {
+            "outside_span": 2,
+            "bracketed": 1035
+          },
+          "max_raw_interval_seconds": 0.00567317008972168
+        }
+      }
+    }
+  ],
+  "remaining_gates": [
+    "Verify IMU columns 1..6 meanings, units, sensor axes/extrinsics and clock basis before vector interpolation or fusion.",
+    "Verify Azure image export convention and matching intrinsics before enabling camera-LiDAR fusion.",
+    "Verify collection/split provenance and held-out overlap for all 237 extra annotated pairs before training use."
+  ],
+  "next_independent_work": "Prepare a bounded native-resolution renderer pilot with clean reference, calibration, pose and label integrity checks; do not scale or claim physical realism before validation."
+}

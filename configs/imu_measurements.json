@@ -1,0 +1,175 @@
+{
+  "schema_version": 1,
+  "interpolation_enabled": false,
+  "source": "TorWIC-SLAM Azure Kinect IMU text exports",
+  "reason": "Publisher Mapping utilities use a nine-column RealSense/base export; they do not verify these seven-column Azure SLAM streams.",
+  "frame_conversion_enabled": false,
+  "sensor_fusion_enabled": false,
+  "streams": {
+    "Aisle_CCW/Aisle_CCW/imu_left.txt": {
+      "source_sha256": "d8c511acf93e0fdd2b60a765164c899dd7648a25f970522216f9fbc243a7f91c",
+      "sequence_id": "Aisle_CCW",
+      "side": "left",
+      "evidence_status": "unverified",
+      "angular_velocity_columns_xyz": null,
+      "linear_acceleration_columns_xyz": null,
+      "angular_velocity_units": null,
+      "linear_acceleration_units": null,
+      "measurement_frame": null,
+      "timestamps_match_frame_basis": null,
+      "max_gap_seconds": null,
+      "evidence_references": {
+        "column_mapping": null,
+        "units": null,
+        "coordinate_frame": null,
+        "clock_basis": null,
+        "gap_policy": null
+      },
+      "calibration_declared_imu_frame": "azure_left_imu"
+    },
+    "Aisle_CCW/Aisle_CCW/imu_right.txt": {
+      "source_sha256": "abb5c2dae3afa1cf75245e17e01fb6bd9e5c03c0ad8d90a2e259a12ce4e812cb",
+      "sequence_id": "Aisle_CCW",
+      "side": "right",
+      "evidence_status": "unverified",
+      "angular_velocity_columns_xyz": null,
+      "linear_acceleration_columns_xyz": null,
+      "angular_velocity_units": null,
+      "linear_acceleration_units": null,
+      "measurement_frame": null,
+      "timestamps_match_frame_basis": null,
+      "max_gap_seconds": null,
+      "evidence_references": {
+        "column_mapping": null,
+        "units": null,
+        "coordinate_frame": null,
+        "clock_basis": null,
+        "gap_policy": null
+      },
+      "calibration_declared_imu_frame": "azure_right_imu"
+    },
+    "Aisle_CCW_Run_1/Aisle_CCW_Run_1/imu_left.txt": {
+      "source_sha256": "30c0782ed01e7d50f04c0d77901a6b4b132e7b2504a274f6d1ba7cf62291d937",
+      "sequence_id": "Aisle_CCW_Run_1",
+      "side": "left",
+      "evidence_status": "unverified",
+      "angular_velocity_columns_xyz": null,
+      "linear_acceleration_columns_xyz": null,
+      "angular_velocity_units": null,
+      "linear_acceleration_units": null,
+      "measurement_frame": null,
+      "timestamps_match_frame_basis": null,
+      "max_gap_seconds": null,
+      "evidence_references": {
+        "column_mapping": null,
+        "units": null,
+        "coordinate_frame": null,
+        "clock_basis": null,
+        "gap_policy": null
+      },
+      "calibration_declared_imu_frame": "azure_left_imu"
+    },
+    "Aisle_CCW_Run_1/Aisle_CCW_Run_1/imu_right.txt": {
+      "source_sha256": "f60d3c3f9227d9baf3ab3ed4178b7c8e5ee87fd4401f03d4c155eb7786b74d76",
+      "sequence_id": "Aisle_CCW_Run_1",
+      "side": "right",
+      "evidence_status": "unverified",
+      "angular_velocity_columns_xyz": null,
+      "linear_acceleration_columns_xyz": null,
+      "angular_velocity_units": null,
+      "linear_acceleration_units": null,
+      "measurement_frame": null,
+      "timestamps_match_frame_basis": null,
+      "max_gap_seconds": null,
+      "evidence_references": {
+        "column_mapping": null,
+        "units": null,
+        "coordinate_frame": null,
+        "clock_basis": null,
+        "gap_policy": null
+      },
+      "calibration_declared_imu_frame": "azure_right_imu"
+    },
+    "Aisle_CW_Run_1/Aisle_CW_Run_1/imu_left.txt": {
+      "source_sha256": "80e5e3e94081dde4d751439bc247d1e2fa17c59bd22d6b9d18545d9439002948",
+      "sequence_id": "Aisle_CW_Run_1",
+      "side": "left",
+      "evidence_status": "unverified",
+      "angular_velocity_columns_xyz": null,
+      "linear_acceleration_columns_xyz": null,
+      "angular_velocity_units": null,
+      "linear_acceleration_units": null,
+      "measurement_frame": null,
+      "timestamps_match_frame_basis": null,
+      "max_gap_seconds": null,
+      "evidence_references": {
+        "column_mapping": null,
+        "units": null,
+        "coordinate_frame": null,
+        "clock_basis": null,
+        "gap_policy": null
+      },
+      "calibration_declared_imu_frame": "azure_left_imu"
+    },
+    "Aisle_CW_Run_1/Aisle_CW_Run_1/imu_right.txt": {
+      "source_sha256": "4e5c6b7da0d06bdb99355d54e4c3f0fc0c9e2e8315ef548c00c889f2b992ccf1",
+      "sequence_id": "Aisle_CW_Run_1",
+      "side": "right",
+      "evidence_status": "unverified",
+      "angular_velocity_columns_xyz": null,
+      "linear_acceleration_columns_xyz": null,
+      "angular_velocity_units": null,
+      "linear_acceleration_units": null,
+      "measurement_frame": null,
+      "timestamps_match_frame_basis": null,
+      "max_gap_seconds": null,
+      "evidence_references": {
+        "column_mapping": null,
+        "units": null,
+        "coordinate_frame": null,
+        "clock_basis": null,
+        "gap_policy": null
+      },
+      "calibration_declared_imu_frame": "azure_right_imu"
+    }
+  },
+  "calibration_sha256": "e96f48296497b6f45f5092074635db1ae5e1777d9eb1db328af1b9716150be65",
+  "calibration_frame_evidence": {
+    "left": {
+      "declared_frame_id": "azure_left_imu",
+      "declared_parent_frame_id": "azure_left_camera",
+      "translation": [
+        -0.0286307,
+        -0.0031187,
+        -0.0472054
+      ],
+      "quaternion_xyzw": [
+        -0.4987278,
+        0.5010531,
+        0.50066704,
+        0.49954869
+      ],
+      "source": "calibrations.txt IMU frame and extrinsic entries",
+      "export_vector_frame_binding_verified": false,
+      "frame_conversion_accuracy_verified": false
+    },
+    "right": {
+      "declared_frame_id": "azure_right_imu",
+      "declared_parent_frame_id": "azure_right_camera",
+      "translation": [
+        -0.0285823,
+        -0.0032089,
+        -0.0470858
+      ],
+      "quaternion_xyzw": [
+        -0.4981531,
+        0.49746627,
+        0.50380434,
+        0.5005516
+      ],
+      "source": "calibrations.txt IMU frame and extrinsic entries",
+      "export_vector_frame_binding_verified": false,
+      "frame_conversion_accuracy_verified": false
+    }
+  }
+}

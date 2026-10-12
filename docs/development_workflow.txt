@@ -20,3 +20,12 @@ are excluded. Commit portable aggregate evidence and reproducible source.
 When work is ready for main, present the concrete diff, validation evidence and
 remaining risks, then request explicit user permission. Until approval, continue
 on dev and leave main unchanged.
+
+Daily publication policy
+
+Batch implementation and verification locally while the current task/day is
+in progress. Do not push until the task batch is complete and the user requests
+or confirms publication. Prior pushes are not authorization for a new batch.
+Local verified commits may remain on dev. Main integration always needs separate
+explicit permission. Follow AGENTS.md for diff review, data integrity, training,
+tests, validation, readability and reproducibility requirements.

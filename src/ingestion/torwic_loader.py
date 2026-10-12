@@ -7,11 +7,15 @@ Example:
 
 import argparse
 import ast
+import copy
+import hashlib
 import json
 from pathlib import Path
 
 import numpy as np
 from PIL import Image
+
+from imu_timing import bracket_frames, load_imu
 
 # Manifest field names map to the publisher's folders and file extensions.
 MODALITIES = {
@@ -134,13 +138,119 @@ def lidar_to_camera(xyz, cal, side="left"):
     return (np.asarray(xyz) - translation) @ rotation_matrix
 
 
-def load_sample(root, record, cal=None):
+class SequenceImu:
+    """Read both IMU files once and expose safe per-frame timestamp brackets.
+
+    ``max_gap_seconds`` is a caller-selected timing tolerance, not a calibrated
+    fusion policy. ``sort=True`` explicitly permits sorting copies of raw rows.
+    Column zero is seconds; columns 1..6 remain opaque publisher measurements.
+    Invalid brackets have -1 indices and NaN arrays, never fabricated readings.
+    No interpolation, clock correction, or coordinate conversion is performed.
+    """
+
+    def __init__(self, root, record, *, max_gap_seconds, sort=False):
+        if (
+            max_gap_seconds is None
+            or not np.isfinite(max_gap_seconds)
+            or max_gap_seconds <= 0
+        ):
+            raise ValueError("An explicit positive finite IMU gap limit is required")
+        self.root = Path(root).resolve()
+        self.sequence_id = record["sequence_id"]
+        self.max_gap_seconds = float(max_gap_seconds)
+        self.paths = self._record_paths(record)
+        self.rows = {}
+        self.reports = {}
+        for side, path in self.paths.items():
+            # Hash before and after loading so the provenance describes these rows.
+            before = hashlib.sha256(path.read_bytes()).hexdigest()
+            rows, report = load_imu(path, sort=sort)
+            if hashlib.sha256(path.read_bytes()).hexdigest() != before:
+                raise ValueError("IMU source changed during loading")
+            rows.setflags(write=False)
+            self.rows[side] = rows
+            self.reports[side] = {
+                **report,
+                "source_path": path.relative_to(self.root).as_posix(),
+                "source_sha256": before,
+                "measurement_columns": [1, 2, 3, 4, 5, 6],
+                "measurement_units_and_frames": "unverified",
+            }
+
+    def _record_paths(self, record):
+        """Reject escaped, cross-trajectory, or incorrectly named IMU paths."""
+        if record["sequence_id"] != self.sequence_id:
+            raise ValueError("IMU reader cannot be reused across sequences")
+        rgb_path = (self.root / record["rgb_path"]).resolve()
+        if not rgb_path.is_relative_to(self.root):
+            raise ValueError("Manifest path escapes dataset root")
+        sequence_directory = rgb_path.parent.parent
+        if sequence_directory.name != self.sequence_id:
+            raise ValueError("Sensor paths disagree with the sequence ID")
+        paths = {}
+        for side in ("left", "right"):
+            path = (self.root / record[f"imu_{side}_path"]).resolve()
+            if not path.is_relative_to(self.root):
+                raise ValueError("Manifest path escapes dataset root")
+            if path != sequence_directory / f"imu_{side}.txt":
+                raise ValueError("IMU path disagrees with the sensor sequence or side")
+            paths[side] = path
+        return paths
+
+    def bracket_record(self, record):
+        """Return both sides' two-row brackets at the record's frame time.
+
+        Each ``measurement_rows`` is float64 (2, 6), copied from original rows
+        when valid, otherwise all NaN. Exact matches repeat the same observation.
+        Check ``valid`` before using these arrays; a bracket is not an estimate.
+        """
+        if self._record_paths(record) != self.paths:
+            raise ValueError("Record uses different IMU streams from this reader")
+        timestamp = float(record["timestamp_seconds"])
+        result = {}
+        for side, rows in self.rows.items():
+            left, right, valid, gaps = bracket_frames(
+                rows[:, 0], [timestamp], max_gap_seconds=self.max_gap_seconds
+            )
+            indices = np.array([left[0], right[0]], dtype=np.int64)
+            bracket_times = np.full(2, np.nan)
+            measurements = np.full((2, 6), np.nan)
+            if valid[0]:
+                bracket_times = rows[indices, 0].copy()
+                measurements = rows[indices, 1:].copy()
+                reason = "exact_match" if left[0] == right[0] else "bracketed"
+            else:
+                reason = "outside_span" if np.isnan(gaps[0]) else "gap_exceeds_limit"
+            result[side] = {
+                "valid": bool(valid[0]),
+                "reason": reason,
+                "timestamp_seconds": timestamp,
+                "bracket_indices": indices,
+                "bracket_times_seconds": bracket_times,
+                "measurement_rows": measurements,
+                "bracket_gap_seconds": float(gaps[0]),
+                "max_gap_seconds": self.max_gap_seconds,
+                "ordering_report": copy.deepcopy(self.reports[side]),
+                "measurements_interpolated": False,
+            }
+        return result
+
+
+def load_sample(root, record, cal=None, *, imu_sequence=None):
     """Load left sensor data; retain a validity mask and raw depth for reproducibility.
 
-    No distortion correction, projection, resampling, or IMU interpolation is applied.
-    Semantic arrays retain class IDs; they are not normalized like RGB.
+    Pass an explicitly configured SequenceImu to also return ``imu`` brackets
+    for both sides. The default remains sensor loading without IMU file reads.
+    No distortion correction, projection, resampling, or IMU interpolation is
+    applied. Semantic arrays retain class IDs; they are not normalized like RGB.
     """
     root = Path(root).resolve()
+    imu = None
+    if imu_sequence is not None:
+        if imu_sequence.root != root:
+            raise ValueError("IMU reader and sample must use the same dataset root")
+        # Fail on inconsistent IMU provenance before decoding image payloads.
+        imu = imu_sequence.bracket_record(record)
     cal = calibration(root) if cal is None else cal
     arrays = {}
     for key in ("rgb_path", "depth_path", "semantic_path"):
@@ -169,7 +279,7 @@ def load_sample(root, record, cal=None):
     depth_valid = depth > 0
     depth_m = depth.astype(np.float32) * 0.001
     depth_m[~depth_valid] = np.nan
-    return {
+    sample = {
         "sample_id": record["sample_id"],
         "sequence_id": record["sequence_id"],
         "timestamp_seconds": record["timestamp_seconds"],
@@ -184,6 +294,9 @@ def load_sample(root, record, cal=None):
         "calibration": cal,
         "split": record["split"],
     }
+    if imu is not None:
+        sample["imu"] = imu
+    return sample
 
 
 def build_manifest(root, confirm_dates=False):
@@ -227,13 +340,18 @@ def build_manifest(root, confirm_dates=False):
         # Report ordering issues without sorting or changing the raw IMU streams.
         for side in ("left", "right"):
             rows = np.loadtxt(seq / f"imu_{side}.txt", ndmin=2)
-            if rows.shape[1] != 7 or not np.isfinite(rows).all():
+            if rows.shape[1] != 7 or len(rows) < 2 or not np.isfinite(rows).all():
                 raise ValueError(f"Invalid IMU rows: {seq}, {side}")
             imu_bounds[side] = (rows[:, 0].min(), rows[:, 0].max())
             imu_warnings[side] = {
                 "backward_timestamp_intervals": int(np.sum(np.diff(rows[:, 0]) < 0)),
                 "duplicate_timestamp_intervals": int(np.sum(np.diff(rows[:, 0]) == 0)),
+                "duplicate_timestamps": int(len(rows) - len(np.unique(rows[:, 0]))),
             }
+            if imu_warnings[side]["duplicate_timestamps"]:
+                raise ValueError(
+                    f"Duplicate IMU timestamps require a resolution policy: {seq}, {side}"
+                )
         for i, frame in enumerate(ids):
             # Store portable paths relative to the dataset root, including nested folders.
             row = {
@@ -294,6 +412,8 @@ def main():
         help="Use only after confirming the downloaded trajectory dates",
     )
     args = parser.parse_args()
+    if args.output.resolve().is_relative_to(args.root.resolve()):
+        raise ValueError("Write ingestion reports outside the immutable raw root")
     records, summaries, cal = build_manifest(args.root, args.confirm_planned_dates)
     # Smoke-test a frame in the planned training sequence; do not tune on the test sequence.
     demo_record = next(
@@ -338,7 +458,7 @@ def main():
         "limitations": [
             "Only demo image and PCD payloads decoded; whole-dataset decoding remains to do.",
             "Transform inverse is implemented; use week1_checks.py for spatial diagnostics. Calibration accuracy and distortion handling need application-specific validation.",
-            "IMU arrays are not sorted or interpolated by this loader.",
+            "The default smoke test omits IMU; SequenceImu optionally returns explicitly sorted, gap-limited brackets without measurement interpolation.",
             "Zero XYZ points are filtered; nonzero outliers need a separate documented rule.",
             "Dates and splits remain unassigned unless explicitly confirmed.",
         ],

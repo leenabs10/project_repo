@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "status": "controlled_pilot_proposal",
+  "source_split": "train",
+  "source_sequence": "Aisle_CCW_Run_1",
+  "manifest_sha256": "fe77b9efd233e44e45d620841b7055118b6f9c44e4f2d26ac47464a72fb56f2e",
+  "calibration_sha256": "e96f48296497b6f45f5092074635db1ae5e1777d9eb1db328af1b9716150be65",
+  "frames_supporting_proposal": 1136,
+  "cameras": {
+    "left": {
+      "rgb_gain_range": [
+        0.9148424764683035,
+        1.104828163107211
+      ],
+      "accepted_mean_luma_range": [
+        107.40986149088542,
+        151.6440357530382
+      ],
+      "accepted_bright_luma_fraction_max": 0.02630718315972224,
+      "accepted_valid_depth_fraction_range": [
+        0.37884928385416666,
+        0.5989708116319444
+      ]
+    },
+    "right": {
+      "rgb_gain_range": [
+        0.9152607211743985,
+        1.1001682716920336
+      ],
+      "accepted_mean_luma_range": [
+        83.96984781901041,
+        145.0032750651042
+      ],
+      "accepted_bright_luma_fraction_max": 0.03570876736111112,
+      "accepted_valid_depth_fraction_range": [
+        0.3703705512152778,
+        0.6854351128472222
+      ]
+    }
+  },
+  "methods": {
+    "rgb_gain": "controlled photometric stress; not calibrated exposure",
+    "depth_mask_transfer": "training donor missing-depth patterns; not a physical failure simulator"
+  },
+  "disabled_methods": {
+    "gaussian_depth_noise": "requires sensor-noise calibration",
+    "blur": "sharpness proxy does not identify a physical blur kernel",
+    "lidar_thinning": "point-count variation alone does not identify sensor dropout",
+    "geometric_warp": "image convention and joint label/intrinsics handling require resolution"
+  },
+  "preserve_native_resolution": true,
+  "labels_unchanged": true,
+  "physical_sensor_realism_certified": false,
+  "profile_sha256": "db671287689444831fae0135f277c1fdc06bd0e6559ac6f80506e92c46a4017b",
+  "policy_source_sha256": "df7150f4885f4eb6d74d19cc245e3885f9a10fc42e9047562298ff5798e6b2c0"
+}

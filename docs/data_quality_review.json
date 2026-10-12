@@ -1,0 +1,144 @@
+{
+  "review_date": "2026-10-12",
+  "branch": "dev",
+  "committed": false,
+  "pushed": false,
+  "merged_into_main": false,
+  "tests_passed": 19,
+  "geometry": {
+    "schema_version": 1,
+    "fusion_enabled": false,
+    "evidence_status": "unverified",
+    "source_image_convention": "unknown",
+    "evidence_reference": null,
+    "rectified_intrinsics_confirmed": false,
+    "native_resolution": [
+      1280,
+      720
+    ],
+    "calibration_sha256": "e96f48296497b6f45f5092074635db1ae5e1777d9eb1db328af1b9716150be65",
+    "distortion_coefficient_order": [
+      "k1",
+      "k2",
+      "p1",
+      "p2",
+      "k3"
+    ],
+    "review_sources": [
+      "https://github.com/Viky397/TorWICDataset#torwic-slam-faq",
+      "https://github.com/Viky397/TorWICDataset/blob/main/utils/convert_rosbag_to_files.py",
+      "https://github.com/Viky397/TorWICDataset/blob/main/utils/calibration.py"
+    ],
+    "reason": "Available public utilities use RealSense settings, not the supplied Azure SLAM export. Numeric overlap does not establish image rectification.",
+    "required_evidence": "Original Azure export pipeline or matching ROS camera_info specifying exported convention and, if rectified, adjusted intrinsics."
+  },
+  "augmentation_policy": {
+    "schema_version": 1,
+    "status": "controlled_pilot_proposal",
+    "source_split": "train",
+    "source_sequence": "Aisle_CCW_Run_1",
+    "manifest_sha256": "fe77b9efd233e44e45d620841b7055118b6f9c44e4f2d26ac47464a72fb56f2e",
+    "calibration_sha256": "e96f48296497b6f45f5092074635db1ae5e1777d9eb1db328af1b9716150be65",
+    "frames_supporting_proposal": 1136,
+    "cameras": {
+      "left": {
+        "rgb_gain_range": [
+          0.9148424764683035,
+          1.104828163107211
+        ],
+        "accepted_mean_luma_range": [
+          107.40986149088542,
+          151.6440357530382
+        ],
+        "accepted_bright_luma_fraction_max": 0.02630718315972224,
+        "accepted_valid_depth_fraction_range": [
+          0.37884928385416666,
+          0.5989708116319444
+        ]
+      },
+      "right": {
+        "rgb_gain_range": [
+          0.9152607211743985,
+          1.1001682716920336
+        ],
+        "accepted_mean_luma_range": [
+          83.96984781901041,
+          145.0032750651042
+        ],
+        "accepted_bright_luma_fraction_max": 0.03570876736111112,
+        "accepted_valid_depth_fraction_range": [
+          0.3703705512152778,
+          0.6854351128472222
+        ]
+      }
+    },
+    "methods": {
+      "rgb_gain": "controlled photometric stress; not calibrated exposure",
+      "depth_mask_transfer": "training donor missing-depth patterns; not a physical failure simulator"
+    },
+    "disabled_methods": {
+      "gaussian_depth_noise": "requires sensor-noise calibration",
+      "blur": "sharpness proxy does not identify a physical blur kernel",
+      "lidar_thinning": "point-count variation alone does not identify sensor dropout",
+      "geometric_warp": "image convention and joint label/intrinsics handling require resolution"
+    },
+    "preserve_native_resolution": true,
+    "labels_unchanged": true,
+    "physical_sensor_realism_certified": false,
+    "profile_sha256": "db671287689444831fae0135f277c1fdc06bd0e6559ac6f80506e92c46a4017b",
+    "policy_source_sha256": "df7150f4885f4eb6d74d19cc245e3885f9a10fc42e9047562298ff5798e6b2c0"
+  },
+  "pilot": {
+    "status": "integrity_passed_for_accepted_pilot",
+    "attempted_variants": 36,
+    "accepted_variants": 25,
+    "rejected_variants": 11,
+    "references_byte_identical": true,
+    "accepted_exports_lossless": true,
+    "labels_unchanged": true,
+    "test_sensor_files_opened": 0,
+    "validation_sensor_files_opened": 0,
+    "policy_sha256": "fdb92dc8e7c404cee06978ffa9d7089564c085d893928e2134ef584032be839b",
+    "physical_sensor_realism_certified": false,
+    "limitations": [
+      "Acceptance envelope is a training-distribution filter, not proof of realistic sensor physics.",
+      "Rejected variants are logged and never exported as accepted training examples."
+    ]
+  },
+  "annotations": {
+    "status": "integrity_passed_provenance_quarantined",
+    "annotation_pairs": 237,
+    "groups": 79,
+    "payload_pairs_passed": 237,
+    "payload_pairs_failed": 0,
+    "source_dimensions": {
+      "848x480": 158,
+      "1280x720": 79
+    },
+    "unique_source_pixel_identities": 237,
+    "duplicate_source_identities": 0,
+    "native_resolution_compatible_pairs": 79,
+    "training_eligible_pairs": 0,
+    "quarantined_pairs": 237,
+    "trajectory_sensor_files_opened": 0,
+    "semantic_remap_required_pairs": 215,
+    "label_schema": "Per-file instance indices mapped through labelMapping to fixed semantic classes",
+    "limitations": [
+      "Unknown dates/trajectories; neither folder IDs nor image size establish split membership.",
+      "No transformed/cropped overlap search against trajectories; lack of exact native pairing is not leakage clearance.",
+      "Payload integrity does not establish annotation accuracy. No samples used for training."
+    ],
+    "required_release_evidence": "Verified source scene/collection and group-wise train/validation/test assignment, including transformed overlap review."
+  },
+  "remaining_external_evidence": [
+    "Azure image export convention/rectified intrinsics",
+    "Annotation source dates/scene groups and held-out-overlap clearance"
+  ],
+  "source_sha256": {
+    "src/validation/image_geometry.py": "35d6685ec464d9234708b115f1d06ab8e0dcc37da10c2d05d6f5d684dac2d066",
+    "src/validation/annotation_provenance.py": "0ea0ffcdb95ad00e9ff8e8445f296739f37171738512161ef520debd2115eb26",
+    "src/synthesis/augmentation_policy.py": "df7150f4885f4eb6d74d19cc245e3885f9a10fc42e9047562298ff5798e6b2c0",
+    "src/synthesis/paired_augmentation_review.py": "77f57793618c94698999340354f64b64c09bc0c546bed138d9131face1c150fc",
+    "tests/test_quality_gates.py": "476b2e685d6ade00dd93fdd105ba52a7a7e5d6a55f6635547e315dedcf8b1e33"
+  }
+}
