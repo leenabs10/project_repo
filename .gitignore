@@ -35,3 +35,9 @@ Thumbs.db
 # Optional project-local runtime and development tools
 .venv-mvp/
 .tools/
+
+# Local research checkpoints and training artifacts
+models/
+*.pt
+*.pth
+*.ckpt

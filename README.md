@@ -174,3 +174,37 @@ Validation summaries under `docs` are snapshots taken before publication. Their
 `committed`/`pushed` fields describe the review-time state, not live GitHub status.
 Use Git history and branch tracking for the current publication state. Generated
 reports, datasets, renderer installations and machine paths remain local.
+
+
+## Organized depth research pipeline
+
+[Pipeline organization](docs/pipeline_integration.txt) records the verified
+training environment, relocated scripts and checkpoint limits. This completes
+the schedule's preparation/training/prediction/audit integration row. The earlier
+data-understanding report covers a different scope. The historical depth research
+remains separate from goods-segmentation training and synthetic-data acceptance.
+
+```powershell
+$trainingPython = (Get-Content .tools\training_runtime.json -Raw | ConvertFrom-Json).python_executable
+& $trainingPython -m unittest discover -s tests
+& $trainingPython -m src.validation.pipeline_smoke --output reports\pipeline_smoke_next
+& $trainingPython -m src.ingestion.prepare_depth_cache --root data\raw\torwic_slam --manifest data\manifests\manifest.jsonl --output data\caches\depth_cache_next --width 320 --height 180
+& $trainingPython -m src.training.depth_quality --data data\caches\depth_320 --warm-start-root models\depth_context --output reports\depth_quality_next --epochs 6
+& $trainingPython -m src.inference.depth_quality --checkpoint models\depth_quality\research_candidate.pt --depth data\raw\torwic_slam\Aisle_CCW_Run_1\Aisle_CCW_Run_1\depth_left\000000.png --output reports\depth_prediction_next.npz
+& $trainingPython -m src.validation.depth_stress_audit --data data\caches\depth_320 --root data\raw\torwic_slam --manifest data\manifests\manifest.jsonl --output reports\depth_stress_next
+```
+
+Run from the project root and use fresh output paths. Training commands launch
+research runs; organizing/verifying the pipeline does not require full retraining.
+The local CUDA interpreter is recorded in ignored `.tools/training_runtime.json`.
+Select that interpreter in VS Code; the ingestion `.venv` may lack training packages.
+[Checkpoint inventory](configs/checkpoint_registry.json) records thirteen unchanged
+local weights. `models/`, weight files, caches and generated outputs stay out of Git.
+Installable environment snapshots are under `requirements/`; historical result
+configs and hashes remain unchanged rather than being relabelled as new experiments.
+
+Cache and nearest-fill evidence: [depth cache verification](docs/depth_cache_verification.txt).
+The audit verifies all June native derivatives, complete manifest membership,
+invalid masks, training-only donors and the historical fixed-validation baselines.
+Use `python -m src.validation.depth_cache_review --output reports/depth_cache_review_next`
+with the documented training interpreter and a fresh destination.

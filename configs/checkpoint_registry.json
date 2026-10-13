@@ -1,0 +1,225 @@
+{
+  "schema_version": 1,
+  "recorded_date": "2026-10-13",
+  "purpose": "Existing depth-research checkpoints; separate from the goods segmentation task",
+  "weights_in_git": false,
+  "production_release": false,
+  "preferred_quality_candidate": "models/depth_quality/research_candidate.pt",
+  "preferred_context_candidate": "models/depth_context/recommended_model.pt",
+  "checkpoints": [
+    {
+      "path": "models/depth_baseline/best_model.pt",
+      "sha256": "aee7958a0c9d7f8349364e7e9b51f3ab5a8db2441bfead5e11f9838932f76378",
+      "family": "depth_baseline",
+      "resolution": [
+        160,
+        90
+      ],
+      "parameters": 11953,
+      "seed": null,
+      "epoch": 6,
+      "denoising_allowed": false,
+      "strict_state_loading": "passed",
+      "cuda_forward": "passed",
+      "production_release": false
+    },
+    {
+      "path": "models/depth_context/depth_seed42/best_model.pt",
+      "sha256": "adb7288583b4784b6de4d391388918f3c595cb715d28531a771bc6a175de4031",
+      "family": "depth_context",
+      "resolution": [
+        160,
+        90
+      ],
+      "parameters": 119633,
+      "seed": 42,
+      "epoch": 7,
+      "denoising_allowed": false,
+      "strict_state_loading": "passed",
+      "cuda_forward": "passed",
+      "production_release": false
+    },
+    {
+      "path": "models/depth_context/depth_seed43/best_model.pt",
+      "sha256": "dabfac321fc91bca28fe4ec4feaa2b055bbfc29a58d4c42be73335238893fa20",
+      "family": "depth_context",
+      "resolution": [
+        160,
+        90
+      ],
+      "parameters": 119633,
+      "seed": 43,
+      "epoch": 8,
+      "denoising_allowed": false,
+      "strict_state_loading": "passed",
+      "cuda_forward": "passed",
+      "production_release": false
+    },
+    {
+      "path": "models/depth_context/depth_seed44/best_model.pt",
+      "sha256": "fd6fb6b7594b44d9bb721034711d8cdad8990328d3ec059ca2bf04f5f800b7e0",
+      "family": "depth_context",
+      "resolution": [
+        160,
+        90
+      ],
+      "parameters": 119633,
+      "seed": 44,
+      "epoch": 8,
+      "denoising_allowed": false,
+      "strict_state_loading": "passed",
+      "cuda_forward": "passed",
+      "production_release": false
+    },
+    {
+      "path": "models/depth_context/local_seed42/best_model.pt",
+      "sha256": "c1063479c7434e78d364c7d4ce65ac40d588a43375fb70353fcc066ca85ef9b2",
+      "family": "depth_context",
+      "resolution": [
+        160,
+        90
+      ],
+      "parameters": 12385,
+      "seed": 42,
+      "epoch": 8,
+      "denoising_allowed": false,
+      "strict_state_loading": "passed",
+      "cuda_forward": "passed",
+      "production_release": false
+    },
+    {
+      "path": "models/depth_context/recommended_model.pt",
+      "sha256": "24bc64ef1b28a3805f2b8a018ee31f4a323415b2493cd6dcd430d322b67d8eae",
+      "family": "depth_context",
+      "resolution": [
+        160,
+        90
+      ],
+      "parameters": 119633,
+      "seed": 44,
+      "epoch": 8,
+      "denoising_allowed": false,
+      "strict_state_loading": "passed",
+      "cuda_forward": "passed",
+      "production_release": false
+    },
+    {
+      "path": "models/depth_context/rgb_seed42/best_model.pt",
+      "sha256": "143c4af84855a033d1ec722269168dcf5530030e0bb4f29859682aebb6f7f089",
+      "family": "depth_context",
+      "resolution": [
+        160,
+        90
+      ],
+      "parameters": 119633,
+      "seed": 42,
+      "epoch": 7,
+      "denoising_allowed": false,
+      "strict_state_loading": "passed",
+      "cuda_forward": "passed",
+      "production_release": false
+    },
+    {
+      "path": "models/depth_context/rgb_seed43/best_model.pt",
+      "sha256": "e8ecdf5078366f5c06ec1e13ba1a9d741282624a909c8b94ea76a4639f30ba8b",
+      "family": "depth_context",
+      "resolution": [
+        160,
+        90
+      ],
+      "parameters": 119633,
+      "seed": 43,
+      "epoch": 8,
+      "denoising_allowed": false,
+      "strict_state_loading": "passed",
+      "cuda_forward": "passed",
+      "production_release": false
+    },
+    {
+      "path": "models/depth_context/rgb_seed44/best_model.pt",
+      "sha256": "47799cc82ca44472edbb18567c0804a84158c706f0d75491769bea09eecc0106",
+      "family": "depth_context",
+      "resolution": [
+        160,
+        90
+      ],
+      "parameters": 119633,
+      "seed": 44,
+      "epoch": 8,
+      "denoising_allowed": false,
+      "strict_state_loading": "passed",
+      "cuda_forward": "passed",
+      "production_release": false
+    },
+    {
+      "path": "models/depth_quality/research_candidate.pt",
+      "sha256": "04dbb308acb549701ab964f7294ed0bf8e010d6cdfb8a3957293e3ba40a59681",
+      "family": "depth_quality",
+      "resolution": [
+        320,
+        180
+      ],
+      "parameters": 119633,
+      "seed": 42,
+      "epoch": 5,
+      "denoising_allowed": false,
+      "strict_state_loading": "passed",
+      "cuda_forward": "passed",
+      "production_release": false
+    },
+    {
+      "path": "models/depth_quality/seed42/best_model.pt",
+      "sha256": "cdcb04c9c195700d27ff461b8cae5923fab1ba382ef97905deab0b0bb3599412",
+      "family": "depth_quality",
+      "resolution": [
+        320,
+        180
+      ],
+      "parameters": 119633,
+      "seed": 42,
+      "epoch": 5,
+      "denoising_allowed": false,
+      "strict_state_loading": "passed",
+      "cuda_forward": "passed",
+      "production_release": false
+    },
+    {
+      "path": "models/depth_quality/seed43/best_model.pt",
+      "sha256": "34913dc99b46215daf69e718377921df72e586860d64df608711d89baa290443",
+      "family": "depth_quality",
+      "resolution": [
+        320,
+        180
+      ],
+      "parameters": 119633,
+      "seed": 43,
+      "epoch": 6,
+      "denoising_allowed": false,
+      "strict_state_loading": "passed",
+      "cuda_forward": "passed",
+      "production_release": false
+    },
+    {
+      "path": "models/depth_quality/seed44/best_model.pt",
+      "sha256": "42c81638d52992620ebd5479870de1f9705eb4096ac65b7fdb130a36c455ea98",
+      "family": "depth_quality",
+      "resolution": [
+        320,
+        180
+      ],
+      "parameters": 119633,
+      "seed": 44,
+      "epoch": 5,
+      "denoising_allowed": false,
+      "strict_state_loading": "passed",
+      "cuda_forward": "passed",
+      "production_release": false
+    }
+  ],
+  "limitations": [
+    "Research resolutions are 160x90 or 320x180, below native 1280x720.",
+    "Originally sensor-invalid depth predictions are unvalidated.",
+    "Denoising remains blocked for the exported quality candidate.",
+    "Historical results used repeated development validation; October was not evaluated."
+  ]
+}

@@ -1,0 +1,149 @@
+{
+  "verified_date": "2026-10-13",
+  "scheduled_day": "Monday, 12 October 2026",
+  "milestone": "Organize the pipeline",
+  "status": "completed_locally",
+  "scope_correction": "The earlier Day 1 completion statement covered data understanding; this report verifies the user's preparation/training/prediction/audit integration row.",
+  "branch": "dev",
+  "committed": false,
+  "pushed": false,
+  "main_unchanged": true,
+  "legacy_scripts_integrated": 10,
+  "source_mapping": [
+    {
+      "original": "prepare_training.py",
+      "destination": "src/ingestion/prepare_depth_cache.py",
+      "original_sha256": "3f2b585234c5d8b794b2ca280a37316dc11007bd7ead0754e65989a62eee7ba9"
+    },
+    {
+      "original": "train_depth_baseline.py",
+      "destination": "src/training/depth_baseline.py",
+      "original_sha256": "d4239688842c6b2a6695051c17ba8761d6d7667b3d5f2ab8c945959da9b6ccfb"
+    },
+    {
+      "original": "improve_depth_completion.py",
+      "destination": "src/training/depth_context.py",
+      "original_sha256": "78ab9a6a02b12926a47983be02360d70d45b6252054c364508a7d888a78d6173"
+    },
+    {
+      "original": "train_quality_depth.py",
+      "destination": "src/training/depth_quality.py",
+      "original_sha256": "223247e5eab1f09d5a8debb052576b5e683cff427f2523bd7924fad692242c83"
+    },
+    {
+      "original": "predict_depth_completion.py",
+      "destination": "src/inference/depth_context.py",
+      "original_sha256": "444c7f15dc95430b1c6ed576bf7c747263f5464784784d2867a7678442892a4a"
+    },
+    {
+      "original": "predict_quality_depth.py",
+      "destination": "src/inference/depth_quality.py",
+      "original_sha256": "09a059046c87ffff94b7ae2cdfcbfe8db854751721c3876e452464bcfef7e99d"
+    },
+    {
+      "original": "diagnose_depth_baseline.py",
+      "destination": "src/validation/depth_baseline_diagnostics.py",
+      "original_sha256": "51d0e3565b56cc03f429af1c3e99eba4056744c8c7cfd4f5a7ac272e845aecfa"
+    },
+    {
+      "original": "assess_depth_improvement.py",
+      "destination": "src/validation/depth_context_assessment.py",
+      "original_sha256": "9f131fe005e6a2feaa476a97a3a4936094d76604790006225feea1265ba0f9fa"
+    },
+    {
+      "original": "audit_synthetic_quality.py",
+      "destination": "src/validation/depth_stress_audit.py",
+      "original_sha256": "b702661bdd33e043b43b7bd0f551ca67eedae4b42967923ab9c5aa08390dd4f9"
+    },
+    {
+      "original": "verify_mvp_tools.py",
+      "destination": "src/validation/training_environment.py",
+      "original_sha256": "60bc692a11facc41f5275019c753a44adeaab69458265bc8f3211575c31f87cd"
+    }
+  ],
+  "source_hashes": {
+    "src/ingestion/prepare_depth_cache.py": "b44b7ae8e5343bbdc27ddcd1bc70fecf12accff14ac857802aec6d5476daaa26",
+    "src/training/depth_baseline.py": "0e9f0196473c85ba830e04c31c749910a257cbb63326c6ff0cf0fcdf5350eab8",
+    "src/training/depth_context.py": "85ea9fb802f96aa714a0fb572c2435e94cf655aba113a99feb4823700b3e5455",
+    "src/training/depth_quality.py": "cdc6f48b8ef2e75f03cef4e1142d79b4b31913cf6d001ca8d9ab91afd6e1c743",
+    "src/inference/depth_context.py": "143117e4af58bae3b9cd695dc0ea1b1e650bf889668c26c064fac5c38f6cc9e0",
+    "src/inference/depth_quality.py": "80e297eff84a65c0665f9d71057251343f734da2ae7560064e1d248823b0a748",
+    "src/validation/depth_baseline_diagnostics.py": "d65e627fb7de89b8ec6a14862df4ed96f9d1b6a64fe266253f263b3222265709",
+    "src/validation/depth_context_assessment.py": "b591a3507985b8ebc4f32725d77749d9f367e861df869b5b292d1bbc9a043d3c",
+    "src/validation/depth_stress_audit.py": "420ed9a53a6c65c852dd32b7d918a7041eacfefd8244ff5c715734af23b61cee",
+    "src/validation/training_environment.py": "614b4fb77b9a42cd29d037f6aa0ecf9f0a88091e4202947e2befb953d4981cca",
+    "src/training/runtime.py": "60f1bb0f36d38313ea47faae284437908e0ed5a0a3acd5f7659f04a5b5cc0d0c",
+    "src/validation/pipeline_smoke.py": "296192df1a075b6333ff76ad1dc50e922b6d49a3c435f9063e0f983460f71df2",
+    "tests/test_depth_pipeline.py": "faf59f3142dc82bf76ce8f01a3cc54529638fb7d2663e7d3bddc89df105dee70"
+  },
+  "model_preprocessing_AST_components_unchanged": 18,
+  "tests_passed": 55,
+  "outside_project_cwd_CLI_checks": 10,
+  "unchanged_checkpoints_verified": 13,
+  "checkpoint_registry": "configs/checkpoint_registry.json",
+  "isolated_optimizer_smoke_steps": 3,
+  "full_retraining_performed": false,
+  "existing_results_and_weights_unchanged": true,
+  "preparation_smoke_frames": {
+    "train": 1,
+    "validation": 1
+  },
+  "prediction_CLIs_exercised": 2,
+  "paired_stress_examples_audited": 30,
+  "test_sensor_files_opened": 0,
+  "training_environment": {
+    "python_version": "3.12.15",
+    "packages": {
+      "numpy": "2.5.3",
+      "Pillow": "12.3.0",
+      "scipy": "1.18.1",
+      "pandas": "3.0.6",
+      "matplotlib": "3.11.2",
+      "opencv-python": "5.0.0.93",
+      "open3d": "0.20.0",
+      "PyYAML": "6.0.3",
+      "tqdm": "4.70.1",
+      "scikit-learn": "1.9.1",
+      "pytest": "9.1.1",
+      "torch": "2.9.1+cu128",
+      "torchvision": "0.24.1+cu128"
+    },
+    "cuda": {
+      "available": true,
+      "name": "NVIDIA GeForce RTX 5070 Laptop GPU",
+      "cuda_runtime": "12.8",
+      "capability": [
+        12,
+        0
+      ],
+      "matrix_kernel_passed": true
+    },
+    "local_runtime_file": ".tools/training_runtime.json"
+  },
+  "caches": {
+    "baseline_and_context": "data/caches/depth_160",
+    "quality": "data/caches/depth_320",
+    "train_frames": 1136,
+    "validation_frames": 1037,
+    "copies_verified_byte_identical": true
+  },
+  "manual_tasks": [
+    "Select the interpreter recorded in .tools/training_runtime.json using VS Code Python: Select Interpreter.",
+    "Review the documented checkpoint/resolution/denoising limitations before future training or inference."
+  ],
+  "remaining_quality_gates": [
+    "Human reference labels and pseudo-label review for goods segmentation.",
+    "Renderer viewpoint/material/domain review before synthetic training admission.",
+    "Optional fusion needs verified Azure export metadata; extra annotations need split provenance."
+  ],
+  "evidence_hashes": {
+    "smoke/pipeline_smoke.json": "5457698d2f3b5496ab6ee2814d66a56466d3df1e0af404d006fcb09e2cd7b7d8",
+    "training_environment.json": "b600bdf81a1b443a6fa8720f00a6626a053206ff6190ec2bbdc0d9df66fffa00",
+    "algorithm_preservation.json": "5c12b8c172b071ac84fa129396affb43168f93e6c9e378a43945c8cde8ff9a1f",
+    "artifact_inventory.json": "819f6195ae9846cf407e1bb76120b906f6d10450e2b9a81f52c1a6696d4d48c3",
+    "prepared_smoke/profile.json": "b44e86a5872838bb9eb46c7dd5a74edd8d78fa41301efd3c75c30b5257216708",
+    "depth_stress_audit/quality_audit.json": "06656c9a27f19cd18e8d148298d10c9ef80bf55ed0c384a305dff915ce017e6e",
+    "quality_prediction.npz": "4909fced44774a3299f177fa891c7c297fa05675724f0c005129328cb76a3681",
+    "context_prediction.npz": "92ecf903ca5de08d71ef3eed405e85aeb80563589e3e76460e29be7d03818951"
+  }
+}

@@ -1,0 +1,82 @@
+Pipeline organization and research environment
+Scheduled milestone: Monday, 12 October 2026. Verified completion: 13 October 2026.
+Local work on dev; not committed or pushed. main remains unchanged.
+
+Scope correction
+The earlier Day 1 statement covered the data-understanding milestone. The user's
+schedule defines this row as organizing preparation, training, prediction and
+audit workflows. Those depth-research scripts were still outside the repository;
+this integration now completes that specific row. It does not imply completion
+of label review, realistic synthesis or production sensor fusion.
+
+Completed
+- Ten legacy scripts integrated under src/ingestion, src/training, src/inference
+  and src/validation with professional purpose-based names.
+- Project-package imports and direct-file bootstraps work from another cwd.
+  No imported audit performs dataset/model reads or report writes.
+- Explicit CLI paths replace workspace-specific defaults. Quality warm-start
+  root is configurable. Outputs cannot overwrite raw/input sources; prediction
+  paths must explicitly end in .npz. Existing results require intentional reuse.
+- Reused byte-identical train/development caches at 160x90 and 320x180, and 13
+  existing checkpoints, inside ignored data/caches and models directories.
+- Recorded exact checkpoint hashes, architecture/resolution and gate state in
+  configs/checkpoint_registry.json. No historical weights or result hashes rewritten.
+- Added ignored local .tools/training_runtime.json and pinned requirement files.
+
+Verified
+- 55 unit/contract tests passed, including eight migration-specific tests.
+- All ten CLIs passed --help from outside the project directory.
+- All 13 checkpoints loaded strictly and produced finite native-model CUDA outputs.
+- Three isolated optimizer steps passed; temporary weights were discarded.
+- Both prediction CLIs ran on a training frame. Quality inference preserves
+  observed depth. Inferred original-invalid regions remain unvalidated.
+- Preparation decoded two June frames and passed lossless cache round-trips;
+  the October record was read only as split metadata, not sensor pixels.
+- Integrated stress audit passed 30 paired examples, native RGB byte identity,
+  lossless PNG, clean observations, invalid-target masking and training-only donors.
+- Eighteen original model/preprocessing components retain identical executable AST.
+  Full retraining was unnecessary and was not performed. All original artifacts
+  and checkpoint copies remain unchanged. No October model evaluation occurred.
+
+Training environment
+Python 3.12.15; torch 2.9.1+cu128; torchvision 0.24.1+cu128; CUDA runtime 12.8.
+NumPy 2.5.3; Pillow 12.3.0; SciPy 1.18.1; Matplotlib 3.11.2.
+GPU: NVIDIA GeForce RTX 5070 Laptop GPU; actual CUDA matrix kernel passed.
+The existing verified environment is reused, avoiding another large installation.
+The exact executable path is machine-local in .tools/training_runtime.json.
+The ingestion-only .venv is not assumed to contain the CUDA training packages.
+
+Your manual tasks
+Select the Python executable from .tools/training_runtime.json in VS Code using
+Python: Select Interpreter. Review configs/checkpoint_registry.json and these
+research limits before starting future runs. No manual file moving, dependency
+reinstallation or full retraining is required to complete this organization task.
+
+Run from C:/amr-synthetic-mvp in PowerShell
+$trainingPython = (Get-Content .tools/training_runtime.json -Raw | ConvertFrom-Json).python_executable
+& $trainingPython -m unittest discover -s tests
+& $trainingPython -m src.validation.pipeline_smoke --output reports/pipeline_smoke_next
+& $trainingPython -m src.training.depth_quality --help
+& $trainingPython -m src.inference.depth_quality --help
+
+Choose fresh output locations. Explicit executable commands do not require
+PowerShell activation scripts. CUDA versions below are a verified environment
+snapshot, not a claim about current latest versions. A fresh setup can install
+requirements/torch_cu128.txt, then requirements/depth_research.txt; the complete
+MVP import checker additionally uses requirements/mvp_tools.txt.
+
+Checkpoint families
+models/depth_baseline: six-channel 160x90 baseline; one original checkpoint.
+models/depth_context: eight-channel 160x90 local/RGB/depth comparisons and the
+  observation-preserving recommended_model.pt; eight original checkpoints.
+models/depth_quality: eight-channel 320x180 depth-only candidates; four originals.
+  research_candidate.pt is the preferred research export. Denoising is blocked.
+These depth experiments remain separate from the chosen goods-segmentation MVP.
+Low-resolution sensor-depth research does not prove goods accuracy or physical realism.
+
+Next work
+Build reviewed goods reference masks and triage teacher-label mistakes. Match the
+renderer viewpoint/materials to training-only images before increasing the pilot.
+Keep test membership frozen and synthetic training gated. Optional fusion and
+extra-annotation provenance remain separate evidence requirements. Publish this
+new integration batch only when the user requests publication.

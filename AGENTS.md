@@ -163,8 +163,9 @@ from proposed work; do not invent requirements from an unavailable planning docu
   helpers are implemented; measurement interpolation and fusion are not certified.
 - Exported-image distortion convention and production registration remain
   unresolved. Augmentation realism requires calibration beyond existing stress tests.
-- Prior depth-training pilots and their checkpoints are experiment evidence; do
-  not assume workspace experiment scripts are already integrated into this repository.
+- Historical depth experiments are now integrated as import-safe project CLIs.
+  Keep their checkpoints/results separate from goods-segmentation evidence; see
+  docs/pipeline_integration.txt for environment, migration and verification.
 - Renderer selection/pilot, controlled real-versus-synthetic comparisons, and final
   held-out evaluation remain separate deliverables. Update this evidence section
   only when new verified results justify it.
@@ -222,7 +223,7 @@ from proposed work; do not invent requirements from an unavailable planning docu
 - Six real training examples and metadata-only evaluation membership are prepared.
   The labels are predictions, and visual triage found likely foreground misses
   and false positives. Do not call them independent ground truth.
-- The current local suite passes 47 tests; full native payload/IMU audits passed
+- The renderer batch passed 47 tests; full native payload/IMU audits passed
   again. Read docs/dataset_readiness.json for exact scope and source hashes.
 - The three-image Blender pilot passed analytic depth, 768 interior ray checks,
   lossless export and ZIP verification. Synthetic training eligibility stays false;
@@ -232,3 +233,23 @@ from proposed work; do not invent requirements from an unavailable planning docu
   fractional class IDs, geometry-blending resampling and invented sensor noise.
 - Calibration declares IMU frame names/extrinsics. Their binding to exported
   measurement columns remains unverified; preserve the disabled interpolation gate.
+
+
+## Organized training pipeline evidence
+
+- The user's Monday pipeline-organization scope is verified separately from the
+  earlier data-understanding milestone. Ten legacy depth scripts are integrated,
+  import-safe and configurable; use module CLIs from the project root.
+- Use the CUDA interpreter from ignored .tools/training_runtime.json for training
+  and the contract suite. The organization snapshot passed 55 tests; cache
+  verification extends the suite to 62. Do not assume the ingestion .venv has
+  training dependencies.
+- Models/checkpoints and caches are ignored local artifacts. Thirteen original
+  checkpoints retain their hashes; eighteen model/preprocessing components retain
+  executable AST. Do not rewrite historical result hashes to imply a new experiment.
+- New runs must preserve raw/input/previous results. Quality warm-start paths are
+  explicit. Clean inference preserves observations, and denoising stays gated.
+- Ten outside-cwd CLI checks, all checkpoint forwards, three discarded optimizer
+  steps, two prediction CLIs and the paired audit passed. No full retraining or
+  October model evaluation occurred. Publication requires the user's explicit
+  authorization for the current batch; future batches need new instructions.

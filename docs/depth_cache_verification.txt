@@ -1,0 +1,65 @@
+Depth cache and nearest-fill baseline verification
+Verified 13 October 2026. Local dev work; no commit, push or main integration.
+
+Cache integrity
+- Complete trajectories: 1136 training, 1037 development-validation, 915 held-out test metadata records.
+- All four caches match manifest IDs/order, expected shape/dtype and split membership.
+- Every June RGB/depth source was hash-checked and decoded once: 4346 source files.
+- Both resolutions match their native derivatives bit-for-bit across 4346 cached frame derivatives.
+- No October sensor files were opened. Existing raw files, caches and all 13 checkpoints are preserved.
+
+Resolved provenance gaps
+- Legacy 160x90 RGB is BILINEAR, verified for every frame. New 320x180 RGB is BOX.
+  The old 160px profile omitted the RGB resize policy; do not silently rebuild it with the new default.
+- Old 160px cache hashes were absent. This audit records current hashes and full source equality.
+- NPZ depth_mm stores uint16 millimetres. The old profile depth_units=metres refers to model depth.
+
+Depth and mask contracts
+- Convert millimetres to float32 metres using 0.001. Valid targets: 0 < depth <= 20m.
+- Zero-depth pixels are invalid, excluded from targets. Cached depths contain no values above 20m.
+- NEAREST resizing preserves sampled depths and zeros; low-resolution derivatives lose native detail.
+- 5185 scenario/frame mask checks passed: observed/hidden disjoint, union equals valid, correct scoring region.
+- 3111 donor queries resolved exclusively to training IDs; validation/test never supply donors.
+- Clean-mode sparse observations are preserved; noise scenarios remain hypothetical stress tests.
+
+Nearest-fill reproduction
+- Existing preprocessors/evaluators, fixed validation seed 4242, batch size 32, same metric regions.
+- Every scenario evaluated all 1037 development-validation frames; pixel-weighted MAE/RMSE in metres.
+- Random/block/empirical primary scores cover hidden valid pixels; noise primary scores cover all originally valid pixels.
+- All historical nearest/smooth metric counts matched exactly; MAE/RMSE within 0.0000001m tolerance.
+- random_160: MAE 0.022899283m; RMSE 0.079037393m.
+- blocks_160: MAE 0.106835383m; RMSE 0.336734956m.
+- random_320: MAE 0.010608503m; RMSE 0.034329203m.
+- blocks_320: MAE 0.094909161m; RMSE 0.319160805m.
+- empirical_320: MAE 0.325462978m; RMSE 0.713273249m.
+- noise10_320: MAE 0.081580491m; RMSE 0.342950755m.
+- noise20_320: MAE 0.088246453m; RMSE 0.343387668m.
+
+Training pair inspection
+- Four training RGB/depth/valid-mask pairs exported losslessly with separate observed/hidden masks.
+- See visual_review/training_pairs.png and visual_review/training_pairs/*/pair.npz. Display depth scale is fixed at 0-8m.
+- Four training samples show the expected near-floor/foreground and farther-shelf depth structure.
+- Valid-depth mask agrees with measured-depth support; original unknown regions remain excluded from hidden targets.
+- Rectangular holes and random omissions occur only in originally valid pixels; RGB remains the real cached source.
+- Nearest fill creates broad plateaus and propagates surfaces across holes/unknown regions. It is an estimate, not a recovered reference.
+- Invalid measured depth is displayed black; masks use white for true. This display correction changes no data or metric.
+- This coarse visual check does not certify native boundary alignment or resolve the exported-image distortion convention.
+
+Tests and reproducibility
+- Ran 62 tests in 0.262s; OK. Changed modules compile.
+- Saved source/cache/code hashes, historical configs, baseline metrics, donor IDs, masks and test log.
+- Existing learned checkpoints were not retrained or modified.
+
+Remaining limitations
+- Single development-validation trajectory; repeated selection is not unbiased testing.
+- Controlled corruption and hypothetical noise do not certify sensor realism.
+- Original zero-depth pixels have no supervised reference; filled values are estimates.
+- Low-resolution depth research is separate from goods-segmentation evidence.
+- Exported camera distortion/registration remains an existing separate evidence requirement.
+
+Run from the project root with a fresh output directory
+$trainingPython = (Get-Content .tools/training_runtime.json -Raw | ConvertFrom-Json).python_executable
+& $trainingPython -m src.validation.depth_cache_review --output reports/depth_cache_verification_next
+
+Evidence: reports/depth_cache_verified/. Portable aggregate: docs/depth_cache_verification.json.
+Next: review goods reference labels and synthetic appearance, keeping depth research separate.
