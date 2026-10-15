@@ -1,0 +1,76 @@
+DubaiDATA MVP delivery plan
+
+Delivery objective
+Demonstrate a customer-adaptable synthetic-data workflow with reusable dataset,
+generation and execution boundaries. Use warehouse goods segmentation as the primary
+benchmark and depth restoration as a conditional secondary benchmark.
+
+Architectural foundation
+- Dataset-independent core.
+- Simulator-independent generation contracts.
+- Infrastructure-independent execution.
+Architecture specification: docs/pipeline_architecture.txt.
+
+Customer requirements and reference data
+Define the customer's preserve/vary/increase/prohibit controls, required modalities,
+coverage targets, quality thresholds and output requirements. Establish the benchmark
+taxonomy and independent reference-label validation, including uncertainty handling.
+Acceptance: traceable input records, agreed task semantics and a defensible split policy.
+
+Adapter integration and standardization
+Define minimal versioned data, sensor, scene, generation-job and result contracts.
+Wrap the existing TorWIC reader and demonstrate the shared boundary with a small
+non-TorWIC fixture. Isolate simulator workers, local execution and artifact storage.
+Integrate BlenderProc through a bounded compatibility pilot while preserving the
+working Blender renderer. Produce standardized RGB, depth and label records.
+Acceptance: reproducible supported jobs, explicit capability rejection and validated
+sample manifests. Additional customers and engines require their own tested adapters.
+
+Generation quality and controlled coverage
+Implement bounded real RGB/depth/LiDAR sensor-condition methods with clean references,
+parameters, masks and measured requested-condition checks. Improve the warehouse
+scene's geometry, camera, materials and lighting against permitted training references.
+Qualify a representative rendered pilot before expanding generation. Validate units, label
+alignment, geometry, validity, lineage, appearance and coverage.
+Acceptance: an approved pilot, documented rejected cases and a reproducible generation
+configuration. Hypothetical noise does not establish calibrated sensor realism.
+
+Dataset generation and benchmark comparison
+Generate a bounded accepted dataset with fidelity, diversity/novelty, coverage and
+lineage evidence. Assemble hybrid training data without split leakage. Compare goods
+models trained on real-only and real-plus-synthetic data using matched initialization,
+training budgets and three seeds. Include the secondary depth benchmark only when it
+can reuse existing work without compromising primary quality or evaluation.
+Acceptance: reproducible development comparisons and explicit failure findings.
+
+Independent evaluation and delivery
+Resolve development issues, then freeze the candidate and evaluation protocol.
+Evaluate on independently validated held-out real reference data without tuning to the result.
+If independent references are unavailable, report evaluation incomplete rather than
+substituting teacher predictions for ground truth. Report improvements and regressions.
+Deliver accepted samples, customer/resolved generation configs, manifests, label
+definitions, quality/coverage results, provenance, evaluation evidence and a user guide.
+Acceptance: a reproducible end-to-end demonstration and an honest results report.
+
+Dataset acceptance
+Qualify reference-label accuracy, appearance, visibility and mask boundaries against
+documented acceptance criteria. Preserve source binding and uncertainty masks, and
+isolate held-out annotations from development decisions. Release qualification
+requires verified evidence and sufficient reference coverage.
+
+Extension and migration criteria
+Evaluate additional backends when customer sensor, physics or fidelity requirements
+justify their engineering and operating costs. Isaac Sim is a candidate, not a fixed
+production destination. Select local or cloud execution independently of the engine.
+Port one controlled scene and verify asset/material mappings, sensor conventions,
+geometry and labels before scaling. Shared contracts, validation and evaluation remain
+reusable. Separate pinned environments and configurable storage reduce coupling.
+Dedicated simulated LiDAR is an extension requiring its own implementation and tests.
+The full same-scene RGB/depth/LiDAR generation requirement remains open until validated;
+a camera-only pilot must not be reported as completing it.
+
+Engineering approach
+Use readable code, purpose-based artifacts, incremental adapters and meaningful tests.
+Preserve verified loaders, audits, checkpoints and source hashes. Avoid speculative
+infrastructure or repository-wide restructuring that does not improve the workflow.
+See docs/dataset_readiness.txt for verified capabilities and outstanding quality gates.

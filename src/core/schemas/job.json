@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "job_id", "kind", "dataset_id", "source_manifest_sha256", "parameters"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "dubaidata/1.0"},
+    "job_id": {"type": "string", "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"},
+    "kind": {"const": "prepare_rgb_depth_cache"},
+    "dataset_id": {"type": "string", "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"},
+    "source_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["resolution", "splits", "depth_max_metres", "cache_format"],
+      "properties": {
+        "resolution": {"type": "array", "items": {"type": "integer", "minimum": 1}, "minItems": 2, "maxItems": 2},
+        "splits": {"type": "array", "items": {"enum": ["train", "validation"]}, "minItems": 1, "maxItems": 2},
+        "depth_max_metres": {"type": "number", "exclusiveMinimum": 0},
+        "cache_format": {"enum": ["canonical", "legacy_mm"]}
+      }
+    }
+  }
+}

@@ -1,35 +1,78 @@
-Warehouse goods dataset MVP scope
+DubaiDATA synthetic-data MVP scope
 
-Target user assumption: a robotics perception/data engineer who needs additional
-warehouse examples of goods moved into an aisle. No customer interviews have been
-performed or implied. Validate these assumptions with 2-3 possible users later.
+Product objective
+Develop a customer-adaptable, simulator-independent synthetic-data pipeline. Ingest
+customer datasets through adapters, standardize modalities/metadata, identify coverage
+requirements, generate controlled sensor/scene variations through supported backends,
+validate quality and export traceable data for customer-specific ML applications.
 
-First task: segment visible boxes/crates/goods in the left Azure camera view.
-The initial TorWIC target is predicted semantic class 7, converted to binary
-0=other and 1=goods. Treat it as a pseudo-label, not independent ground truth.
-One image cannot establish change over time or safe aisle passage from this mask
-alone. Synthetic scenario labels describe added goods geometry; operational
-blockage/change labels need a separate reviewed protocol.
+Three architectural principles
+- Dataset-independent core.
+- Simulator-independent generation contracts.
+- Infrastructure-independent execution.
+Detailed boundaries and implementation status: docs/pipeline_architecture.txt.
+TorWIC and warehouse goods are the first application, not permanent core assumptions.
 
-Required product behavior: choose a scenario, generate native images plus matching
-marked regions, inspect quality, then export a dataset with settings and provenance.
-Keep one aisle and a bounded batch initially. Physical geometry, labels and clean
-references must be checked before scale or training admission.
+Initial customer application
+Fixed TorWIC-SLAM RGB, depth, 3D LiDAR, calibration, poses/timing and semantic information.
+Confirmed full-trajectory split: Aisle_CCW_Run_1 training 1136;
+Aisle_CW_Run_1 development-validation 1037; Aisle_CCW locked test 915.
+Keep real raw files immutable; do not fit synthesis to the held-out test data. Retain dataset-specific
+conventions in the adapter and source metadata, not universal pipeline constants.
+Extra annotations remain quarantined until source provenance/held-out overlap is cleared.
 
-Formats: lossless 1280x720 RGB PNG, uint8 semantic PNG, binary goods PNG, float32
-axial depth in metres with validity mask when included, and JSON camera/pose/seed
-metadata. The three-sample renderer ZIP is an engineering pilot, not training-ready.
+Customer controls and synthesis
+Customer requests declare what to preserve, vary, increase and prohibit, required
+modalities, coverage targets and acceptance criteria. Only supported requests execute.
+Real-sample variations include bounded RGB conditions, depth dropout/noise and LiDAR
+dropout/range variations with clean references, source IDs, masks, seeds and parameters.
+Hypothetical stress settings do not establish calibrated sensor-failure realism.
+Scene generation starts with one aisle using the existing Blender pilot and a bounded
+BlenderProc integration. RGB/depth/labels come from one declared virtual scene/rig.
+Resolution is native 1280x720 for this application, not a hardcoded generic-core limit.
+Dedicated simulated LiDAR is an extension requiring its own implementation and
+validation. Retain a common sensor contract and report this capability as unsupported.
+The full same-scene RGB/depth/LiDAR requirement remains open; a camera-only pilot
+cannot complete it. Camera-depth unprojection must not be represented as LiDAR.
 
-Split: complete June 15 training (1136), June 23 development validation (1037),
-October 12 held-out test (915). Freeze membership and candidate/protocol before
-final testing. Do not fit camera appearance or synthesis parameters to October.
+Primary benchmark and conditional second benchmark
+Primary: visible warehouse goods segmentation, using independently validated references.
+Publisher class 7 -> binary goods 1 is a proposed TorWIC task mapping, not a universal
+taxonomy. Current predicted masks require reference-label validation and correction; uncertain pixels need a defined
+ignore policy. A single segmentation mask cannot certify change or safe aisle passage.
+Proposed success target: at least 3 percentage points goods IoU improvement with three
+seeds and matched budgets on independently validated real reference data. It is not a guaranteed gain.
+Secondary candidate: depth completion under controlled withheld-valid-depth conditions,
+reusing existing caches, baselines and checkpoints. Proceed only when feasibility is
+established without compromising primary labels, generation quality or evaluation.
+Originally invalid depth has no reference and remains excluded from supervised claims.
 
-Proposed success criteria, to validate with users: zero accepted export/alignment
-failures; a usable repeatable dataset-generation flow; and at least 3 percentage
-points improvement in goods IoU over an equal-budget real-only baseline on an
-independent human-reviewed real reference, measured with 3 seeds. Report uncertainty
-and regressions. Current pseudo-labels cannot establish that success criterion.
+Validation, provenance and delivery
+Validate schema, payloads, units, geometry, conditions, fidelity, diversity/novelty,
+coverage, lineage and relevant modality consistency. Keep physical plausibility,
+calibrated fidelity, label/appearance qualification and model utility as separate evidence dimensions.
+Record source/scene/capture IDs, modality states, hashes, calibration/frame conventions,
+parameters, seeds, code/backend/runtime versions and acceptance/rejection reasons.
+Export datasets, customer configs, quality/coverage report, lineage and an optional
+hybrid training/locked-real comparison through a reproducible CLI/local workflow.
+Freeze the candidate and protocol before held-out evaluation; never tune to that result.
 
-Out of current proof: autonomous navigation safety, production sensor fusion,
-spinning-LiDAR/IMU simulation, calibrated Azure noise, and cross-warehouse accuracy.
-Existing depth restoration experiments remain separate evidence and are preserved.
+Backend and deployment policy
+BlenderProc is the current intended backend; integration/compatibility is still pending.
+Preserve the existing verified Blender renderer. Isaac Sim is a candidate only when
+customer sensor/physics/fidelity requirements justify conversion, validation and cost.
+GCP is an optional execution environment, not a mandatory destination. Keep dataset,
+simulator, task, storage and execution adapters behind stable independent boundaries.
+
+Exclusions and current state
+No arbitrary-format automatic ingestion, universal ontology mapping, live robot control,
+full navigation, SLAM development, safety certification, full digital twin, SaaS or
+multi-tenant production infrastructure. New customer adapters still require engineering.
+Unresolved real camera/IMU conventions stay explicit; optional fusion stays disabled.
+Existing ingestion/profile/cache/depth evidence and three-scene pilot are retained.
+The engineering suite passed 115 tests. Canonical preparation contracts, two dataset
+input adapters and local cache/real-sample condition workers are verified. Native
+RGB gain/depth-mask generation passed automated checks for 11 variants and rejected 7;
+release qualification is in progress and LiDAR is preserved unchanged. Shared scene
+generation, validated-reference training and independent model evaluation remain required.
+See docs/dataset_readiness.txt for capability evidence and outstanding acceptance gates.

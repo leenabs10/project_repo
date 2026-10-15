@@ -41,3 +41,8 @@ models/
 *.pt
 *.pth
 *.ckpt
+
+# Local package build artifacts
+*.egg-info/
+build/
+dist/

@@ -15,7 +15,11 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 
-from imu_timing import bracket_frames, load_imu
+# Support both the existing standalone CLI and imports through dataset adapters.
+if __package__ in (None, ""):
+    from imu_timing import bracket_frames, load_imu
+else:
+    from .imu_timing import bracket_frames, load_imu
 
 # Manifest field names map to the publisher's folders and file extensions.
 MODALITIES = {

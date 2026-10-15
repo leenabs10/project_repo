@@ -1,0 +1,55 @@
+DubaiDATA controlled sensor-condition synthesis
+
+Purpose and implementation
+Generate traceable sensor-condition variations from real training captures while
+preserving native geometry, labels, calibration, poses and timestamps. The current
+backend supports bounded RGB gain and depth missingness from training-only donors.
+LiDAR remains unchanged. Scene generation is a separate backend capability.
+
+Architecture
+Dataset adapters retain source conventions; generation adapters transform arrays;
+shared validators enforce acceptance criteria. A fixed local worker executes portable
+jobs with separate runtime configuration. Canonical outputs retain source identity,
+units, masks, parameters, seeds and implementation hashes.
+
+Pilot results
+Six training captures at 1280x720; three conditions per capture.
+Condition                         Automated pass    Rejected
+Reduced brightness, gain 0.93     6                 0
+Increased brightness, gain 1.07   3                 3
+Training-donor depth missingness  2                 4
+Total                            11                7
+
+Brightness rejections exceeded the clipping envelope. Depth rejections exceeded
+coverage or dropout limits. Requested condition coverage remains incomplete.
+Automated integrity qualification is complete; dataset release qualification is
+in progress. Training eligibility remains disabled.
+
+Integrity and reproducibility
+98 contract tests passed. PNG arrays and validity masks round-trip losslessly.
+Retained depth measurements are exact; invalid depth remains excluded. Source labels
+and LiDAR files are byte-identical. All 32 source files remained unchanged.
+Six native LiDAR payloads passed format checks. No validation or test sensor files
+were opened. Repeated runs produced identical outputs and acceptance decisions.
+Sample identities and seeds remain stable across job ordering and partitioning.
+
+Execution profile
+Approximately 9 seconds per native pilot, including decoding, generation, export,
+source verification, preview artifacts and hashing; executor overhead is additional.
+The complete attempt occupies approximately 42 MiB. Processing retains one source
+and donor pair at a time. Peak memory and production-scale throughput are unmeasured.
+
+Qualification boundaries
+Training distributions define brightness, clipping and depth-coverage envelopes.
+Effect limits are explicit engineering stress settings rather than calibrated sensor
+failure probabilities. Physical noise fidelity and camera-LiDAR registration are not
+certified. Independent goods-reference labels and downstream task results remain
+outstanding. Scene diversity and simulated LiDAR require separate implementation.
+
+Configuration and evidence
+configs/jobs/torwic_sensor_conditions.json: portable generation request.
+configs/synthesis/torwic_sensor_quality.json: evidence-bound quality policy.
+configs/runtime/torwic_sensor_conditions.example.json: local runtime example.
+docs/sensor_condition_evidence.json: aggregate qualification results.
+reports/sensor_conditions_verified: source snapshots, outputs and artifact hashes.
+reports/sensor_conditions_verification: test results and independent export audit.

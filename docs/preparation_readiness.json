@@ -1,0 +1,48 @@
+{
+  "status": "preparation_engineering_verified_dataset_acceptance_in_progress",
+  "contract_tests_passed": 115,
+  "task_definition": "configs/tasks/warehouse_goods.json",
+  "benchmark_configuration": "configs/benchmarks/warehouse_goods.json",
+  "protocol_sha256": "2c0dbc1146ac90b621d49dd1bd41e23db6c2ebf1045e9fa8094aec511da791bb",
+  "manifest_sha256": "fe77b9efd233e44e45d620841b7055118b6f9c44e4f2d26ac47464a72fb56f2e",
+  "reference_candidates": {
+    "train": 24,
+    "validation": 12
+  },
+  "all_condition_pilot_sources_included": true,
+  "reference_source_files_verified_unchanged": 108,
+  "held_out_test_sensor_files_opened": 0,
+  "reference_import": "source-bound validation and lossless target export verified",
+  "condition_decisions": "bound to the exact immutable batch profile",
+  "admission_gate": "verified; condition acceptance and qualified source targets required",
+  "qualified_real_reference_counts": {
+    "train": 0,
+    "validation": 0
+  },
+  "training_eligible_synthetic_variants": 0,
+  "dataset_release_status": "acceptance_in_progress",
+  "runtime_fixture_check": {
+    "status": "passed",
+    "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU",
+    "resolution": [
+      640,
+      360
+    ],
+    "batch_size": 4,
+    "precision": "float32",
+    "strict_reload_and_forward": "passed",
+    "peak_cuda_allocated_bytes_including_reload": 1237489152,
+    "peak_cuda_reserved_bytes_including_reload": 1472200704,
+    "initial_checkpoint_sha256": "fc3c493d68e89cc31ef488c803d5d7dd2f3190fb570598faa49fef69be8e5e70"
+  },
+  "runtime_profile_sha256": "6b62f52d831541674c13a7eb6e558b72e2361de2ef29acadc584d8ca5623bc58",
+  "existing_depth_checkpoints_verified_unchanged": 13,
+  "wheel_template_and_workers": "included and byte-identical to checkout",
+  "wheel_sha256": "55745446133d34058770ae92b5736a243a7cb311fcf38328964b02223bc5e265",
+  "packet_profile_sha256": "f607f6591f908e87226dbc05126b1946d371a78de03314a90b22ec0a72d44512",
+  "qualified_reference_profile_sha256": "b5cbaa70624f454d971d201bfe9665c1c4f2a413b45219d803de718af64b1708",
+  "admission_profile_sha256": "55d37ee858a2b90022c15eeb8823cc9f50f7a3fc8dd760df83898f543c8dde33",
+  "benchmark_training_completed": false,
+  "synthetic_data_utility_demonstrated": false,
+  "scene_backend_integration_completed": false
+}

@@ -1,0 +1,7 @@
+{
+  "dataset": {
+    "adapter": "torwic",
+    "root": "data/raw/torwic_slam",
+    "manifest": "data/manifests/manifest.jsonl"
+  }
+}

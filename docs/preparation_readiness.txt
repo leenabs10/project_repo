@@ -1,0 +1,54 @@
+DubaiDATA preparation and benchmark readiness
+
+Engineering qualification
+Dataset preparation, controlled real-sample synthesis, source-bound reference import
+and dataset admission are implemented and verified. Customer-specific task rules are
+isolated in the goods task adapter. Existing source data, caches, historical evidence
+and research checkpoints are preserved.
+
+Implemented interfaces
+- Native reference preparation with deterministic training/development selection.
+- Task definitions for foreground, background, uncertainty and 0/1/255 target IDs.
+- Source-bound corrected-mask import with native geometry and lossless export checks.
+- Acceptance records bound to the exact generated batch snapshot.
+- Admission requiring condition acceptance, corrected source targets, matching
+  task versions, provenance, split membership and reference coverage.
+- Separate qualified target fields; original semantic predictions retain their origin.
+- Foreground metrics that exclude ignored pixels and expose undefined denominators.
+
+Verified evidence
+115 contract and integration tests passed. Editor interaction, confirmation reset,
+RLE export/import, stale bindings, malformed masks and invalid admission paths are
+covered. The distribution includes the editor template and qualification workers.
+The native workspace contains 24 training and 12 development candidates, including
+all six condition-pilot sources. All 108 source files were verified unchanged;
+no held-out test sensor payloads were opened. Thirteen historical depth checkpoints
+retain their original checksums.
+
+Benchmark configuration and runtime
+The goods comparison configuration declares inputs, preprocessing, initialization,
+loss, optimizer, model seeds, selection metrics and matched update budgets.
+A discarded fixture optimizer step passed on the local GPU at 640x360, batch size 4,
+float32. Strict checkpoint reload and native-resolution logits passed. Peak CUDA
+allocation was approximately 1.15 GiB; reserved memory was approximately 1.37 GiB,
+including the reload check. This is a runtime observation, not a full-run memory bound.
+
+Dataset qualification status
+Dataset acceptance remains in progress. The current corrected-reference count and
+training-eligible variant count are zero. The admission check preserves this state
+and records reasons for all 18 condition attempts. The original pilot's 11 automated
+passes and 7 rejections remain unchanged; rejected cases are not silently replaced.
+
+Capability boundaries
+Benchmark execution, independent task results, matched synthetic-data comparisons
+and scene-backend integration remain separate milestones. The runtime fixture does
+not establish convergence, accuracy or data utility. Model-assisted reference
+correction retains potential anchoring bias. The configured reference counts are
+pilot requirements, not statistical adequacy guarantees. Fusion and unsupported
+sensor-generation capabilities retain their existing restrictions.
+
+References
+configs/tasks/warehouse_goods.json: task definition and reference criteria.
+configs/benchmarks/warehouse_goods.json: declared comparison configuration.
+docs/preparation_readiness.json: aggregate qualification evidence.
+src/pipeline/prepare_benchmark.py: preparation, import and admission interfaces.

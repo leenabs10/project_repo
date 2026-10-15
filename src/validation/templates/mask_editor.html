@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><title>Reference label workspace</title>
+<style>body{font:16px system-ui;margin:24px;background:#f5f6f8;color:#182230}button,select,input{font:inherit;padding:8px}#surface{position:relative;width:100%;max-width:1280px;aspect-ratio:__WIDTH__/__HEIGHT__;margin-top:16px}canvas{position:absolute;width:100%;height:100%;touch-action:none}label{display:inline-block;margin:6px}#status{font-weight:600}</style>
+<h1>Reference label workspace</h1><p id="source"></p><p id="definition"></p>
+<label>Class <select id="class"><option value="1">Goods</option><option value="0">Background</option><option value="255">Ignore</option></select></label>
+<label>Brush radius <input id="radius" type="number" min="1" max="100" value="12"></label>
+<button id="toggle">Toggle overlay</button><button id="undo">Undo stroke</button>
+<div id="surface"><canvas id="rgb" width="__WIDTH__" height="__HEIGHT__"></canvas><canvas id="mask" width="__WIDTH__" height="__HEIGHT__"></canvas></div>
+<p id="status">Loading candidate labels...</p>
+<label>Reviewer <input id="reviewer"></label>
+<label><input id="confirmed" type="checkbox">I checked the complete native image and corrected labels under the stated definition.</label>
+<button id="export">Export reference submission</button>
+<script>
+const source = __SOURCE_RECORD__, definition = __TASK_DEFINITION__;
+const width = __WIDTH__, height = __HEIGHT__, canvas = document.querySelector('#mask');
+const context = canvas.getContext('2d');
+let labels = new Uint8Array(width * height), ready = false, overlay = true, painting = false, previous = null;
+const history = [];
+document.querySelector('#source').textContent = source.sample_id + ' | ' + source.split + ' | ' + width + ' x ' + height;
+document.querySelector('#definition').textContent = 'Goods: ' + definition.foreground + '. Background: ' + definition.background + '. Uncertainty: ' + definition.uncertainty + '.';
+function image(path) { return new Promise((resolve, reject) => { const item = new Image(); item.onload = () => resolve(item); item.onerror = reject; item.src = path; }); }
+function display() {
+  context.clearRect(0, 0, width, height);
+  if (!overlay) return;
+  const pixels = context.createImageData(width, height);
+  for (let i = 0; i < labels.length; i++) {
+    if (labels[i] === 1) { pixels.data[i*4] = 235; pixels.data[i*4+1] = 70; pixels.data[i*4+2] = 210; pixels.data[i*4+3] = 125; }
+    if (labels[i] === 255) { pixels.data[i*4] = 255; pixels.data[i*4+1] = 160; pixels.data[i*4+3] = 160; }
+  }
+  context.putImageData(pixels, 0, 0);
+}
+function position(event) { const box = canvas.getBoundingClientRect(); return [(event.clientX-box.left)*width/box.width, (event.clientY-box.top)*height/box.height]; }
+function paint(point) {
+  const radius = Math.max(1, Math.min(100, Number(document.querySelector('#radius').value) || 1));
+  const value = Number(document.querySelector('#class').value);
+  const start = previous || point, distance = Math.hypot(point[0]-start[0], point[1]-start[1]);
+  const steps = Math.max(1, Math.ceil(distance / Math.max(1, radius/2)));
+  for (let step = 0; step <= steps; step++) {
+    const cx = start[0]+(point[0]-start[0])*step/steps, cy = start[1]+(point[1]-start[1])*step/steps;
+    for (let y = Math.max(0,Math.floor(cy-radius)); y <= Math.min(height-1,Math.ceil(cy+radius)); y++)
+      for (let x = Math.max(0,Math.floor(cx-radius)); x <= Math.min(width-1,Math.ceil(cx+radius)); x++)
+        if ((x-cx)**2+(y-cy)**2 <= radius**2) labels[y*width+x] = value;
+  }
+  previous = point; display();
+}
+canvas.onpointerdown = event => { if (!ready) return; event.preventDefault(); history.push(labels.slice()); if (history.length>10) history.shift(); painting=true; previous=null; canvas.setPointerCapture(event.pointerId); document.querySelector('#confirmed').checked=false; paint(position(event)); };
+canvas.onpointermove = event => { if (painting) paint(position(event)); };
+canvas.onpointerup = canvas.onpointercancel = () => { painting=false; previous=null; };
+document.querySelector('#toggle').onclick = () => { overlay=!overlay; display(); };
+document.querySelector('#undo').onclick = () => { if (history.length) { labels=history.pop(); document.querySelector('#confirmed').checked=false; display(); } };
+document.querySelector('#export').onclick = () => {
+  const reviewer = document.querySelector('#reviewer').value.trim();
+  if (!ready || painting || !reviewer || !document.querySelector('#confirmed').checked) { alert('Finish checking the complete image, enter your name and confirm.'); return; }
+  const runs = []; let value=labels[0], count=1;
+  for (let i=1; i<labels.length; i++) { if (labels[i]===value) count++; else { runs.push([value,count]); value=labels[i]; count=1; } } runs.push([value,count]);
+  const submission = {...source, reviewer, reviewed:true, reviewed_at:new Date().toISOString(), width, height, mask_rle:runs};
+  const url=URL.createObjectURL(new Blob([JSON.stringify(submission)],{type:'application/json'}));
+  const link=document.createElement('a'); link.href=url; link.download=source.sample_id.replaceAll('/','_')+'_reference.json'; link.click(); setTimeout(()=>URL.revokeObjectURL(url),1000);
+  document.querySelector('#status').textContent='Submission exported. Source files are unchanged; admission validates the submission separately.';
+};
+Promise.all([image('rgb.png'),image('candidate.png')]).then(([rgb,candidate])=>{
+  if (rgb.naturalWidth!==width || rgb.naturalHeight!==height || candidate.naturalWidth!==width || candidate.naturalHeight!==height) throw Error('Native geometry mismatch');
+  document.querySelector('#rgb').getContext('2d').drawImage(rgb,0,0);
+  const temporary=document.createElement('canvas'); temporary.width=width; temporary.height=height;
+  const temporaryContext=temporary.getContext('2d'); temporaryContext.drawImage(candidate,0,0);
+  const pixels=temporaryContext.getImageData(0,0,width,height).data;
+  for (let i=0;i<labels.length;i++) labels[i]=pixels[i*4]; ready=true; display();
+  document.querySelector('#status').textContent='Prediction candidate loaded. Magenta: goods; orange: ignored. Check all visible regions.';
+}).catch(error=>{document.querySelector('#status').textContent='Unable to load the native source files: '+error.message;});
+</script></html>

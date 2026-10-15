@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dubaidata-synthetic-pipeline"
+version = "0.1.0"
+description = "Adapter-based synthetic-data pipeline foundations and verified warehouse research workflows"
+requires-python = ">=3.12,<3.13"
+dependencies = ["numpy==2.5.3", "Pillow==12.3.0", "jsonschema==4.26.0"]
+
+[project.scripts]
+dubaidata-prepare = "src.pipeline.run:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src", "src.*"]
+namespaces = true
+
+[tool.setuptools.package-data]
+"src.core" = ["schemas/*.json"]
+"src.validation" = ["templates/*.html"]

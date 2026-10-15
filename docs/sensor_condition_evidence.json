@@ -1,0 +1,98 @@
+{
+  "status": "automated_integrity_passed_release_qualification_in_progress",
+  "contract_tests": 98,
+  "source_samples": 6,
+  "native_rgb_depth_resolution": [
+    1280,
+    720
+  ],
+  "attempted_variants": 18,
+  "rejected_variants": 7,
+  "condition_coverage": {
+    "reduced_brightness": {
+      "requested": 6,
+      "automated_pass": 6,
+      "rejected": 0,
+      "release_accepted": 0
+    },
+    "increased_brightness": {
+      "requested": 6,
+      "automated_pass": 3,
+      "rejected": 3,
+      "release_accepted": 0
+    },
+    "training_missingness": {
+      "requested": 6,
+      "automated_pass": 2,
+      "rejected": 4,
+      "release_accepted": 0
+    }
+  },
+  "rejection_reason_counts": {
+    "bright_luma_fraction_exceeds_training_envelope": 3,
+    "valid_depth_fraction_outside_training_envelope": 4,
+    "depth_hidden_fraction_outside_requested_bounds": 1
+  },
+  "manifest_sha256": "fe77b9efd233e44e45d620841b7055118b6f9c44e4f2d26ac47464a72fb56f2e",
+  "worker_profile_sha256": "b821b4f418a4428ee75e3f408ef36221a81125b4ebb8e9ad1e9c199b20b5b164",
+  "verified_artifacts": 87,
+  "source_files_verified_unchanged": 32,
+  "lidar_native_format_checks": [
+    {
+      "sample_id": "Aisle_CCW_Run_1/000000",
+      "stored_rows": 262144,
+      "usable_points": 194947
+    },
+    {
+      "sample_id": "Aisle_CCW_Run_1/000227",
+      "stored_rows": 262144,
+      "usable_points": 205527
+    },
+    {
+      "sample_id": "Aisle_CCW_Run_1/000454",
+      "stored_rows": 262144,
+      "usable_points": 225412
+    },
+    {
+      "sample_id": "Aisle_CCW_Run_1/000681",
+      "stored_rows": 262144,
+      "usable_points": 219705
+    },
+    {
+      "sample_id": "Aisle_CCW_Run_1/000908",
+      "stored_rows": 262144,
+      "usable_points": 190776
+    },
+    {
+      "sample_id": "Aisle_CCW_Run_1/001135",
+      "stored_rows": 262144,
+      "usable_points": 194906
+    }
+  ],
+  "retained_measurements_and_masks": "all accepted variants passed",
+  "validation_sensor_payloads_opened": 0,
+  "test_sensor_payloads_opened": 0,
+  "worker_elapsed_seconds": 9.069120500003919,
+  "worker_timing_scope": "source decode, generation, lossless export, source verification, visual diagnostics and artifact hashing; excludes executor startup and parent verification",
+  "attempt_storage_bytes": 44089145,
+  "peak_memory_measured": false,
+  "physical_sensor_realism_certified": false,
+  "training_eligible": false,
+  "delivered_coverage_complete": false,
+  "limitations": [
+    "RGB gain is an 8-bit stress transform, not calibrated exposure or low-light noise.",
+    "Donor masks transfer missingness only, not geometry, measurements or a physical failure model.",
+    "LiDAR is preserved byte-for-byte; no simulated/corrupted LiDAR is generated.",
+    "Unchanged geometry does not resolve real camera-LiDAR registration or certify joint sensor fidelity.",
+    "Preserved label provenance is not independent semantic ground truth."
+  ],
+  "distribution_check": {
+    "status": "passed",
+    "wheel_sha256": "b8ede366cd121a488fe865dafd48d1eef7576fc21d50f60e651a55460973c1d2",
+    "worker_and_validator_sources": "identical to verified checkout",
+    "sensor_job_and_policy_schemas": "included and validate real pilot inputs"
+  },
+  "automated_integrity_pass": 11,
+  "repeat_run_data_diagnostics_and_acceptance_decisions": "identical",
+  "technical_evidence": "reports/sensor_conditions_verification/evidence.json"
+}

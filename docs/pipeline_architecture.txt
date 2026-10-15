@@ -1,0 +1,166 @@
+DubaiDATA customer-adaptable synthetic-data architecture
+Architecture specification and capability boundaries
+
+Product definition
+DubaiDATA is developing a customer-adaptable, simulator-independent synthetic-data
+pipeline. It ingests customer-specific datasets through adapters, standardizes their
+modalities and metadata, identifies coverage requirements, generates controlled
+sensor and scene variations using supported backends, validates their quality, and
+exports traceable datasets for customer-specific ML applications.
+
+The three architectural principles
+1. Dataset-independent core.
+2. Simulator-independent generation contracts.
+3. Infrastructure-independent execution.
+
+Independence means stable boundaries and explicit adapters. It does not mean every
+dataset, simulator or execution environment is already supported. New integrations
+need implementation, capability checks and evidence before being called available.
+
+End-to-end flow
+Customer input -> dataset adapter -> canonical manifest/profile -> customer targets
+-> generation plan -> sensor-condition or scene-generation backend -> canonical
+samples -> quality acceptance -> optional hybrid dataset/task evaluation -> export.
+An execution runner launches jobs for these stages without defining their semantics.
+
+Dataset adapter boundary
+- Discover and decode source files; preserve source hashes, native metadata and IDs.
+- Declare available modalities, units, frames, timing basis, calibration and labels.
+- Map source-specific classes and conventions explicitly. Do not guess unknown units
+  or pretend an automatic universal ontology mapping is implemented.
+- Preserve customer-defined split groups and locked evaluation membership.
+- Expose standardized records and reusable operations to the core. Source folder
+  names, collection metadata, publisher class IDs and sensor layouts stay in adapters.
+TorWIC is the first reference integration. Another customer dataset requires a new
+adapter/configuration, not changes to the shared synthesis and validation rules.
+
+Canonical data model
+Versioned dataset, sample, sensor-rig, taxonomy, quality and provenance contracts.
+Common fields include dataset/customer IDs, source/sample IDs, split membership,
+capture/timing basis, modality states, calibration references, units, coordinate
+frames, relative artifact references, hashes and label provenance/qualification status.
+Resolution and modality availability are declared, not global TorWIC constants.
+Preserve raw publisher conventions alongside documented canonical conversions.
+Distinguish camera axial depth, radial sensor range, validity and inferred values.
+Unsupported, missing and available outputs have explicit meanings; never invent files.
+
+Customer target and coverage model
+Describe preserve/vary/increase/prohibit controls, modality requirements, scenario
+counts, allowed distributions, coverage bins, quality thresholds and export format.
+Tie parameter proposals to permitted training/reference data. Keep customer targets
+separate from sensor-realism evidence and record requested versus achieved coverage.
+Store an immutable resolved generation plan with sampled object poses and parameters.
+Where feasible, sample scene geometry in shared planning code, not independently in
+each engine. Preserve backend-specific randomness/version evidence as well as seeds.
+
+Generation contracts
+Two routes consume shared requests:
+1. Real-sample sensor variations: clean references plus bounded RGB/depth/LiDAR
+   derivatives, masks, transformation parameters and traceable source lineage.
+2. Scene generation: portable metric geometry, asset IDs, taxonomy, lighting intent,
+   sensor rig and capture specification translated by an engine adapter.
+Backend responsibility: describe capabilities, preflight the request, translate the
+scene/sensors, execute generation and normalize outputs into standard sample records.
+Capability checks must cover required modalities, timing/scan behaviour, annotation
+types and applicable fidelity limits. Unsupported requests fail before expensive work.
+No bpy, BlenderProc or Isaac API imports in shared contracts, profiling, acceptance,
+task evaluation or packaging. Existing dataset/renderer scripts are wrapped gradually.
+
+Scene and asset portability
+Preserve metric dimensions/transforms, stable instance/class IDs, source assets,
+material references, physical parameter units and asset licenses/hashes.
+Maintain mappings from portable asset IDs to each backend's representation.
+Keep original assets even if USD is evaluated for interchange. USD alone does not
+guarantee equivalent materials, lighting, physics, sensors or image appearance.
+Backend camera-axis/depth/label conversions are explicit and covered by fixtures.
+
+Infrastructure-independent execution
+Execution runner accepts a versioned job, runtime/resource requirements and artifact
+locations. It launches a backend worker and captures status, logs and a result manifest.
+Backend workers use separate pinned environments/processes; do not require BlenderProc
+and Isaac to share one Python environment. Local execution is the initial runner.
+Remote/cloud runners are future implementations selected by actual requirements.
+Storage resolution is separate from generation logic: dataset-relative artifact
+names and configured roots, with local/remote transport behind storage adapters.
+No customer contract contains personal absolute paths, credentials or a mandatory
+cloud provider. Runtime references and secrets are deployment configuration.
+Use job/attempt IDs, controlled retries, explicit failures and fresh output locations;
+never overwrite raw data, existing accepted runs or checkpoints implicitly.
+Simulator choice, execution location and storage provider are separate decisions.
+
+Quality and task evaluation
+Data quality is the governing product priority. Generation volume and speed
+cannot bypass integrity, label, geometry, fidelity or dataset acceptance criteria.
+Reject or quarantine failed samples with reasons; unmet requested coverage prevents
+a complete-delivery claim. Plausible appearance is not evidence of correct labels.
+Scale only after representative pilot acceptance. Use bounded-memory processing,
+partitioned jobs and retry-safe artifacts while preserving sample identity,
+parameter/seed binding and acceptance semantics. Measure accepted output per unit
+compute, rejection rate, coverage, resource usage and downstream utility at declared
+resolution/quality. These measurements establish scalability; modular design alone
+does not. Customer value and model improvement require independent evidence.
+Common acceptance: schema, payload integrity, units, geometry, requested conditions,
+fidelity, diversity/novelty, coverage, lineage and relevant modality consistency.
+Backend/sensor-specific validators add ray/scan, timing and implementation checks.
+Reference-label accuracy and appearance are independently qualified. Calibrated sensor
+realism cannot be inferred from plausible images or hypothetical noise alone.
+Task adapters define target semantics, ignore rules, loader inputs, models, metrics,
+training budgets and held-out protocols. Goods segmentation is the first benchmark,
+not the core's universal task. Depth restoration is a bounded optional second task.
+Training eligibility and delivered generation status are explicit. Report gains,
+regressions, unknowns and partially supported scope honestly.
+
+Customer delivery
+Export accepted data, customer/resolved generation configs, manifests, calibration
+references, label definitions, quality/coverage results, lineage, versions, limitations
+and optional ML comparison results. Keep export formats behind customer/task adapters.
+MVP delivery is a CLI/local workflow and management demonstration; no portal, billing,
+multi-tenant platform or production orchestration is required.
+
+Initial support and future candidate policy
+- TorWIC: existing verified real-data integration, progressively adapted to contracts.
+- Existing Blender: retained verified RGB/depth/label pilot, appearance gates pending.
+- BlenderProc: current intended scene backend; isolated tools are downloaded, but
+  renderer integration and compatibility must be demonstrated before claiming support.
+- Real LiDAR: ingestion/profile exists; complete controlled variations remain pending.
+- Simulated LiDAR: deferred capability, not supplied by a camera-depth point cloud.
+  The original same-scene RGB/depth/LiDAR generation gate remains open until validated.
+- Isaac Sim: future candidate when customer LiDAR/physics/sensor-fidelity needs justify
+  adapter, asset and infrastructure costs. It is not a fixed production destination.
+- GCP or another environment: optional execution choice, independent of simulator.
+
+Migration acceptance
+Reuse customer requests, portable scene intent, sample/taxonomy/provenance contracts,
+shared validators, task/evaluation code and exports. Implement the new backend worker,
+asset/material mappings and sensor conversions. Port one controlled scene first.
+Verify scale, rigid transforms, known camera projections, axial depth versus range,
+visible labels and every requested sensor capability with explicit tolerances.
+Compare appearance/coverage/task utility separately; do not require pixel identity
+or assume identical seeds produce identical outputs across engines/hardware.
+Benchmark quality, throughput, memory, reproducibility and cost before scaling.
+Smooth migration means limited changes at adapters and deployment boundaries, not
+a promise of automatic scene conversion or zero sensor revalidation.
+
+Implementation priorities
+Verified foundations include canonical sample/preparation-job contracts, a TorWIC
+wrapper, an explicit paired-PNG manifest adapter, shared cache preparation and a local
+subprocess worker/executor. Legacy research caches retain exact array and file hashes.
+The source decoder's algorithm is preserved with package-safe imports. Core schemas are
+included in an installable host package. See docs/adapter_foundation.json for evidence.
+Shared scene-generation workers, additional task adapters and remote execution/storage require
+further integration. The existing custom Blender pilot remains separately available.
+Preserve existing audits, checkpoints and source provenance.
+Real-sample condition jobs now add versioned customer controls and a fixed separate
+worker for RGB gain/depth missingness. Source conventions stay in dataset adapters;
+transforms stay in the generation adapter; shared acceptance and qualification evidence
+live under validation. Jobs bind source manifests, quality policy and training-only
+evidence. Labels/LiDAR remain unchanged. Both accepted and rejected attempts retain
+lineage and requested-versus-achieved condition counts; training remains gated.
+The goods task adapter, source-bound target import and dataset admission now provide
+acceptance tracking. Corrected targets remain separate from publisher predictions;
+no appearance decision can promote an uncorrected prediction into a task reference.
+Next: complete dataset qualification, integrate a bounded scene worker,
+then assemble hybrid data and perform the controlled task comparison. Keep additional sensor
+methods evidence-driven. Unsupported calibrated noise and LiDAR corruption stay blocked.
+The suite includes a non-TorWIC customer fixture, cross-split payload rejection,
+partition-stable identities, native output/mask integrity and executor-to-worker checks.

@@ -1,0 +1,110 @@
+{
+  "status": "passed",
+  "split_counts": {
+    "train": 1136,
+    "validation": 1037,
+    "test": 915
+  },
+  "full_cache_frames": 2173,
+  "native_rgb_depth_files_decoded": 4346,
+  "native_multimodal_parity_samples": 2,
+  "legacy_cache_parity": {
+    "train": {
+      "array_member_bytes": "identical",
+      "old_sha256": "9aeadb0bf0280532554b41b965784209fd529bdb0fe834a3d2ee9411a7dc07ae",
+      "new_sha256": "9aeadb0bf0280532554b41b965784209fd529bdb0fe834a3d2ee9411a7dc07ae",
+      "frames": 1136
+    },
+    "validation": {
+      "array_member_bytes": "identical",
+      "old_sha256": "41bfea558f2ac2296b07c1bef5b775404a857e4fe876b35c8a27784447bf4d70",
+      "new_sha256": "41bfea558f2ac2296b07c1bef5b775404a857e4fe876b35c8a27784447bf4d70",
+      "frames": 1037
+    }
+  },
+  "source_provenance_records_matched": 2173,
+  "test_sensor_payloads_decoded": 0,
+  "contract_tests": 82,
+  "legacy_cli_outside_project": "passed",
+  "full_cache_elapsed_seconds_including_worker_start_decode_export_verification": 147.25149709999823,
+  "memory_strategy": "One native pair at a time, disk-backed output arrays, chunked archive verification",
+  "peak_memory_measured": false,
+  "packages": {
+    "numpy": "2.5.3",
+    "Pillow": "12.3.0",
+    "scipy": "1.18.1",
+    "opencv-python": "5.0.0.93",
+    "open3d": "0.20.0",
+    "torch": "2.9.1+cu128",
+    "torchvision": "0.24.1+cu128",
+    "PyYAML": "6.0.3",
+    "jsonschema": "4.26.0",
+    "pytest": "9.1.1",
+    "black": "26.10.0",
+    "dubaidata-synthetic-pipeline": "0.1.0"
+  },
+  "dependency_health": [
+    "No broken requirements found.",
+    "No broken requirements found."
+  ],
+  "cuda_matrix_check": "passed",
+  "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU",
+  "new_packages": [
+    "black==26.10.0"
+  ],
+  "generation_adapter_status": "Capability declarations only; simulator workers remain unavailable",
+  "cloud_execution_status": "Not implemented",
+  "simulation_started": false,
+  "training_started": false,
+  "protected_hashes": {
+    "data\\manifests\\manifest.jsonl": "fe77b9efd233e44e45d620841b7055118b6f9c44e4f2d26ac47464a72fb56f2e",
+    "data\\raw\\torwic_slam\\calibrations.txt": "e96f48296497b6f45f5092074635db1ae5e1777d9eb1db328af1b9716150be65",
+    "src\\ingestion\\torwic_loader.py": "d18be6331f46c00c2fd4e699b97429b89be7e673619f458208bc86463eb2b77c",
+    "models\\depth_baseline\\best_model.pt": "aee7958a0c9d7f8349364e7e9b51f3ab5a8db2441bfead5e11f9838932f76378",
+    "models\\depth_context\\depth_seed42\\best_model.pt": "adb7288583b4784b6de4d391388918f3c595cb715d28531a771bc6a175de4031",
+    "models\\depth_context\\depth_seed43\\best_model.pt": "dabfac321fc91bca28fe4ec4feaa2b055bbfc29a58d4c42be73335238893fa20",
+    "models\\depth_context\\depth_seed44\\best_model.pt": "fd6fb6b7594b44d9bb721034711d8cdad8990328d3ec059ca2bf04f5f800b7e0",
+    "models\\depth_context\\local_seed42\\best_model.pt": "c1063479c7434e78d364c7d4ce65ac40d588a43375fb70353fcc066ca85ef9b2",
+    "models\\depth_context\\recommended_model.pt": "24bc64ef1b28a3805f2b8a018ee31f4a323415b2493cd6dcd430d322b67d8eae",
+    "models\\depth_context\\rgb_seed42\\best_model.pt": "143c4af84855a033d1ec722269168dcf5530030e0bb4f29859682aebb6f7f089",
+    "models\\depth_context\\rgb_seed43\\best_model.pt": "e8ecdf5078366f5c06ec1e13ba1a9d741282624a909c8b94ea76a4639f30ba8b",
+    "models\\depth_context\\rgb_seed44\\best_model.pt": "47799cc82ca44472edbb18567c0804a84158c706f0d75491769bea09eecc0106",
+    "models\\depth_quality\\research_candidate.pt": "04dbb308acb549701ab964f7294ed0bf8e010d6cdfb8a3957293e3ba40a59681",
+    "models\\depth_quality\\seed42\\best_model.pt": "cdcb04c9c195700d27ff461b8cae5923fab1ba382ef97905deab0b0bb3599412",
+    "models\\depth_quality\\seed43\\best_model.pt": "34913dc99b46215daf69e718377921df72e586860d64df608711d89baa290443",
+    "models\\depth_quality\\seed44\\best_model.pt": "42c81638d52992620ebd5479870de1f9705eb4096ac65b7fdb130a36c455ea98"
+  },
+  "code_sha256": {
+    "src\\core\\contracts.py": "741fdab1d183dee73bf9060dd9f36d79282085e8d7c30f75c18e90073d79262b",
+    "src\\core\\__init__.py": "43edb3a8ce06d758b91889f9add625342fea4e89a18a71c42e0e7786baf85fd5",
+    "src\\adapters\\__init__.py": "f2d80d9a82068c0cbb31cd052c1ab01c66d6dab93eec0f60e55358cd51af609b",
+    "src\\adapters\\datasets\\paired_images.py": "33f13684d0412fc8656baac9b664e0bf9e27ae197da5f3b3a4e7c664fbe4a66f",
+    "src\\adapters\\datasets\\torwic.py": "a4d9501aecd680be5dcdf0790dc24ff1961ddd6d91b6ef1d11fdfa38476ba660",
+    "src\\adapters\\datasets\\__init__.py": "98ed243c0331a894fc9690a353a590ff4c91bb6fd1908c3af19560f15187baee",
+    "src\\adapters\\execution\\local.py": "61440e15f0efaac3cb13256adb1c2788aff57017ca939592b43e9993eca39026",
+    "src\\adapters\\execution\\__init__.py": "ad144992ea762b3e7983c7eeca81a5fe1b7955e1ee21b4e550b6571020cb38c7",
+    "src\\adapters\\generation\\capabilities.py": "e276a5f13561e8f707f52dfcd3bd94d8332da490bd08d013f9794b3fbadfde93",
+    "src\\adapters\\generation\\__init__.py": "d3c61222129abe296348ba2f22c34262c3857d415ca1c5b043a622f69463784f",
+    "src\\adapters\\storage\\local.py": "6f49674f83f23bc3a90fa8c102e8a1c160a2467f4c09196be5fbc745ebf53615",
+    "src\\adapters\\storage\\__init__.py": "5f4d79487779430c3a5b1e92be4b77fa27bc00d93ed558dcb86511a8d7899909",
+    "src\\pipeline\\cache.py": "c692a4d4b19208cc5af24ee1cd7b100217db30f948f4e8366248a53fb747fc35",
+    "src\\pipeline\\prepare.py": "ebcd776c57357ec6ea98ff9231c1d26154ecaf52f39fabdcc183c9c4471c5e95",
+    "src\\pipeline\\__init__.py": "533c44198bc848c88c655e8921410de29ab16937bb4fe9f1de6edbdfed520c69",
+    "src/pipeline/run.py": "5975db24302fa3965d4a3bd612b3f390e418924c57205bf077f8113028d32ef7"
+  },
+  "readiness": "Verified data preparation foundation; independent reference labels, rendering integration and utility validation remain outstanding",
+  "host_package": "dubaidata-synthetic-pipeline==0.1.0",
+  "editable_install": "passed",
+  "wheel_schema_validation": "passed",
+  "installed_cli_outside_workspace": "passed",
+  "loader_import_equivalence": {
+    "loader_functions_and_classes_ast": "identical",
+    "components": 7
+  },
+  "formatting_equivalence": {
+    "path": "src/pipeline/cache.py",
+    "executable_ast": "identical",
+    "verified_run_sha256": "c692a4d4b19208cc5af24ee1cd7b100217db30f948f4e8366248a53fb747fc35",
+    "formatted_source_sha256": "885b23d305a5948c67101925dcfe43dc50817a5c954da3bbf7e24d21bb64dfbb"
+  }
+}

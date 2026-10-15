@@ -1,0 +1,35 @@
+{
+  "schema_version": "dubaidata/1.0",
+  "dataset_id": "torwic_slam",
+  "source_manifest_sha256": "fe77b9efd233e44e45d620841b7055118b6f9c44e4f2d26ac47464a72fb56f2e",
+  "source_split": "train",
+  "training_groups": [
+    "Aisle_CCW_Run_1"
+  ],
+  "sensor_id": "azure_left_camera",
+  "basis": "training_distribution_bounds_not_sensor_calibration",
+  "evidence_sha256": {
+    "training_profile": "db671287689444831fae0135f277c1fdc06bd0e6559ac6f80506e92c46a4017b",
+    "parent_policy": "fdb92dc8e7c404cee06978ffa9d7089564c085d893928e2134ef584032be839b",
+    "calibration": "e96f48296497b6f45f5092074635db1ae5e1777d9eb1db328af1b9716150be65"
+  },
+  "bounds": {
+    "rgb_gain_range": [
+      0.9148424764683035,
+      1.104828163107211
+    ],
+    "mean_luma_range": [
+      107.40986149088542,
+      151.6440357530382
+    ],
+    "bright_luma_fraction_max": 0.02630718315972224,
+    "valid_depth_fraction_range": [
+      0.37884928385416666,
+      0.5989708116319444
+    ],
+    "hidden_valid_fraction_min": 0.01,
+    "hidden_valid_fraction_max": 0.4,
+    "rgb_mean_absolute_change_min": 0.25
+  },
+  "physical_sensor_realism_certified": false
+}

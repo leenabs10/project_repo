@@ -1,210 +1,167 @@
-# AMR Synthetic MVP
+# DubaiDATA Synthetic Data MVP
 
-TorWIC-SLAM dataset inspection and ingestion. Raw data stays unchanged.
+DubaiDATA is developing a customer-adaptable, simulator-independent synthetic-data
+pipeline. It ingests customer datasets through adapters, standardizes modalities
+and metadata, identifies coverage requirements, generates controlled sensor and
+scene variations, validates quality, and exports traceable datasets for
+customer-specific ML applications.
 
-Run from the project root in PowerShell:
+The architecture follows three principles:
+
+- **Dataset-independent core**
+- **Simulator-independent generation contracts**
+- **Infrastructure-independent execution**
+
+[MVP scope](docs/mvp_scope.txt) · [Architecture](docs/pipeline_architecture.txt) ·
+[Delivery milestones](docs/mvp_delivery_plan.txt) · [Capability assessment](docs/dataset_readiness.txt)
+
+## Reference application
+
+TorWIC-SLAM warehouse AMR data is the reference integration. It includes RGB,
+depth, LiDAR, calibration, trajectory information and predicted semantic labels.
+Goods segmentation is the primary benchmark; depth restoration is a conditional
+secondary benchmark. Dataset conventions and task semantics belong in adapters,
+not in the reusable pipeline core.
+
+The workflow is:
+
+```text
+Customer data -> adapter -> standardized profile -> synthesis specification
+-> supported generation backend -> quality acceptance -> dataset export
+-> optional hybrid training and independent real-data evaluation
+```
+
+## Capabilities and integration status
+
+| Area | Evidence or integration status |
+| --- | --- |
+| Data integrity | 3,088 frames and 21,616 sensor payloads audited |
+| Depth caches | Both resolutions verified against manifests and source derivatives |
+| Research workflows | Preparation, training, prediction and audit scripts integrated |
+| Scene pilot | Custom Blender RGB/depth/label geometry and export checks passed |
+| Shared preparation | Canonical contracts, two dataset input formats and local worker/executor verified |
+| Real-sample conditions | Native RGB gain/depth-mask jobs verified; 11 passed automated checks, 7 rejected; release qualification in progress |
+| Benchmark preparation | Task definitions, corrected-target import and admission verified; GPU fixture/runtime checks passed |
+| BlenderProc | Tools prepared; generation integration and acceptance pending |
+| Goods references | Independent reference validation required; trajectory masks are predictions |
+| Simulated LiDAR | Dedicated generation unavailable; camera point clouds are not LiDAR scans |
+| Downstream utility | Controlled goods comparison and independent evaluation required |
+
+BlenderProc is the intended camera-generation backend. Isaac Sim is an additional
+candidate when customer sensor, physics or fidelity requirements justify the work.
+Local and cloud execution are separate deployment choices. Neither a simulator nor
+a cloud provider is a predetermined production destination.
+
+## Data and quality rules
+
+- Preserve raw data and clean references; write derivatives to separate locations.
+- Keep complete-trajectory splits and protect held-out real data from tuning.
+- Record source IDs, parameters, seeds, calibration, versions and artifact hashes.
+- Exclude invalid depth and uncertain labels from supervision.
+- Check geometry, labels, requested conditions, fidelity, coverage and lineage.
+- Treat hypothetical corruption as controlled stress synthesis until calibrated.
+- Require reference-label accuracy and appearance qualification before dataset release.
+
+## Local development commands
+
+Run from the project root using the appropriate Python environment. Explicit
+interpreter paths avoid dependence on shell activation scripts.
+
+Inspect inputs and verify native payloads:
 
 ```powershell
-.\.venv\Scripts\Activate.ps1
-python -c "import sys; print(sys.executable); print(sys.prefix != sys.base_prefix)"
-python -m pip --version
 .\.venv\Scripts\python.exe src\ingestion\inspect_torwic.py --root data\raw\torwic_slam
+.\.venv\Scripts\python.exe src\validation\full_ingestion_checks.py --root data\raw\torwic_slam --manifest data\manifests\manifest.jsonl --output reports\ingestion_review_next\full_payload_checks.json
 ```
 
-The inventory is saved to reports/dataset_inventory.json.
-
-Build the confirmed trajectory manifest and run representative checks:
+Use the CUDA-enabled research interpreter recorded in the local runtime configuration:
 
 ```powershell
-.\.venv\Scripts\python.exe src\ingestion\torwic_loader.py --root data\raw\torwic_slam --output data\manifests --confirm-planned-dates
-.\.venv\Scripts\python.exe src\validation\week1_checks.py --root data\raw\torwic_slam --manifest data\manifests\manifest.jsonl --output reports\week1
+$trainingPython = (Get-Content .tools\training_runtime.json -Raw | ConvertFrom-Json).python_executable
+& $trainingPython -m unittest discover -s tests
+& $trainingPython -m src.validation.depth_cache_review --output reports\depth_cache_review_next
+& $trainingPython -m src.training.depth_quality --help
+& $trainingPython -m src.inference.depth_quality --help
 ```
 
-Use `--confirm-planned-dates` only for the collection dates already confirmed in
-`docs/dataset_notes.txt`. To decode every trajectory payload and check both-camera
-image shapes/types, semantic IDs, and binary LiDAR contents:
+Use fresh output paths. Full payload audits and cache-source comparisons are
+intentionally comprehensive; reuse matching evidence when inputs and code have
+not changed. Do not retrain merely to verify documentation or formatting changes.
+
+Dataset profiling and task preparation:
 
 ```powershell
-.\.venv\Scripts\python.exe src\validation\full_ingestion_checks.py --root data\raw\torwic_slam --manifest data\manifests\manifest.jsonl --output reports\week1\full_payload_checks.json
-```
-
-This audit reads raw data without modifying it and performs no model evaluation.
-
-## Week 1 status
-
-The trajectory ingestion gate passed on October 9, 2026: all 3,088 frames
-and 21,616 sensor payloads passed the full audit, with nine representative
-checks and a byte-identical rebuilt manifest. See
-[the portable validation summary](docs/week1_validation.json) and
-[dataset notes](docs/dataset_notes.txt) for scope and limitations.
-
-Raw datasets and local reports remain excluded from Git. This completes ingestion
-for the depth-only prototype; sensor registration and IMU handling must be
-validated before adding fusion. October was inspected only for data integrity.
-
-## Dataset characterization
-
-Development takes place on `dev`. Integration into `main` always requires the
-user's explicit permission; see [development rules](AGENTS.md).
-
-The training-only profiler covers both cameras, measured depth, semantic
-predictions, LiDAR usability/range, trajectory intervals and IMU span/order.
-The alignment review compares native-resolution projection with and without
-the supplied distortion coefficients. It does not fit calibration parameters.
-
-```powershell
-.\.venv\Scripts\python.exe src\profiling\dataset_profile.py --root data\raw\torwic_slam --manifest data\manifests\manifest.jsonl --output reports\dataset_profile --workers 4
-.\.venv\Scripts\python.exe src\validation\sensor_alignment_review.py --root data\raw\torwic_slam --manifest data\manifests\manifest.jsonl --output reports\sensor_alignment --samples 16
-.\.venv\Scripts\python.exe -m unittest discover -s tests -v
-```
-
-See [characterization findings](docs/dataset_characterization.txt) and
-[portable evidence](docs/dataset_characterization.json). Reports and overlays are
-derived artifacts and remain excluded from Git. Full profiling decoded 7,952
-training payloads; validation and test sensors were not opened.
-
-`imu_timing.load_imu` rejects backward order by default. Explicit `sort=True`
-returns a sorted copy with anomaly information; duplicates are rejected.
-`bracket_frames` returns validity masks and never extrapolates. No vector
-interpolation or implicit timestamp correction is performed.
-
-Production camera-LiDAR registration and the exported RGB distortion convention
-remain unresolved. Native overlap residuals are diagnostics, not independent
-calibration accuracy. Semantic masks remain pseudo-labels.
-
-## Data-quality gates and augmentation pilot
-
-The development pipeline includes training-derived augmentation proposals,
-native-resolution paired export checks, image-geometry preflight, and an audit of
-extra human annotations. See [review findings](docs/data_quality_review.txt).
-
-```powershell
-.\.venv\Scripts\python.exe src\synthesis\augmentation_policy.py --profile reports\dataset_profile\summary.json --root data\raw\torwic_slam --manifest data\manifests\manifest.jsonl --output configs\augmentation_policy.json
-.\.venv\Scripts\python.exe src\synthesis\paired_augmentation_review.py --root data\raw\torwic_slam --manifest data\manifests\manifest.jsonl --policy configs\augmentation_policy.json --output reports\augmentation_pilot_next --samples 6
-.\.venv\Scripts\python.exe src\validation\annotation_provenance.py --root data\raw\torwic_slam --annotations data\raw\torwic_slam\AnnotatedSemanticSet_Finetuning\Labelled_Test_Data --output reports\annotation_provenance_review
-```
-
-Choose a fresh pilot output directory; existing runs are never overwritten.
-The extra indexed annotations use instance IDs and require their per-file
-`labelMapping` to produce semantic IDs. Their unknown split provenance remains
-quarantined. Trajectory masks retain their existing semantic-ID interpretation.
-
-`configs/image_geometry.json` intentionally disables fusion until the Azure
-export convention is confirmed. RGB gain and missing-depth mask transfer are
-controlled stress augmentations, not certified physical sensor simulation.
-Publish completed development batches only when the user authorizes the target branch.
-
-
-## IMU loader integration
-
-See [the timing review](docs/imu_ingestion_review.txt) and
-[portable evidence](docs/imu_ingestion_review.json). `SequenceImu` reads both
-streams once per trajectory; pass it as `load_sample(..., imu_sequence=reader)`.
-Its constructor requires `max_gap_seconds`; `sort=True` explicitly sorts a copy.
-Check each side's `valid` and `reason` before using `measurement_rows` (2 x 6).
-Column meanings/units remain unverified, and no vector interpolation is applied.
-
-Run a read-only timing integrity review into a fresh report path:
-
-```powershell
-.\.venv\Scripts\python.exe src\validation\imu_ingestion_review.py --root data\raw\torwic_slam --manifest data\manifests\manifest.jsonl --output reports\imu_review_next\timing_review.json --sort-imu --max-gap-seconds 0.02
-```
-
-The 20 ms value is an explicit inspection tolerance, not a certified fusion
-setting. The report separates successful loader-contract checks from incomplete
-coverage. Invalid brackets return NaN measurements and -1 indices. Keep raw
-streams and split membership unchanged; do not fill unavailable IMU readings.
-
-
-## Verified IMU measurement alignment
-
-The [metadata review](docs/sensor_metadata_review.txt) records the source
-investigation and remaining requirements. `imu_measurements.align_verified_measurements`
-supports linear resampling only with reviewed per-stream column, unit, frame,
-clock and gap evidence bound to the source hash. It returns masked SI vectors in
-the recorded sensor frame; no coordinate conversion or fusion is applied.
-
-`configs/imu_measurements.json` keeps real TorWIC interpolation disabled. Preserve
-unknown fields as null; do not populate them from the separate Mapping exporter
-or assume a 20 ms inspection tolerance is certified. The existing bracket-only
-SequenceImu loader remains available without assigning vector meanings.
-
-```powershell
-.\.venv\Scripts\python.exe src\validation\sensor_metadata_review.py --root data\raw\torwic_slam --imu-contract configs\imu_measurements.json --geometry-contract configs\image_geometry.json --annotations data\raw\torwic_slam\AnnotatedSemanticSet_Finetuning\Labelled_Test_Data --output reports\sensor_metadata_review_next\review.json
-```
-
-Use a fresh output path. `protections_verified_metadata_pending` confirms the
-current disabled gates, not readiness for interpolation, fusion or annotation
-training. Once evidence is obtained, review and test it before enabling a gate.
-
-
-## Warehouse goods task and renderer pilot
-
-See [MVP scope](docs/mvp_scope.txt) and [current readiness](docs/dataset_readiness.txt).
-The chosen starting task is left-camera goods segmentation. Binary target 1
-means publisher semantic class 7, not driveable-ground class 1. The real targets
-are pseudo-labels; [visual findings](docs/label_quality_findings.json) identify
-possible errors requiring reference review before training claims.
-
-```powershell
+.\.venv\Scripts\python.exe src\profiling\dataset_profile.py --root data\raw\torwic_slam --manifest data\manifests\manifest.jsonl --output reports\dataset_profile_next --workers 4
 .\.venv\Scripts\python.exe src\profiling\task_dataset_review.py --root data\raw\torwic_slam --manifest data\manifests\manifest.jsonl --profile reports\dataset_profile\summary.json --output reports\task_review_next
+```
+
+Existing renderer pilot:
+
+```powershell
 $renderer = (Get-Content .tools\renderer_runtime.json -Raw | ConvertFrom-Json).blender_executable
 & $renderer --background --factory-startup -t 8 --python-exit-code 1 --python src\synthesis\warehouse_renderer.py -- --config configs\warehouse_renderer.json --root data\raw\torwic_slam --output reports\warehouse_render_next
 .\.venv\Scripts\python.exe src\validation\renderer_pilot_checks.py --render-root reports\warehouse_render_next --raw-root data\raw\torwic_slam --output reports\warehouse_package_next
 ```
 
-Choose fresh output directories. The pilot creates native RGB, clean float32 axial
-depth, geometry semantic IDs, binary goods targets, poses, settings and a local ZIP.
-It uses an independent zero-distortion synthetic camera with the reference left
-camera K. It does not certify the real exported-image convention. An analytic
-plane and independent scene rays verify depth/class alignment before packaging.
+The renderer command launches generation; installation alone does not establish
+quality acceptance. The existing pilot uses its documented synthetic camera
+convention and does not certify the real exported-image distortion convention.
 
-Shared cuboid geometry improves construction efficiency without reducing resolution
-or maximum sampling quality. Pilot appearance is a prototype; clean depth has no
-calibrated Azure failure model. Training eligibility remains false until reference
-labels, camera/domain appearance and downstream usefulness are reviewed. No IMU
-or spinning-LiDAR simulation is claimed. Keep all development local until the
-user authorizes publication.
+## Evidence and reproducibility
 
-The local `.tools/renderer_runtime.json` records the installed executable and official
-archive checksum. It stays excluded from Git. On another machine, install the same
-portable Blender version and create this local runtime file with its executable path.
+[Depth verification](docs/depth_cache_verification.txt) records cache contracts,
+mask handling, donor isolation and baseline metrics.
+[Pipeline organization](docs/pipeline_integration.txt) records research environment
+and checkpoint compatibility evidence. [Checkpoint inventory](configs/checkpoint_registry.json)
+identifies local weights and their limitations. Dependency snapshots are in
+`requirements/`; source calibration and label provenance remain attached to datasets.
 
-Validation summaries under `docs` are snapshots taken before publication. Their
-`committed`/`pushed` fields describe the review-time state, not live GitHub status.
-Use Git history and branch tracking for the current publication state. Generated
-reports, datasets, renderer installations and machine paths remain local.
+Raw data, generated reports, environments, credentials, runtime paths and model
+weights remain excluded from version control. See [development instructions](AGENTS.md)
+for repository workflow and evidence-preservation rules.
 
+## Adapter-based preparation and technology stack
 
-## Organized depth research pipeline
-
-[Pipeline organization](docs/pipeline_integration.txt) records the verified
-training environment, relocated scripts and checkpoint limits. This completes
-the schedule's preparation/training/prediction/audit integration row. The earlier
-data-understanding report covers a different scope. The historical depth research
-remains separate from goods-segmentation training and synthetic-data acceptance.
+[Verified stack](docs/tech_stack.txt) and [adapter evidence](docs/adapter_foundation.json)
+describe implemented preparation boundaries and remaining generation integrations.
+The host package includes the core JSON schemas; existing research CLIs remain available.
 
 ```powershell
-$trainingPython = (Get-Content .tools\training_runtime.json -Raw | ConvertFrom-Json).python_executable
-& $trainingPython -m unittest discover -s tests
-& $trainingPython -m src.validation.pipeline_smoke --output reports\pipeline_smoke_next
-& $trainingPython -m src.ingestion.prepare_depth_cache --root data\raw\torwic_slam --manifest data\manifests\manifest.jsonl --output data\caches\depth_cache_next --width 320 --height 180
-& $trainingPython -m src.training.depth_quality --data data\caches\depth_320 --warm-start-root models\depth_context --output reports\depth_quality_next --epochs 6
-& $trainingPython -m src.inference.depth_quality --checkpoint models\depth_quality\research_candidate.pt --depth data\raw\torwic_slam\Aisle_CCW_Run_1\Aisle_CCW_Run_1\depth_left\000000.png --output reports\depth_prediction_next.npz
-& $trainingPython -m src.validation.depth_stress_audit --data data\caches\depth_320 --root data\raw\torwic_slam --manifest data\manifests\manifest.jsonl --output reports\depth_stress_next
+& $trainingPython -m pip install -r requirements/pipeline_core.txt -r requirements/development.txt
+& $trainingPython -m pip install --no-deps --no-build-isolation -e .
+& $trainingPython -m src.pipeline.run --job configs/jobs/torwic_cache.json --runtime configs/runtime/torwic_local.example.json --output reports/adapter_cache_next
 ```
 
-Run from the project root and use fresh output paths. Training commands launch
-research runs; organizing/verifying the pipeline does not require full retraining.
-The local CUDA interpreter is recorded in ignored `.tools/training_runtime.json`.
-Select that interpreter in VS Code; the ingestion `.venv` may lack training packages.
-[Checkpoint inventory](configs/checkpoint_registry.json) records thirteen unchanged
-local weights. `models/`, weight files, caches and generated outputs stay out of Git.
-Installable environment snapshots are under `requirements/`; historical result
-configs and hashes remain unchanged rather than being relabelled as new experiments.
+The portable job contains dataset identity, manifest hash and task parameters. Local
+paths and the selected dataset adapter belong to separate runtime configuration.
+This command prepares RGB/depth caches; it does not launch simulation or training.
+Scene backends fail explicitly until their requested capabilities are integrated.
 
-Cache and nearest-fill evidence: [depth cache verification](docs/depth_cache_verification.txt).
-The audit verifies all June native derivatives, complete manifest membership,
-invalid masks, training-only donors and the historical fixed-validation baselines.
-Use `python -m src.validation.depth_cache_review --output reports/depth_cache_review_next`
-with the documented training interpreter and a fresh destination.
+## Controlled real-sample synthesis
+
+[Condition-generation evidence](docs/sensor_condition_generation.txt) documents the
+implemented RGB gain and training-donor depth-mask methods, portable customer controls,
+source binding and shared quality checks. LiDAR and labels are preserved unchanged.
+The native-resolution pilot passed 11 of 18 variants through automated checks;
+dataset release qualification and complete requested coverage remain outstanding.
+
+```powershell
+& $trainingPython -m src.pipeline.run --job configs/jobs/torwic_sensor_conditions.json --runtime configs/runtime/torwic_sensor_conditions.example.json --output reports/sensor_conditions_next
+```
+
+The runtime requires the exact training profile, parent policy and calibration files
+referenced by their hashes. Use a fresh output directory. Generated variants remain
+excluded from training until dataset acceptance criteria are satisfied.
+
+## Benchmark preparation and qualification
+
+[Preparation evidence](docs/preparation_readiness.txt) describes task-specific target
+rules, source-bound reference import and dataset admission. The goods benchmark
+configuration declares preprocessing, initialization, seeds, metrics and comparison
+budgets. Runtime compatibility passed a discarded GPU fixture step and checkpoint
+reload; benchmark performance and dataset release qualification remain outstanding.
+
+```powershell
+& $trainingPython -m src.pipeline.prepare_benchmark --help
+& $trainingPython -m src.validation.goods_runtime --help
+```

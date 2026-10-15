@@ -4,6 +4,43 @@ These rules apply to the repository and its subdirectories. Follow the user's
 current instructions and the verified MVP scope. Distinguish completed evidence
 from proposed work; do not invent requirements from an unavailable planning document.
 
+## Product architecture and boundaries
+
+- DubaiDATA builds a customer-adaptable synthetic-data pipeline. Its three
+  principles are: dataset-independent core, simulator-independent generation
+  contracts, and infrastructure-independent execution. See
+  docs/pipeline_architecture.txt and docs/mvp_scope.txt for the current design.
+- TorWIC, its numeric formats/splits/frames below, and goods segmentation are
+  the first adapter/application. Do not hardcode them into new shared contracts.
+  Dataset independence requires explicit new adapters, not guessed source formats.
+- Keep customer controls, canonical metadata, coverage, provenance, quality and
+  evaluation outside dataset-specific and simulator-specific implementations.
+  Required modality/fidelity support must be checked before job execution.
+- Simulator workers use separate pinned environments and provider-neutral jobs.
+  Separate generation backend, execution runner and storage adapter decisions.
+  Personal paths, cloud credentials and a mandatory provider do not belong in
+  shared customer specifications. Reject unsupported requests rather than invent outputs.
+- BlenderProc is the current intended backend; retain the existing Blender pilot.
+  Isaac Sim is a future candidate selected when requirements justify engineering
+  and validation. GCP is an optional runner choice, not a production commitment.
+- Preserve portable scene/asset/sensor intent. New backends still need conversion,
+  known-fixture geometry/sensor checks and appearance review; do not promise
+  automatic migration, equivalent materials or pixel-identical results.
+- Six weeks total, four delivery weeks remaining: plan 19 October-15 November.
+  New simulation starts no earlier than 19 October. The old 25 October completion
+  target is superseded. Goods is primary; depth is a conditional bounded benchmark.
+  Simulated LiDAR remains deferred and the original same-scene RGB/depth/LiDAR
+  generation gate remains open. Do not describe the camera pilot as full completion.
+- Stakeholder-facing scope, architecture, plans, status documents and README
+  must use capabilities, milestones and acceptance criteria. Keep calendar dates,
+  week counts, deadlines, private scheduling, chat history and rollback/publishing
+  housekeeping out of these documents. Internal planning remains private. Preserve
+  source-capture timestamps and original audit/provenance records where required;
+  do not alter datasets, historical hashes or technical evidence to polish prose.
+- The architecture document is a target design. The 14 October implementation was
+  rolled back; do not claim generic-core/backend/executor support is implemented
+  until tested. Reuse working code incrementally and preserve evidence snapshots.
+
 ## Branches, commits, and publishing
 
 - Implement on `dev` or on a feature branch created from `dev`. Check branch and
@@ -44,6 +81,16 @@ from proposed work; do not invent requirements from an unavailable planning docu
 - Preserve historical evidence names and hashes unless a migration is explicitly
   requested. For readability-only edits, verify executable AST equivalence and
   syntax compilation; do not retrain merely because comments changed.
+
+## Human-review communication
+
+- Keep stakeholder-facing documents professional: describe capabilities, results,
+  qualification status and acceptance criteria. Do not include human-review headings,
+  reviewer checklists, manual operator instructions or feedback-file procedures.
+  Keep operational follow-up in ignored local reports and private communication.
+- Collect actionable human-evaluation items and artifact links at the end of the
+  task batch when needed in the conversation, not in stakeholder documentation. Continue independent engineering while those reviews remain pending.
+  Do not treat silence, automated checks or a prepared gallery as human approval.
 
 ## Data integrity and provenance
 
@@ -101,6 +148,18 @@ from proposed work; do not invent requirements from an unavailable planning docu
 
 ## Synthetic-data quality
 
+- Data quality is the first priority. Throughput, volume and delivery pressure
+  must not bypass source integrity, label correctness, geometry, fidelity or
+  applicable human-review gates. Reject/quarantine failures and retain reasons.
+- Scale only within quality-validated settings. Measure accepted samples per
+  unit compute, rejection rate, coverage, memory/storage usage and task utility;
+  raw output counts or plausible images alone do not establish success.
+- Use bounded-memory processing, partitioned jobs and retry-safe artifacts as
+  workloads grow. Preserve sample IDs, parameter/seed binding, provenance and
+  acceptance semantics under parallel execution. Never silently lower fidelity.
+- Treat scalability and customer value as hypotheses until demonstrated by
+  representative workloads and independent evaluation. Architecture alone is
+  not proof of production readiness or guaranteed model improvement.
 - Preserve clean RGB/depth/semantic references and their geometric relationship.
   Record every augmentation's algorithm, seed, parameters, donor ID, and masks.
 - Separate controlled stress tests from sensor-calibrated simulation. Gaussian
@@ -253,3 +312,48 @@ from proposed work; do not invent requirements from an unavailable planning docu
   steps, two prediction CLIs and the paired audit passed. No full retraining or
   October model evaluation occurred. Publication requires the user's explicit
   authorization for the current batch; future batches need new instructions.
+
+## Verified adapter preparation foundation
+
+- Canonical sample/cache-job contracts, TorWIC and declared paired-PNG adapters,
+  shared cache preparation and a local subprocess executor are implemented.
+  82 tests passed; the complete June 320x180 cache has identical NPZ hashes.
+- Keep the legacy research cache format explicit; canonical caches preserve raw
+  values and source units plus float32 metres/valid masks. Do not silently quantize
+  another customer's depth scale into millimetres. Resizing updates camera metadata.
+- The source loader's package import was corrected with identical decoder function/
+  class AST. Preserve raw inputs, prior caches/checkpoints and historical hash records.
+- The host package is installable and includes schema resources. Local worker jobs
+  do not accept shell commands or machine paths. Deployment configuration owns them.
+- Generation entries are capability declarations with unavailable common workers;
+  do not claim BlenderProc/Isaac integration, simulated LiDAR, remote execution,
+  reviewed goods training, calibrated realism or production scalability from these
+  preparation checks. No new rendering or training is part of this batch.
+
+## Controlled real-sample synthesis evidence
+
+- Native RGB gain and training-only depth-mask jobs run through the fixed local
+  executor with portable controls and evidence hashes. Shared quality checks live
+  outside the generation adapter. 98 tests passed, including a different customer
+  format and stable partitioned execution. Cross-split payload paths are rejected.
+- The six-source pilot passed 11 of 18 variants through automated checks and
+  rejected 7. Repeated data/review bytes and decisions match; sources are unchanged.
+  LiDAR/labels are preserved byte-for-byte. See docs/sensor_condition_evidence.json.
+- All variants remain training-ineligible; human appearance and independent goods
+  references are pending. Missing coverage remains explicit. Do not relax bounds
+  to pass rejected cases or call gain/dropout calibrated sensor simulation.
+
+## Verified benchmark preparation
+
+- The goods task adapter, native reference workspace, corrected-mask importer and
+  snapshot-bound admission workflow are verified by 115 tests. Runtime fixture
+  update/reload passed at 640x360, batch size 4, float32. No trained candidate was saved.
+- The current 24-train/12-development packet includes every condition-pilot source.
+  No real corrected submissions or condition acceptance decisions have been supplied.
+  Keep eligible counts at zero until validated submissions and required coverage exist.
+- Use the snapshot-bound feedback template from the current preparation workflow;
+  the older five-column gallery CSV cannot bind decisions to a complete batch version.
+- Reference masks are model-assisted corrections, with potential anchoring bias.
+  Configured cohort counts are pilot requirements, not statistical adequacy guarantees.
+  No benchmark score, model improvement or simulator integration follows from runtime checks.
+- Preserve frozen source/results and publish only on the user's new explicit request.

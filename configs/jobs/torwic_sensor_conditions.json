@@ -1,0 +1,65 @@
+{
+  "schema_version": "dubaidata/1.0",
+  "kind": "generate_sensor_conditions",
+  "job_id": "torwic_sensor_condition_pilot",
+  "backend": "real_sensor_conditions",
+  "dataset_id": "torwic_slam",
+  "source_manifest_sha256": "fe77b9efd233e44e45d620841b7055118b6f9c44e4f2d26ac47464a72fb56f2e",
+  "quality_policy_sha256": "f2aa730b8517d7f5f3ae9ca15b73d9420aa86567ccb7cd559311cf85f3e3d954",
+  "source_split": "train",
+  "source_sample_ids": [
+    "Aisle_CCW_Run_1/000000",
+    "Aisle_CCW_Run_1/000227",
+    "Aisle_CCW_Run_1/000454",
+    "Aisle_CCW_Run_1/000681",
+    "Aisle_CCW_Run_1/000908",
+    "Aisle_CCW_Run_1/001135"
+  ],
+  "seed": 7331,
+  "required_modalities": [
+    "rgb",
+    "depth",
+    "semantic",
+    "lidar"
+  ],
+  "controls": {
+    "preserve": [
+      "native_geometry",
+      "labels",
+      "calibration",
+      "pose",
+      "timestamps",
+      "retained_depth",
+      "unvaried_modalities"
+    ],
+    "prohibit": [
+      "geometry_warp",
+      "depth_noise",
+      "lidar_corruption",
+      "label_rewrite"
+    ]
+  },
+  "conditions": [
+    {
+      "condition_id": "reduced_brightness",
+      "method": "rgb_gain",
+      "gain": 0.93
+    },
+    {
+      "condition_id": "increased_brightness",
+      "method": "rgb_gain",
+      "gain": 1.07
+    },
+    {
+      "condition_id": "training_missingness",
+      "method": "depth_mask_transfer",
+      "donor_sample_ids": [
+        "Aisle_CCW_Run_1/000100",
+        "Aisle_CCW_Run_1/000350",
+        "Aisle_CCW_Run_1/000600",
+        "Aisle_CCW_Run_1/000850",
+        "Aisle_CCW_Run_1/001100"
+      ]
+    }
+  ]
+}

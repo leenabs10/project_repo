@@ -1,0 +1,16 @@
+{
+  "schema_version": "dubaidata/1.0",
+  "task_id": "warehouse_visible_goods",
+  "definition_version": "visible_goods/1.0",
+  "input": "left_rgb",
+  "foreground": "Visible cartons, crates and stored or transported goods, including goods on shelves or robots",
+  "background": "Robot bodies, shelf structure, floor, walls, people and transport equipment",
+  "uncertainty": "Mark ambiguous identity, occlusion boundaries and unresolvable pixels as ignore; do not infer hidden surfaces",
+  "source_candidate_class_id": 7,
+  "target_ids": {"background": 0, "goods": 1, "ignore": 255},
+  "reference_origin": "human_reviewed_model_assisted",
+  "minimum_reference_frames": {"train": 24, "validation": 12},
+  "maximum_ignore_fraction": 0.5,
+  "reference_limitations": "Candidate masks are predictions. Correction is model-assisted and may retain anchoring bias. Frame counts are pilot requirements, not statistical adequacy guarantees.",
+  "test_policy": "Do not prepare or use held-out test labels until the candidate and evaluation protocol are frozen"
+}

@@ -1,0 +1,19 @@
+{
+  "schema_version": "dubaidata/1.0",
+  "job_id": "torwic_depth_cache",
+  "kind": "prepare_rgb_depth_cache",
+  "dataset_id": "torwic_slam",
+  "source_manifest_sha256": "fe77b9efd233e44e45d620841b7055118b6f9c44e4f2d26ac47464a72fb56f2e",
+  "parameters": {
+    "resolution": [
+      320,
+      180
+    ],
+    "splits": [
+      "train",
+      "validation"
+    ],
+    "depth_max_metres": 20,
+    "cache_format": "legacy_mm"
+  }
+}

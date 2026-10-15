@@ -1,0 +1,107 @@
+DubaiDATA implementation stack
+
+Core language and contracts
+Python 3.12; standard-library protocols, JSON records/jobs and JSON Schema.
+jsonschema validates versioned metadata without dataset, simulator or cloud imports.
+Shared pipeline requirements are pinned in requirements/pipeline_core.txt.
+
+Data processing
+NumPy and Pillow decode/process arrays and lossless images. Existing SciPy, OpenCV
+and Open3D support depth processing, image diagnostics and point-cloud inspection.
+Adapters keep source layouts, units, invalid sentinels and dataset split rules explicit.
+The supported additional input format is a declared paired-PNG canonical manifest;
+automatic arbitrary-customer ingestion and ontology mapping are not implemented.
+
+Generation
+Existing custom Blender 4.5.3 pilot remains available. Isolated BlenderProc 2.8.0
+with Blender 4.2.1 is prepared for integration. These environments remain separate
+from the host data/ML environment. Generation capability declarations reject unavailable
+workers and simulated LiDAR requests; no common scene-generation worker is claimed yet.
+The real_sensor_conditions worker implements native RGB gain and training-only depth
+missingness, with explicit customer controls and evidence-bound acceptance policies.
+LiDAR/labels are preserved; calibrated depth noise and LiDAR corruption remain blocked.
+Isaac Sim is a conditional candidate, not an installed or mandatory production backend.
+
+ML and evaluation
+CUDA-enabled PyTorch 2.9.1+cu128 and torchvision 0.24.1+cu128 support existing depth
+research and the planned goods benchmark. Generic pretrained initialization
+does not constitute a trained goods model. Independently validated reference targets and controlled
+real-only/real-plus-synthetic experiments remain required.
+
+Execution, storage and distribution
+Local subprocess workers exchange portable JSON jobs and result manifests. Machine
+paths/interpreters are deployment configuration. No shell command comes from a job.
+Fresh attempt directories, logs, failure status and verified artifact hashes are used.
+Local storage protects raw/input paths. Output arrays use disk-backed mappings and
+chunked NPZ verification. Remote/cloud execution and storage adapters remain unimplemented.
+Installable host package: dubaidata-synthetic-pipeline; CLI: dubaidata-prepare.
+Core schemas are included as package data. Separate backend workers reduce SDK coupling.
+
+Development and quality
+unittest/pytest for contract and integration checks; Black 26.10.0 for formatting.
+Git/GitHub for source versioning. No production orchestrator, portal, ROS stack,
+container platform or cloud service is required by the implemented preparation path.
+Use requirements/development.txt for development tools and requirements/blenderproc_host.txt
+for the isolated host snapshot. Local runtime paths and downloaded assets stay out of Git.
+
+Implemented preparation interfaces
+- Canonical sample and preparation-job schemas.
+- TorWIC wrapper plus explicit paired-PNG dataset adapter.
+- Shared canonical cache and compatible legacy-mm export, including resized camera metadata.
+- Local worker/executor and contained storage helpers.
+- Real-sample condition jobs, common quality gates and visual diagnostics; scene integration remains pending.
+
+Run from the checkout using the documented data/ML interpreter
+python -m pip install -r requirements/pipeline_core.txt -r requirements/development.txt
+python -m pip install --no-deps --no-build-isolation -e .
+python -m src.pipeline.run --help
+python -m src.ingestion.prepare_depth_cache --help
+
+Keep portable job specifications separate from local runtime configuration. Use
+fresh output paths. Schema/contract acceptance is not a claim of physical sensor
+realism, generic production scalability or demonstrated goods-model improvement.
+
+Verified dependency versions
+- numpy: 2.5.3
+- Pillow: 12.3.0
+- scipy: 1.18.1
+- opencv-python: 5.0.0.93
+- open3d: 0.20.0
+- torch: 2.9.1+cu128
+- torchvision: 0.24.1+cu128
+- PyYAML: 6.0.3
+- jsonschema: 4.26.0
+- pytest: 9.1.1
+- black: 26.10.0
+- dubaidata-synthetic-pipeline: 0.1.0
+
+Verification
+- 115 contract tests passed, including customer-fixture preparation/generation, target import and dataset admission.
+- Full train/development cache arrays and complete NPZ hashes match the existing
+  verified 320x180 research caches; all 2173 frames and 2173 provenance entries matched.
+- Two native multimodal samples match the original decoder; source/checkpoint hashes
+  are preserved. The loader import correction retains identical function/class AST.
+- Installed CLI works outside the checkout; schemas load from the built wheel.
+- Both environments pass dependency checks; a real CUDA matrix kernel passed.
+- Peak memory was not measured. Pixel buffers are disk-backed; source metadata is
+  indexed in memory. These checks do not establish production-scale throughput.
+
+Example portable job and separate runtime configuration
+configs/jobs/torwic_cache.json binds the source manifest and requested cache format.
+configs/runtime/torwic_local.example.json selects the local dataset adapter/roots.
+python -m src.pipeline.run --job configs/jobs/torwic_cache.json --runtime configs/runtime/torwic_local.example.json --output reports/adapter_cache_next
+
+Implementation references
+JSON Schema validation: https://python-jsonschema.readthedocs.io/en/stable/validate/
+BlenderProc interface: https://github.com/DLR-RM/BlenderProc
+
+Benchmark preparation interfaces
+The goods task adapter defines binary targets and ignore handling outside the shared
+core. Native reference preparation, corrected-mask import, snapshot-bound acceptance
+and qualified dataset export are implemented. The editor template is packaged with
+the host distribution. Node.js supports development-only editor interaction checks;
+the deployed workspace requires a browser and the existing Python environment.
+The declared DeepLabV3/MobileNet initialization uses the existing verified local weight
+file. A fixture optimizer step and strict reload passed at 640x360, batch size 4,
+float32. This is runtime evidence; benchmark training and utility claims remain open.
+See docs/preparation_readiness.txt for interfaces and acceptance status.

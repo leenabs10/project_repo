@@ -1,84 +1,104 @@
-Dataset readiness and warehouse renderer pilot
-Review date: 2026-10-12. Local dev work; no commit, push or main integration.
+DubaiDATA MVP capability and readiness assessment
 
-Completed core ingestion work
-- Full recheck: 3088/3088 frames and 21616 payloads passed; zero errors.
-- IMU recheck: 6176 frame-side queries and nine loader samples passed safe access
-  contracts. Every training frame is covered at the explicit 20 ms inspection
-  limit. Missing validation/test coverage remains invalid; no readings invented.
-- Manifest hash and six raw IMU hashes are unchanged. Real units/column meanings
-  and export-frame binding remain unverified; interpolation/fusion stay disabled.
-- Calibration already declares azure_left_imu/azure_right_imu and their camera
-  parents/extrinsics. Those entries are now recorded as available evidence,
-  without pretending they establish the exported measurement axes.
-- Extra instance-mask remapping is implemented; all 237 pairs remain quarantined.
-  Human training labels and camera export convention remain evidence requirements.
+Product direction
+A customer-adaptable synthetic-data pipeline built around a dataset-independent core,
+simulator-independent generation contracts and infrastructure-independent execution.
+TorWIC warehouse data is the reference integration; goods segmentation is the primary
+benchmark. The architecture describes the intended reusable boundaries, not a claim
+that every adapter, backend or execution environment is implemented.
 
-Requirements and data-understanding milestone
-- Recovered the earlier warehouse MVP planning document. It defines weekly
-  outcomes but no exact daily subplan. This first-day scope is task/camera choice,
-  native examples, training characterization and fixed evaluation membership.
-- Documented target-user assumptions, product behavior and proposed success
-  criteria in docs/mvp_scope.txt. No customer interviews or model success claimed.
-- Chosen left-camera goods segmentation, class 7 -> binary 1. Exported six
-  training-only native image/mask examples and pseudo-label overlays losslessly.
-- Frozen metadata-only train/validation/test membership: 1136/1037/915. The
-  preparation script opened no validation/test sensors. Existing full integrity
-  audits read them without model evaluation or synthesis fitting.
-- Reviewed the six overlays. The first/last examples miss a large foreground
-  wooden crate under the proposed task. A later view has likely robot/ceiling
-  false positives. Reference annotation and pseudo-label triage are needed.
+Verified data foundation
+- All 3088 trajectory frames and 21616 sensor payloads passed ingestion checks.
+- Complete-trajectory membership is preserved: 1136 training, 1037 development
+  validation and 915 held-out test frames. No model evaluation on the test set is claimed.
+- Training characterization covered 1136 frames and 7952 payloads.
+- All four depth caches match manifest membership and raw-source derivatives:
+  4346 native RGB/depth files and 4346 cached frame derivatives verified.
+- Legacy 160x90 RGB uses BILINEAR; 320x180 RGB uses BOX. Depth uses NEAREST,
+  stores uint16 millimetres and converts to metres. Invalid zero depth is excluded
+  from supervision. These are reference-adapter conventions, not universal constants.
+- IMU ordering/bracketing protection is implemented. Coverage remains partial in
+  development/held-out data; measurement-column units/frame binding remain unresolved.
 
-Renderer pilot completed
-- Installed official checksum-verified portable Blender 4.5.3 LTS in the workspace.
-- Rendered clear, partial-blockage and wide-blockage aisle configurations with
-  native 1280x720 RGB, clean axial depth, geometry semantics and binary goods masks.
-- Analytic plane proved this configuration's Z pass is already axial depth.
-  Mistaken range normalization would create up to 3.60 m error on that fixture.
-- 768 independent interior rays gave 100% class agreement and maximum depth
-  discrepancy about 0.193 mm. Boundary pixels were excluded from this check;
-  RGB antialiasing and appearance review remain distinct from geometric truth.
-- Lossless PNG/NPY exports, masks, source hashes, metric poses and ZIP payloads
-  passed validation. Package is about 6.36 MiB and retains training_eligible=false.
-- Shared metric cuboid meshes reduced scene assembly to about 0.10 seconds.
-  Final renders took 11.75/14.45/15.63 seconds including export on RTX 5070 Laptop
-  OptiX, with up to 256 samples and adaptive threshold 0.01. These three renders
-  are pilot measurements, not a throughput guarantee; GPU peak VRAM was not measured.
-- Appearance review corrected a washed-out first pass. Final mean luma is about
-  139-140 versus training median 128. Brightness is only an image proxy. The clean,
-  symmetric scene, materials, clutter and camera viewpoint still have a domain gap.
-- All 47 contract tests passed; code compiles, is formatted and passes diff checks.
+Verified generation and research evidence
+- A three-scenario Blender pilot exports native RGB, metric axial depth, semantic
+  and binary goods masks, camera poses, generation settings and lossless packages.
+- An analytic fixture verifies axial depth; 768 interior rays passed class agreement
+  and geometric checks. Boundary alignment and natural appearance require separate qualification.
+- Native paired augmentation accepted 25 variants and rejected 11 with explicit
+  integrity rules. This establishes derivative integrity, not calibrated sensor realism.
+- Seven nearest-fill scenarios reproduced their measured-depth validation baselines.
+- 5185 scenario/frame mask checks and 3111 training-only donor queries passed.
+- Four training RGB/depth/mask pairs were visually inspected. Unknown-depth predictions
+  remain estimates without independent reference values.
+- The engineering contract suite passed 115 tests. Depth research is separate
+  from goods-segmentation performance and does not demonstrate synthetic-data utility.
 
-Status and next steps
-Core ingestion and the defined data-understanding first-day scope are complete.
-This does not complete the full data-learning stage or production fusion readiness.
-Next, create reviewed goods references from training/development data, record
-disagreements with pseudo-labels, and match the renderer camera/materials/layout
-to those real examples. Verify geometry again before a 10-20 example expansion.
-Keep synthetic training, optional sensor fusion and extra annotations gated until
-their quality/provenance evidence is sufficient. Then freeze comparison budgets,
-seeds and metrics for real-only versus real-plus-synthetic experiments.
+Architecture and integration readiness
+Verified components include TorWIC-specific ingestion/profiling, depth research and
+the custom Blender pilot. Canonical sample/cache-job contracts, TorWIC and declared
+paired-PNG adapters, shared cache preparation, local storage and a separate-process
+executor are verified. The installed host CLI and built-wheel schema loading passed.
+Shared scene workers and remote execution/storage remain integration work. BlenderProc tools are prepared;
+end-to-end renderer compatibility and acceptance require a validated integration.
+Isaac Sim and cloud execution remain conditional extensions rather than commitments.
 
-Files
-docs/mvp_scope.txt: assumptions and proposed success criteria.
-reports/task_dataset_review/: native real examples, overlays and evaluation protocol.
-reports/warehouse_goods_pilot_package/: verified synthetic pilot and dataset ZIP.
-docs/dataset_readiness.json: portable counts, hashes, findings and remaining gates.
+Required quality evidence
+- Independent goods-reference masks and approved taxonomy/uncertainty rules.
+  Existing trajectory semantic masks are model predictions with identified errors.
+- Appearance and mask-boundary qualification before synthetic samples enter training.
+- Complete controlled RGB/depth/LiDAR conditions with parameters, clean references,
+  measured condition/coverage results and documented sensor-realism limits.
+- Extra annotated pairs: all 237 remain quarantined until provenance and overlap
+  with held-out data are resolved. Their indexed masks require per-file label mapping.
+- Real exported-image distortion/registration conventions and IMU vector meaning
+  remain source-evidence requirements. Optional fusion stays disabled.
+- Dedicated simulated LiDAR is unavailable. Camera-depth unprojection is not a
+  LiDAR scan; the full same-scene RGB/depth/LiDAR generation gate remains open.
+- Matched real-only versus real-plus-synthetic goods experiments and independent
+  locked-real evaluation have not established model improvement.
 
-Schedule clarification recorded 2026-10-13
-The first-day completion above covers data understanding. The user's Monday
-'Organize the pipeline' row is a separate scope, now verified in
-docs/pipeline_integration.txt. Historical validation counts remain snapshots;
-the current integrated contract suite passes 55 tests.
+Acceptance and delivery
+Keep integrity, geometry, requested conditions, fidelity, coverage, reference-label accuracy
+and task utility as separate gates. Unsupported capabilities must remain explicit.
+Deliver traceable accepted samples, configuration, quality/coverage evidence and
+honest benchmark results. Proposed targets are not guaranteed gains or safety claims.
 
-Depth cache verification recorded 2026-10-13
-All four depth caches match complete June trajectory membership and raw source
-derivatives. Verified 4346 native RGB/depth files and 4346 cached frame derivatives.
-Legacy 160px RGB uses BILINEAR; newer 320px uses BOX. Depth remains NEAREST
-uint16 millimetres, converted to metres with zero excluded from supervision.
-All seven historical nearest-fill scenarios reproduced; 5185 validation mask
-checks and 3111 training-only donor queries passed. Four training pairs reviewed.
-The current suite passes 62 tests. Original caches/raw/checkpoints are unchanged.
-See docs/depth_cache_verification.txt/json for hashes, metrics and limitations.
-This does not resolve original unknown depth, physical sensor realism, native
-camera registration or independent goods labels. No new push or main integration.
+Supporting documentation
+docs/mvp_scope.txt: product scope, application boundaries and success criteria.
+docs/pipeline_architecture.txt: reusable interfaces and migration requirements.
+docs/mvp_delivery_plan.txt: capability milestones and acceptance criteria.
+docs/depth_cache_verification.txt: detailed cache and depth-baseline evidence.
+docs/dataset_characterization.json: profiling and source-validation evidence.
+
+Adapter preparation verification
+The full 2173-frame training/development RGB/depth rebuild matches the existing research caches
+byte-for-byte, including complete NPZ hashes. Provenance entries match source hashes.
+Native multimodal loader parity passed on two representative samples. Core tests
+exercise different dimensions, centimetre depth units and a different invalid sentinel.
+No source data, old caches or protected checkpoints were modified. Pixel processing
+uses disk-backed arrays/chunked verification; production-scale performance is unproven.
+See docs/tech_stack.txt and docs/adapter_foundation.json for interfaces and evidence.
+
+Controlled real-sample synthesis verification
+Portable preserve/vary/prohibit controls now drive native RGB gain and training-only
+depth-mask transfer through the same local executor. All 18 requested variants are
+accounted for: 11 passed automated checks, 7 were rejected. Brighter images exceeded
+the clipping envelope in three cases; depth-mask transfers failed coverage/dropout
+limits in four. Rejections and missing condition coverage remain visible.
+Clean references, LiDAR and semantic files are byte-identical. All retained depth
+measurements and exported validity/hidden masks passed checks. A repeated run produced
+identical data, diagnostic artifacts and acceptance decisions. No validation/test sensor payloads were read.
+Appearance qualification and independent goods references remain outstanding;
+training eligibility is false. No calibrated sensor noise or scene diversity is claimed.
+See docs/sensor_condition_generation.txt and docs/sensor_condition_evidence.json.
+
+Benchmark preparation qualification
+The goods task definition, corrected-target importer and source-bound admission
+workflow are verified. The 36-frame native candidate workspace includes all pilot
+sources. Dataset acceptance is in progress; the qualified reference and eligible
+variant counts remain zero. The GPU runtime passed a discarded fixture update and
+strict checkpoint reload at the configured training resolution and batch size.
+This verifies preparation and runtime compatibility; no goods benchmark result or
+synthetic-data improvement is claimed. See docs/preparation_readiness.txt and
+docs/preparation_readiness.json for the current qualification evidence.

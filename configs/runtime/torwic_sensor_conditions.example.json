@@ -1,0 +1,13 @@
+{
+  "dataset": {
+    "adapter": "torwic",
+    "root": "data/raw/torwic_slam",
+    "manifest": "data/manifests/manifest.jsonl"
+  },
+  "quality_policy": "configs/synthesis/torwic_sensor_quality.json",
+  "evidence_files": {
+    "training_profile": "reports/dataset_profile/summary.json",
+    "parent_policy": "configs/augmentation_policy.json",
+    "calibration": "data/raw/torwic_slam/calibrations.txt"
+  }
+}
