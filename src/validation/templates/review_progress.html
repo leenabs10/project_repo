@@ -1,0 +1,43 @@
+<script>
+// Review progress comes from persisted versions, not from checkbox appearance.
+let token = '';
+async function refreshProgress() {
+  const result = document.querySelector('#result');
+  try {
+    const response = await fetch('/api/session', {cache: 'no-store'});
+    if (!response.ok) throw Error('The local save service is unavailable.');
+    const session = await response.json();
+    token = session.token;
+    document.querySelector('#summary').textContent =
+      'Saved reference versions: ' + session.reviewed.length + ' / ' + session.total;
+    for (const card of document.querySelectorAll('[data-sample]')) {
+      card.querySelector('.progress').textContent = session.reviewed.includes(card.dataset.sample)
+        ? 'validated version saved' : 'not saved';
+    }
+  } catch (error) {
+    result.textContent = error.message + ' Open the workspace through its review server.';
+  }
+}
+document.querySelector('#validate').onclick = async () => {
+  const result = document.querySelector('#result');
+  try {
+    if (!token) await refreshProgress();
+    if (!token) return;
+    const response = await fetch('/api/validate', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'X-Review-Token': token},
+      body: '{}'
+    });
+    const cohort = await response.json();
+    if (!response.ok) throw Error(cohort.error);
+    result.textContent = 'Saved references validated: ' + JSON.stringify(cohort.reference_counts)
+      + '. Complete benchmark reference cohort: ' + cohort.benchmark_reference_ready
+      + '. An extension must be combined with its preserved parent cohort before training.';
+    await refreshProgress();
+  } catch (error) {
+    result.textContent = 'Validation failed: ' + error.message;
+  }
+};
+window.addEventListener('pageshow', refreshProgress);
+refreshProgress();
+</script>

@@ -24,7 +24,11 @@ from src.validation.artifacts import (
 
 
 def decode_mask_runs(runs, width: int, height: int) -> np.ndarray:
-    """Decode bounded native RLE; reject malformed values, overflow and truncation."""
+    """Decode row-major [class ID, pixel count] runs into a uint8 HxW mask.
+
+    IDs are background=0, goods=1 and ignore=255. Validate the complete run
+    layout before allocating memory; malformed exports cannot become references.
+    """
     if (
         type(width) is not int
         or type(height) is not int
@@ -288,15 +292,23 @@ def import_references(
         if entry is None or entry["binding"]["split"] not in {"train", "validation"}:
             raise ValueError("Submission is outside permitted reference membership")
         binding = entry["binding"]
-        if set(submission) != set(binding) | {
+        required_fields = set(binding) | {
             "reviewer",
             "reviewed",
             "reviewed_at",
             "width",
             "height",
             "mask_rle",
-        }:
+        }
+        if not required_fields <= set(submission) or set(
+            submission
+        ) - required_fields - {"reviewer_kind"}:
             raise ValueError("Unexpected or missing reference submission fields")
+        # Historical browser exports attest a human check. AI corrections must
+        # declare their origin and never inherit that reference qualification.
+        reviewer_kind = submission.get("reviewer_kind", "human")
+        if not isinstance(reviewer_kind, str) or reviewer_kind not in {"human", "ai"}:
+            raise ValueError("Reviewer kind must be human or ai")
         if any(submission[key] != value for key, value in binding.items()):
             raise ValueError("Reference submission source binding mismatch")
         if binding["sample_id"] in seen:
@@ -367,6 +379,8 @@ def import_references(
             folder.mkdir(parents=True)
             rgb = source_path(packet, entry["folder"] + "/rgb.png")
             shutil.copyfile(rgb, folder / "rgb.png")
+            # Retain the exact reviewed payload, including parent draft lineage.
+            (folder / "reviewed_submission.json").write_bytes(payload)
             Image.fromarray(mask).save(folder / "target.png")
             with Image.open(folder / "target.png") as image:
                 if not np.array_equal(np.array(image), mask):
@@ -403,8 +417,22 @@ def import_references(
                     .relative_to(output)
                     .as_posix(),
                     "target_sha256": file_hash(folder / "target.png"),
-                    "reference_origin": definition["reference_origin"],
+                    "reference_origin": (
+                        definition["reference_origin"]
+                        if submission.get("reviewer_kind", "human") == "human"
+                        else "ai_reviewed_model_assisted"
+                    ),
+                    "reviewer_kind": submission.get("reviewer_kind", "human"),
                     "reviewer": submission["reviewer"].strip(),
+                    "reviewed_at": submission["reviewed_at"],
+                    "review_packet_profile_sha256": expected_packet_sha256,
+                    "initial_mask_sha256": submission["candidate_sha256"],
+                    "parent_submission_sha256": submission.get(
+                        "parent_submission_sha256"
+                    ),
+                    "parent_draft_profile_sha256": submission.get(
+                        "parent_draft_profile_sha256"
+                    ),
                     "submission_sha256": digest,
                     "image_size": entry["record"]["image_size"],
                     "ignore_fraction": float((mask == 255).mean()),
@@ -419,8 +447,16 @@ def import_references(
             split: sum(row["split"] == split for row in references)
             for split in ("train", "validation")
         }
+        qualified_counts = {
+            split: sum(
+                row["split"] == split
+                and row["reference_origin"] == definition["reference_origin"]
+                for row in references
+            )
+            for split in ("train", "validation")
+        }
         ready = all(
-            counts[split] >= count
+            qualified_counts[split] >= count
             for split, count in definition["minimum_reference_frames"].items()
         )
         result = {
@@ -430,8 +466,18 @@ def import_references(
             "packet_profile_sha256": expected_packet_sha256,
             "manifest_sha256": profile["manifest_sha256"],
             "reference_counts": counts,
+            "qualified_reference_counts": qualified_counts,
             "benchmark_reference_ready": ready,
-            "reference_origin": definition["reference_origin"],
+            "reference_origin": (
+                definition["reference_origin"]
+                if not references
+                or all(row["reviewer_kind"] == "human" for row in references)
+                else (
+                    "ai_reviewed_model_assisted"
+                    if all(row["reviewer_kind"] == "ai" for row in references)
+                    else "mixed_model_assisted"
+                )
+            ),
             "artifact_sha256": artifact_hashes(output),
         }
         write_json(output / "profile.json", result)

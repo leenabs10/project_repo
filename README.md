@@ -41,9 +41,9 @@ Customer data -> adapter -> standardized profile -> synthesis specification
 | Scene pilot | Custom Blender RGB/depth/label geometry and export checks passed |
 | Shared preparation | Canonical contracts, two dataset input formats and local worker/executor verified |
 | Real-sample conditions | Native RGB gain/depth-mask jobs verified; 11 passed automated checks, 7 rejected; release qualification in progress |
-| Benchmark preparation | Task definitions, corrected-target import and admission verified; GPU fixture/runtime checks passed |
+| Goods baseline | Real-only training, strict reload and native evaluation verified on known fixtures; dataset qualification remains separate |
 | BlenderProc | Tools prepared; generation integration and acceptance pending |
-| Goods references | Independent reference validation required; trajectory masks are predictions |
+| Goods references | Native annotation, source-bound import and provenance checks implemented; reference accuracy requires separate qualification |
 | Simulated LiDAR | Dedicated generation unavailable; camera point clouds are not LiDAR scans |
 | Downstream utility | Controlled goods comparison and independent evaluation required |
 
@@ -109,6 +109,17 @@ convention and does not certify the real exported-image distortion convention.
 
 ## Evidence and reproducibility
 
+[Ingestion validation](docs/ingestion_validation.json) records payload counts,
+split membership and the immutable original audit record.
+The representative diagnostic CLI is `python -m src.validation.representative_ingestion_checks`;
+new runs write `representative_ingestion_checks.json` in their selected output directory.
+
+The pinned `configs/augmentation_policy.json` uses dimensionless RGB gains,
+8-bit luminance limits and depth-validity fractions between zero and one.
+Its method descriptions distinguish controlled stress from calibrated sensor
+simulation. JSON remains strict JSON; explanatory comments belong in its generator,
+`src/synthesis/augmentation_policy.py`, so configuration hashes remain stable.
+
 [Depth verification](docs/depth_cache_verification.txt) records cache contracts,
 mask handling, donor isolation and baseline metrics.
 [Pipeline organization](docs/pipeline_integration.txt) records research environment
@@ -155,13 +166,23 @@ excluded from training until dataset acceptance criteria are satisfied.
 
 ## Benchmark preparation and qualification
 
-[Preparation evidence](docs/preparation_readiness.txt) describes task-specific target
-rules, source-bound reference import and dataset admission. The goods benchmark
-configuration declares preprocessing, initialization, seeds, metrics and comparison
-budgets. Runtime compatibility passed a discarded GPU fixture step and checkpoint
-reload; benchmark performance and dataset release qualification remain outstanding.
+The native reference editor preserves source bindings, categorical masks and
+annotation version history. The importer retains original submission bytes and
+distinguishes model-assisted corrections from confirmed reference versions.
+Technical validation does not establish annotation accuracy or benchmark readiness.
+
+The real-only training/evaluation CLI uses explicit configurations and rejects
+unqualified targets, held-out membership and changed payload checksums. Ignored
+pixels remain excluded from supervision. Checkpoints reload strictly, and logits
+are evaluated at native reference geometry. Known-fixture execution does not
+establish customer accuracy, model improvement or synthetic-data utility.
 
 ```powershell
 & $trainingPython -m src.pipeline.prepare_benchmark --help
-& $trainingPython -m src.validation.goods_runtime --help
+& $trainingPython -m src.training.goods_benchmark train --help
+& $trainingPython -m src.training.goods_benchmark evaluate --help
+& $trainingPython -m src.training.goods_baseline --help
 ```
+
+Experimental training extensions, dataset-specific model results and pending
+annotation revisions are excluded from this verified software release.

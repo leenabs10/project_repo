@@ -217,6 +217,32 @@ class BenchmarkPreparationTests(unittest.TestCase):
             expected_reference_sha256=file_hash(self.base / "references/profile.json"),
         )
 
+    def test_admitted_manifest_keeps_condition_seed_and_source_binding(self):
+        self.batch()
+        self.accept_conditions()
+        self.write_submission(self.submission())
+        self.write_submission(self.submission("validation"), "validation.json")
+        self.import_targets()
+        result = self.qualify()
+        self.assertEqual(result["manifest_sha256"], file_hash(self.manifest))
+        admitted = json.loads(
+            (self.base / "qualified/eligible_manifest.jsonl").read_text()
+        )
+        attempts = [
+            json.loads(line)
+            for line in (self.batch_root / "attempts.jsonl").read_text().splitlines()
+        ]
+        original = next(
+            row
+            for row in attempts
+            if row["variant_id"] == admitted["record"]["sample_id"]
+        )
+        self.assertEqual(admitted["condition"], original["condition"])
+        self.assertEqual(admitted["generation_seed"], original["seed"])
+        self.assertEqual(
+            admitted["source_rgb_sha256"], original["source_sha256"]["rgb"]
+        )
+
     def test_packet_excludes_test_and_keeps_candidates_ineligible(self):
         profile = verify_snapshot(self.packet, self.packet_sha)
         self.assertEqual(profile["selected_frames"], {"train": 1, "validation": 1})
@@ -319,6 +345,51 @@ class BenchmarkPreparationTests(unittest.TestCase):
             mask = np.array(image)
         self.assertEqual(int((mask == 255).sum()), 1)
         self.assertEqual(rows[0]["reference_origin"], "human_reviewed_model_assisted")
+
+    def test_ai_corrections_are_importable_but_do_not_become_human_references(self):
+        self.batch()
+        self.accept_conditions()
+        for split in ("train", "validation"):
+            submission = self.submission(split)
+            submission["reviewer_kind"] = "ai"
+            self.write_submission(submission, split + ".json")
+        result = self.import_targets()
+        self.assertEqual(result["reference_counts"], {"train": 1, "validation": 1})
+        self.assertEqual(
+            result["qualified_reference_counts"], {"train": 0, "validation": 0}
+        )
+        self.assertFalse(result["benchmark_reference_ready"])
+        rows = [
+            json.loads(line)
+            for line in (self.base / "references/references.jsonl")
+            .read_text()
+            .splitlines()
+        ]
+        self.assertTrue(
+            all(row["reference_origin"] == "ai_reviewed_model_assisted" for row in rows)
+        )
+        admission = self.qualify()
+        self.assertEqual(admission["eligible_variants"], 0)
+        self.assertFalse(admission["training_eligible"])
+
+    def test_unknown_annotation_reviewer_kind_is_rejected(self):
+        submission = self.submission()
+        submission["reviewer_kind"] = "unverified"
+        self.write_submission(submission)
+        with self.assertRaisesRegex(ValueError, "Reviewer kind"):
+            self.import_targets()
+
+    def test_mixed_annotations_only_count_matching_reference_provenance(self):
+        self.write_submission(self.submission())
+        validation = self.submission("validation")
+        validation["reviewer_kind"] = "ai"
+        self.write_submission(validation, "validation.json")
+        result = self.import_targets()
+        self.assertEqual(result["reference_origin"], "mixed_model_assisted")
+        self.assertEqual(
+            result["qualified_reference_counts"], {"train": 1, "validation": 0}
+        )
+        self.assertFalse(result["benchmark_reference_ready"])
 
     def test_stale_binding_unknown_identity_and_unconfirmed_masks_rejected(self):
         for field, value in (

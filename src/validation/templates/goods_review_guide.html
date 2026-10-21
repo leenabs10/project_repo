@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to review goods masks</title>
+<style>
+body{font:18px/1.65 system-ui;color:#182230;background:#f5f6f8;max-width:1400px;margin:24px auto;padding:0 20px}
+article,section{background:white;padding:22px;margin:20px 0;border:1px solid #ccd3dc;border-radius:12px}
+img{max-width:100%;height:auto}table{border-collapse:collapse;width:100%}td,th{padding:14px;border:1px solid #ccd3dc;text-align:left}
+.swatch{display:inline-block;width:22px;height:22px;vertical-align:middle;margin-right:8px;border:1px solid #444}a{color:#164ca0}
+li{margin:10px 0}.notice{border-left:6px solid #c67d00;padding:15px;background:#fff5df}
+</style>
+<a href="index.html">All draft images</a><h1>What to paint, and how to review it</h1>
+<p class="notice">The examples use packet images and categorical masks to illustrate the annotation standard. Preserve source geometry, class definitions and genuine uncertainty.</p>
+<section><h2>Use these three classes</h2><table><thead><tr><th>Colour and editor selection</th><th>Cover these pixels</th><th>Do not do this</th></tr></thead><tbody>
+<tr><td><i class="swatch" style="background:#eb46d2"></i><strong>Goods (1)</strong></td><td>Visible identifiable loads, cartons, crates, wrapped stock and stored goods, including loads carried on robots.</td><td>Do not select a whole rectangular area around an object. Fill its visible surfaces, following its outline.</td></tr>
+<tr><td><i class="swatch" style="background:#00b4d2"></i><strong>Background (0)</strong></td><td>Robot bodies, people, lifts, shelf structure, support pallets, empty pallets/handling containers, barriers, floor, walls, ceiling and visible gaps.</td><td>Do not call equipment goods because it is wooden or brown. Separate the load from its supporting equipment.</td></tr>
+<tr><td><i class="swatch" style="background:#ffa000"></i><strong>Ignore (255)</strong></td><td>Genuinely unclear identity, unresolvable blur or uncertain boundaries.</td><td>Do not infer hidden contents or leave clear floor/clear goods unanswered merely to reach a coverage percentage.</td></tr>
+</tbody></table><p>Some wooden crates enclose identifiable cargo; empty handling crates/containers are background. Inspect their role in RGB. If it cannot be established, use Ignore. Colour in the photograph is never the class rule.</p></section>
+<section><h2>Review one image at a time</h2><ol>
+<li>Open <strong>RGB only</strong>. Identify the visible goods and supporting equipment before looking at the draft labels.</li>
+<li>Switch to <strong>RGB + all classes</strong>. Fill missed goods surfaces with Goods. Paint mistaken goods on equipment as Background.</li>
+<li>Use a larger brush inside a clear surface, then a small brush near its outline. Example starting radii: 20 native pixels inside a large object, 2 near an edge. Zoom to 200% for precision.</li>
+<li>Keep visible gaps and obstructions in their own class. Do not draw goods behind a person, rack or robot that blocks them.</li>
+<li>Inspect orange regions: resolve the clear ones; leave genuine uncertainty ignored. There is no target pink percentage. Coverage is not an accuracy score.</li>
+<li>Check <strong>Classes only</strong> for stray patches, then check RGB again. Scroll through the entire image. Use Undo stroke for mistakes.</li>
+<li>Only after your inspection, enter your reviewer name, tick the complete-image confirmation and select <strong>Save validated reviewed version</strong>. Check the success message. Export reviewed JSON is also available.</li>
+</ol><p>Saving validates dimensions, IDs, source bindings and format. It does not establish independent semantic accuracy or automatically admit training data.</p></section>
+<h2>Three examples from this review packet</h2>
+<p>Each comparison is ordered: <strong>RGB photograph → previous annotation → current annotation</strong>. Magenta means goods, cyan means background, orange means unresolved. The source photographs are unchanged.</p>
+<!-- EXAMPLES -->
+<p><a href="index.html">Open the 36-image review workspace</a></p></html>

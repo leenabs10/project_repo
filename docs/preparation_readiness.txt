@@ -34,13 +34,14 @@ allocation was approximately 1.15 GiB; reserved memory was approximately 1.37 Gi
 including the reload check. This is a runtime observation, not a full-run memory bound.
 
 Dataset qualification status
-Dataset acceptance remains in progress. The current corrected-reference count and
-training-eligible variant count are zero. The admission check preserves this state
-and records reasons for all 18 condition attempts. The original pilot's 11 automated
-passes and 7 rejections remain unchanged; rejected cases are not silently replaced.
+Reference accuracy and condition acceptance remain separate from the implemented
+software checks. Preserve source-bound corrections and original evidence; do not
+infer dataset admission from successful import or fixture execution. The original
+pilot's 11 automated passes and 7 rejections remain unchanged. Rejected cases are
+not silently replaced.
 
 Capability boundaries
-Benchmark execution, independent task results, matched synthetic-data comparisons
+Dataset-specific model qualification, matched synthetic-data comparisons
 and scene-backend integration remain separate milestones. The runtime fixture does
 not establish convergence, accuracy or data utility. Model-assisted reference
 correction retains potential anchoring bias. The configured reference counts are

@@ -8,14 +8,14 @@
         "Aisle_CCW_Run_1/001135"
       ],
       "finding": "Large foreground wooden crate on the AMR is not covered by the predicted goods overlay.",
-      "status": "likely false negative under the proposed goods task; needs human reference annotation"
+      "status": "likely false negative under the proposed goods task; reference annotation verification required"
     },
     {
       "sample_ids": [
         "Aisle_CCW_Run_1/000908"
       ],
       "finding": "Some predicted goods regions lie on the robot edge and a bright ceiling artifact.",
-      "status": "likely false positives; needs human review"
+      "status": "likely false positives; label verification required"
     },
     {
       "sample_ids": [
@@ -27,7 +27,7 @@
         "Aisle_CCW_Run_1/001135"
       ],
       "finding": "Real views include low/angled viewpoints and clutter. The symmetric pilot aisle and camera height are not yet a matched scene model.",
-      "status": "domain appearance/pose review pending; synthetic training eligibility remains false"
+      "status": "appearance and pose validation pending; synthetic training eligibility remains false"
     }
   ]
 }

@@ -1,0 +1,354 @@
+<!doctype html>
+<!--
+Native-resolution editor template for source annotations and validated versions.
+The host injects immutable source/task bindings. Zoom changes CSS display size;
+the uint8 label array and exported row-major runs keep the original geometry.
+-->
+<html lang="en">
+<meta charset="utf-8">
+<title>Native goods reference editor</title>
+<style>
+body {
+  font:16px system-ui;
+  margin:20px;
+  background:#f5f6f8;
+  color:#182230
+}
+
+button,select,input {
+  font:inherit;
+  padding:8px
+}
+label {
+  display:inline-block;
+  margin:6px
+}
+
+.legend {
+  display:flex;
+  gap:20px;
+  flex-wrap:wrap;
+  margin:14px 0
+}
+.swatch {
+  display:inline-block;
+  width:18px;
+  height:18px;
+  vertical-align:middle;
+  margin-right:6px;
+  border:1px solid #555
+}
+
+#viewport {
+  overflow:auto;
+  max-height:70vh;
+  border:1px solid #a8b1bd;
+  background:#ddd
+}
+
+#surface {
+  position:relative;
+  width:100%;
+  aspect-ratio:__WIDTH__/__HEIGHT__
+}
+
+canvas {
+  position:absolute;
+  width:100%;
+  height:100%;
+  touch-action:none;
+  image-rendering:pixelated
+}
+
+#status {
+  font-weight:600;
+  white-space:pre-wrap
+}
+.tools {
+  position:sticky;
+  top:0;
+  background:#f5f6f8;
+  z-index:2;
+  padding:6px
+}
+
+</style>
+<a href="../../index.html">All reference images</a>
+<h1>Native goods reference editor</h1>
+<p id="source">
+</p>
+<p id="definition">
+</p>
+<p>Empty pallets and handling containers are background; identifiable loads are goods. Inspect the full image, including ignored regions. Source annotations and version history are preserved.</p>
+<!-- REVIEW_GUIDANCE -->
+<div class="legend">
+<span>
+<i class="swatch" style="background:#eb46d2">
+</i>Goods (1)</span>
+<span>
+<i class="swatch" style="background:#00b4d2">
+</i>Background (0)</span>
+<span>
+<i class="swatch" style="background:#ffa000">
+</i>Ignored (255)</span>
+</div>
+<div class="tools">
+<label>Paint class <select id="class">
+<option value="1">Goods</option>
+<option value="0">Background</option>
+<option value="255">Ignore</option>
+</select>
+</label>
+<label>Brush radius (native pixels) <input id="radius" type="number" min="1" max="100" value="8">
+</label>
+<label>Display <select id="view">
+<option value="overlay">RGB + all classes</option>
+<option value="rgb">RGB only</option>
+<option value="labels">Classes only</option>
+</select>
+</label>
+<label>Zoom <select id="zoom">
+<option value="fit">Fit width</option>
+<option value="1">100% native</option>
+<option value="2">200%</option>
+<option value="4">400%</option>
+</select>
+</label>
+<button id="undo">Undo stroke</button>
+<p id="counts">
+</p>
+</div>
+<div id="viewport">
+<div id="surface">
+<canvas id="rgb" width="__WIDTH__" height="__HEIGHT__">
+</canvas>
+<canvas id="mask" width="__WIDTH__" height="__HEIGHT__">
+</canvas>
+</div>
+</div>
+<p id="status" role="status" aria-live="polite">Loading source annotation...</p>
+<label>Reviewer name <input id="reviewer" autocomplete="name">
+</label>
+<label>
+<input id="confirmed" type="checkbox">I inspected the complete native image and corrected the labels under the stated definition.</label>
+<p>
+<button id="save">Save validated reviewed version</button> <button id="export">Export reviewed JSON</button>
+</p>
+<p>Saving validates format, provenance and source integrity. Semantic correctness relies on your inspection. No dataset admission or training starts here.</p>
+<script>
+const source = __SOURCE_RECORD__, definition = __TASK_DEFINITION__;
+const width = __WIDTH__, height = __HEIGHT__;
+const canvas = document.querySelector('#mask'), context = canvas.getContext('2d');
+const status = document.querySelector('#status');
+let labels = new Uint8Array(width * height), ready = false, painting = false, previous = null, token = '';
+const history = [];
+document.querySelector('#source').textContent = source.sample_id + ' | ' + source.split + ' | ' + width + ' × ' + height;
+document.querySelector('#definition').textContent = 'Goods: ' + definition.foreground + '. Background: ' + definition.background + '. Uncertainty: ' + definition.uncertainty + '.';
+function loadImage(path) {
+  return new Promise((resolve, reject) => {
+    const item = new Image();
+    item.onload = () => resolve(item);
+    item.onerror = () => reject(Error('Image load failed: ' + path));
+    item.src = path;
+  });
+}
+/** Render a display overlay without changing the native class-ID array. */
+function display() {
+  const view = document.querySelector('#view').value, counts = {
+    0: 0,
+    1: 0,
+    255: 0
+  };
+  context.clearRect(0, 0, width, height);
+  const pixels = context.createImageData(width, height);
+  for (let index = 0; index < labels.length; index++) {
+    const value = labels[index];
+    counts[value]++;
+    if (view === 'rgb') continue;
+    const colour = value === 1 ? [235, 70, 210]: value === 0 ? [0, 180, 210]: [255, 160, 0];
+    const offset = index * 4;
+    pixels.data[offset] = colour[0];
+    pixels.data[offset + 1] = colour[1];
+    pixels.data[offset + 2] = colour[2];
+    pixels.data[offset + 3] = view === 'labels' ? 255: value === 0 ? 55: 135;
+  }
+  context.putImageData(pixels, 0, 0);
+  const percent = count => (100 * count / labels.length).toFixed(1) + '%';
+  document.querySelector('#counts').textContent = 'Goods ' + percent(counts[1]) + ' | Background ' + percent(counts[0]) + ' | Ignored ' + percent(counts[255]);
+}
+function invalidateConfirmation() {
+  document.querySelector('#confirmed').checked = false;
+  status.textContent = 'Unsaved changes. Check the complete image before confirming this version.';
+}
+/** Map CSS-scaled pointer coordinates back to native image pixels. */
+function position(event) {
+  const box = canvas.getBoundingClientRect();
+  return [(event.clientX - box.left) * width / box.width, (event.clientY - box.top) * height / box.height];
+}
+/** Interpolate brush stamps between pointer events to avoid gaps in a stroke. */
+function paint(point) {
+  const radius = Math.max(1, Math.min(100, Number(document.querySelector('#radius').value) || 1));
+  const value = Number(document.querySelector('#class').value), start = previous || point;
+  const steps = Math.max(1, Math.ceil(Math.hypot(point[0] - start[0], point[1] - start[1]) / Math.max(1, radius / 2)));
+  for (let step = 0; step <= steps; step++) {
+    const cx = start[0] + (point[0] - start[0]) * step / steps, cy = start[1] + (point[1] - start[1]) * step / steps;
+    for (let y = Math.max(0, Math.floor(cy - radius)); y <= Math.min(height - 1, Math.ceil(cy + radius)); y++) {
+      for (let x = Math.max(0, Math.floor(cx - radius)); x <= Math.min(width - 1, Math.ceil(cx + radius)); x++) {
+        if ((x - cx) ** 2 + (y - cy) ** 2 <= radius ** 2) labels[y * width + x] = value;
+      }
+    }
+  }
+  previous = point;
+  display();
+}
+// Store the pre-stroke mask so undo restores exact class IDs; edits clear confirmation.
+canvas.onpointerdown = event => {
+  if (!ready) return;
+  event.preventDefault();
+  history.push(labels.slice());
+  if (history.length > 20) history.shift();
+  painting = true;
+  previous = null;
+  canvas.setPointerCapture(event.pointerId);
+  invalidateConfirmation();
+  paint(position(event));
+};
+canvas.onpointermove = event => {
+  if (painting) paint(position(event));
+};
+canvas.onpointerup = canvas.onpointercancel = () => {
+  painting = false;
+  previous = null;
+};
+document.querySelector('#undo').onclick = () => {
+  if (history.length) {
+    labels = history.pop();
+    invalidateConfirmation();
+    display();
+  }
+};
+document.querySelector('#reviewer').oninput = () => {
+  document.querySelector('#confirmed').checked = false;
+};
+document.querySelector('#view').onchange = display;
+document.querySelector('#zoom').onchange = () => {
+  const value = document.querySelector('#zoom').value;
+  document.querySelector('#surface').style.width = value === 'fit' ? '100%': (width * Number(value)) + 'px';
+};
+/** Bind row-major mask runs to the source, reviewer and complete-image attestation. */
+function reviewedSubmission() {
+  const reviewer = document.querySelector('#reviewer').value.trim();
+  if (!ready || painting || !reviewer || !document.querySelector('#confirmed').checked) {
+    status.textContent = 'Export blocked: inspect the full image, enter your reviewer name and confirm.';
+    return null;
+  }
+  const ignored = labels.reduce((count, value) => count + (value === 255), 0) / labels.length;
+  if (ignored > definition.maximum_ignore_fraction) {
+    status.textContent = 'Export blocked: ignored fraction exceeds the task limit. Resolve clear regions; keep genuine uncertainty ignored.';
+    return null;
+  }
+  const runs = [];
+  let value = labels[0], count = 1;
+  for (let index = 1; index < labels.length; index++) {
+    if (labels[index] === value) count++;
+    else {
+      runs.push([value, count]);
+      value = labels[index];
+      count = 1;
+    }
+  }
+  runs.push([value, count]);
+  return {
+    ... source,
+    reviewer,
+    reviewer_kind: 'human',
+    reviewed: true,
+    reviewed_at: new Date().toISOString(),
+    width,
+    height,
+    mask_rle: runs
+  };
+}
+// Downloading preserves source binding; server-side validation is still required for admission.
+document.querySelector('#export').onclick = () => {
+  const submission = reviewedSubmission();
+  if (!submission) return;
+  const url = URL.createObjectURL(new Blob([JSON.stringify(submission)], {
+    type: 'application/json'
+  }));
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = source.sample_id.replaceAll('/', '_') + '_human_reference.json';
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  status.textContent = 'Reviewed JSON exported. Import validation is required before admission.';
+};
+async function session() {
+  const response = await fetch('/api/session');
+  if (!response.ok) throw Error('Local validation service unavailable; JSON export remains available.');
+  const result = await response.json();
+  token = result.token;
+  return result;
+}
+// The local service validates the submitted version before selecting it for the cohort.
+document.querySelector('#save').onclick = async() => {
+  const submission = reviewedSubmission();
+  if (!submission) return;
+  try {
+    if (!token) await session();
+    const response = await fetch('/api/reviews', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Review-Token': token
+      },
+      body: JSON.stringify(submission)
+    });
+    const result = await response.json();
+    if (!response.ok) throw Error(result.error);
+    status.textContent = 'Reviewed version saved and validated. Completed ' + result.reviewed.length + ' / ' + result.total + '. Draft and previous versions are preserved.';
+  } catch (error) {
+    status.textContent = 'Save failed: ' + error.message;
+  }
+};
+// Load source images losslessly; display zoom never changes exported mask geometry.
+Promise.all([loadImage('rgb.png'), loadImage('candidate.png')]).then(async([rgb, candidate]) => {
+  if (rgb.naturalWidth !== width || rgb.naturalHeight !== height || candidate.naturalWidth !== width || candidate.naturalHeight !== height) throw Error('Native geometry mismatch');
+  document.querySelector('#rgb').getContext('2d').drawImage(rgb, 0, 0);
+  const temporary = document.createElement('canvas');
+  temporary.width = width;
+  temporary.height = height;
+  const temporaryContext = temporary.getContext('2d');
+  temporaryContext.drawImage(candidate, 0, 0);
+  const pixels = temporaryContext.getImageData(0, 0, width, height).data;
+  for (let index = 0; index < labels.length; index++) {
+    const value = pixels[index * 4];
+    if (![0, 1, 255].includes(value)) throw Error('Unsupported native label ID');
+    labels[index] = value;
+  }
+  status.textContent = 'Source annotation loaded. Confirmation is required before saving a version.';
+  try {
+    await session();
+    const response = await fetch('/api/review?sample_id=' + encodeURIComponent(source.sample_id));
+    if (response.ok) {
+      const saved = await response.json();
+      let offset = 0;
+      for (const [value, count] of saved.mask_rle) {
+        labels.fill(value, offset, offset + count);
+        offset += count;
+      }
+      if (offset !== labels.length) throw Error('Saved review geometry mismatch');
+      document.querySelector('#reviewer').value = saved.reviewer;
+      status.textContent = 'Latest validated reference loaded. Confirm any changes before saving another version.';
+    }
+  } catch {
+    /* Static download-only use remains supported. */
+  }
+  document.querySelector('#confirmed').checked = false;
+  ready = true;
+  display();
+}).catch (error => {
+  status.textContent = 'Unable to load native labels: ' + error.message;
+});
+</script>
+</html>

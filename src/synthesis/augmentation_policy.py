@@ -28,6 +28,9 @@ def build_policy(profile):
         luma = camera["luma_mean_8bit"]
         if not (0 < luma["p10"] <= luma["p50"] <= luma["p90"] <= 255):
             raise ValueError("Invalid training luma quantiles")
+        # Gain is relative to median training brightness; luminance stays 8-bit.
+        # Depth coverage is a fraction in [0, 1]. These are stress bounds, not
+        # calibrated sensor-noise parameters.
         cameras[side] = {
             "rgb_gain_range": [luma["p10"] / luma["p50"], luma["p90"] / luma["p50"]],
             "accepted_mean_luma_range": [luma["p01"], luma["p99"]],
@@ -190,7 +193,9 @@ def main():
     if args.output.resolve() in [args.profile.resolve(), args.manifest.resolve()]:
         parser.error("Policy must not overwrite its evidence inputs")
     policy["profile_sha256"] = hashlib.sha256(profile_bytes).hexdigest()
-    policy["policy_source_sha256"] = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+    policy["policy_source_sha256"] = hashlib.sha256(
+        Path(__file__).read_bytes()
+    ).hexdigest()
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(policy, indent=2), encoding="utf-8")
     print(json.dumps(policy, indent=2))

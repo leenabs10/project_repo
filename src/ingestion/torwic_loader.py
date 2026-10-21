@@ -461,7 +461,7 @@ def main():
         },
         "limitations": [
             "Only demo image and PCD payloads decoded; whole-dataset decoding remains to do.",
-            "Transform inverse is implemented; use week1_checks.py for spatial diagnostics. Calibration accuracy and distortion handling need application-specific validation.",
+            "Transform inverse is implemented; use representative_ingestion_checks.py for spatial diagnostics. Calibration accuracy and distortion handling need application-specific validation.",
             "The default smoke test omits IMU; SequenceImu optionally returns explicitly sorted, gap-limited brackets without measurement interpolation.",
             "Zero XYZ points are filtered; nonzero outliers need a separate documented rule.",
             "Dates and splits remain unassigned unless explicitly confirmed.",

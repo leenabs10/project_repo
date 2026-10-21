@@ -26,20 +26,18 @@ from proposed work; do not invent requirements from an unavailable planning docu
 - Preserve portable scene/asset/sensor intent. New backends still need conversion,
   known-fixture geometry/sensor checks and appearance review; do not promise
   automatic migration, equivalent materials or pixel-identical results.
-- Six weeks total, four delivery weeks remaining: plan 19 October-15 November.
-  New simulation starts no earlier than 19 October. The old 25 October completion
-  target is superseded. Goods is primary; depth is a conditional bounded benchmark.
-  Simulated LiDAR remains deferred and the original same-scene RGB/depth/LiDAR
-  generation gate remains open. Do not describe the camera pilot as full completion.
+- Goods segmentation is the primary benchmark; depth is a conditional bounded
+  benchmark. Simulated LiDAR remains deferred, and the same-scene RGB/depth/LiDAR
+  generation gate remains open. A camera pilot does not establish full completion.
 - Stakeholder-facing scope, architecture, plans, status documents and README
   must use capabilities, milestones and acceptance criteria. Keep calendar dates,
-  week counts, deadlines, private scheduling, chat history and rollback/publishing
+  schedule labels, deadlines, private scheduling, chat history and rollback/publishing
   housekeeping out of these documents. Internal planning remains private. Preserve
   source-capture timestamps and original audit/provenance records where required;
   do not alter datasets, historical hashes or technical evidence to polish prose.
-- The architecture document is a target design. The 14 October implementation was
-  rolled back; do not claim generic-core/backend/executor support is implemented
-  until tested. Reuse working code incrementally and preserve evidence snapshots.
+- The architecture document is a target design. Do not claim core, backend or
+  executor capabilities are implemented until verified by the relevant tests.
+  Reuse working code incrementally and preserve evidence snapshots.
 
 ## Branches, commits, and publishing
 
@@ -67,7 +65,7 @@ from proposed work; do not invent requirements from an unavailable planning docu
 
 - Readability is a requirement. Use descriptive names based on purpose, such as
   `dataset_profile`, `sensor_alignment_review`, and `imu_timing`; avoid calendar
-  week or phase-number names for new code, reports, and commits.
+  or numbered phase names for new code, reports, and commits.
 - Keep functions focused and expand dense statements. Avoid compressed control
   flow, multiple actions on one line, and unexplained numeric constants.
 - Add docstrings for public functions and important data contracts: purpose,
@@ -296,7 +294,7 @@ from proposed work; do not invent requirements from an unavailable planning docu
 
 ## Organized training pipeline evidence
 
-- The user's Monday pipeline-organization scope is verified separately from the
+- Research pipeline integration is verified separately from the
   earlier data-understanding milestone. Ten legacy depth scripts are integrated,
   import-safe and configurable; use module CLIs from the project root.
 - Use the CUDA interpreter from ignored .tools/training_runtime.json for training
@@ -348,12 +346,28 @@ from proposed work; do not invent requirements from an unavailable planning docu
 - The goods task adapter, native reference workspace, corrected-mask importer and
   snapshot-bound admission workflow are verified by 115 tests. Runtime fixture
   update/reload passed at 640x360, batch size 4, float32. No trained candidate was saved.
-- The current 24-train/12-development packet includes every condition-pilot source.
-  No real corrected submissions or condition acceptance decisions have been supplied.
-  Keep eligible counts at zero until validated submissions and required coverage exist.
+- Reference datasets require separate semantic qualification. Preserve their
+  source and submission hashes; label corrections create new versions and require
+  every compared model to use the same targets. Technical import is not proof of
+  annotation accuracy or customer-model fitness.
 - Use the snapshot-bound feedback template from the current preparation workflow;
   the older five-column gallery CSV cannot bind decisions to a complete batch version.
 - Reference masks are model-assisted corrections, with potential anchoring bias.
   Configured cohort counts are pilot requirements, not statistical adequacy guarantees.
   No benchmark score, model improvement or simulator integration follows from runtime checks.
 - Preserve frozen source/results and publish only on the user's new explicit request.
+
+## Verified reference and real-only execution tools
+
+- This software release contains native annotation editing, exact submission
+  preservation, provenance-aware admission and a real-only training/evaluation
+  engine. Keep experimental training extensions and dataset-specific outcomes
+  separate from software contract verification.
+- Fixture training, strict checkpoint reload and native evaluation validate the
+  implementation. They do not qualify real masks, certify accuracy or establish
+  synthetic-data utility. Never edit prediction outputs to improve scores.
+- Preserve all local experiment and annotation histories. Label revisions need
+  a new source-bound version; compare every candidate against the same targets.
+- Keep stakeholder wording professional and technical authorship truthful.
+  Publication of this selected subset does not authorize a future push or any
+  integration into main. Preserve uncommitted working changes.

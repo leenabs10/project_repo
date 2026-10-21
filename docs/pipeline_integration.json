@@ -1,13 +1,6 @@
 {
-  "verified_date": "2026-10-13",
-  "scheduled_day": "Monday, 12 October 2026",
-  "milestone": "Organize the pipeline",
-  "status": "completed_locally",
-  "scope_correction": "The earlier Day 1 completion statement covered data understanding; this report verifies the user's preparation/training/prediction/audit integration row.",
-  "branch": "dev",
-  "committed": false,
-  "pushed": false,
-  "main_unchanged": true,
+  "milestone": "Research pipeline integration",
+  "status": "integration_verified",
   "legacy_scripts_integrated": 10,
   "source_mapping": [
     {
@@ -127,12 +120,8 @@
     "validation_frames": 1037,
     "copies_verified_byte_identical": true
   },
-  "manual_tasks": [
-    "Select the interpreter recorded in .tools/training_runtime.json using VS Code Python: Select Interpreter.",
-    "Review the documented checkpoint/resolution/denoising limitations before future training or inference."
-  ],
   "remaining_quality_gates": [
-    "Human reference labels and pseudo-label review for goods segmentation.",
+    "Goods-reference validation and versioned benchmark evaluation.",
     "Renderer viewpoint/material/domain review before synthetic training admission.",
     "Optional fusion needs verified Azure export metadata; extra annotations need split provenance."
   ],
@@ -145,5 +134,11 @@
     "depth_stress_audit/quality_audit.json": "06656c9a27f19cd18e8d148298d10c9ef80bf55ed0c384a305dff915ce017e6e",
     "quality_prediction.npz": "4909fced44774a3299f177fa891c7c297fa05675724f0c005129328cb76a3681",
     "context_prediction.npz": "92ecf903ca5de08d71ef3eed405e85aeb80563589e3e76460e29be7d03818951"
-  }
+  },
+  "evidence_scope": "Recorded verification snapshot; current capabilities are described by the linked task-specific readiness documents.",
+  "original_record": {
+    "path": "reports/ingestion_validation_archive/original_pipeline_integration.json",
+    "sha256": "1c3d524f1eaca1f0c957f97bdef74eb1c18237e80ce5f7105dbe7df0f5fe7609"
+  },
+  "scope": "Reusable preparation, training, prediction and audit workflows for the recorded depth-research configuration."
 }

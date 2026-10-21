@@ -24,9 +24,11 @@ Isaac Sim is a conditional candidate, not an installed or mandatory production b
 
 ML and evaluation
 CUDA-enabled PyTorch 2.9.1+cu128 and torchvision 0.24.1+cu128 support existing depth
-research and the planned goods benchmark. Generic pretrained initialization
-does not constitute a trained goods model. Independently validated reference targets and controlled
-real-only/real-plus-synthetic experiments remain required.
+research and the real-only goods training/evaluation CLI. Source checksums,
+qualified target provenance, ignored pixels and native evaluation are verified
+through known fixtures. Dataset reference qualification and controlled downstream
+comparisons remain separate acceptance criteria. No model accuracy is certified
+by software verification.
 
 Execution, storage and distribution
 Local subprocess workers exchange portable JSON jobs and result manifests. Machine

@@ -1,0 +1,33 @@
+{
+  "description": "Recorded TorWIC trajectory-ingestion integrity results. Counts describe payload validation, not model accuracy or sensor-registration certification.",
+  "ingestion_gate": "passed",
+  "scope": "Both-camera RGB, measured depth, predicted semantic labels and XYZ LiDAR trajectory payloads",
+  "frames_checked": 3088,
+  "frames_passed": 3088,
+  "sensor_payloads_checked": 21616,
+  "errors": 0,
+  "split_counts": {
+    "test": 915,
+    "train": 1136,
+    "validation": 1037
+  },
+  "representative_samples_passed": 9,
+  "manifest_sha256": "fe77b9efd233e44e45d620841b7055118b6f9c44e4f2d26ac47464a72fb56f2e",
+  "rebuilt_manifest_matches_project": true,
+  "test_split_usage": "Read-only integrity inspection; no model evaluation or tuning",
+  "evidence": {
+    "record_path": "reports/ingestion_validation_archive/original_ingestion_record.json",
+    "record_sha256": "569df068a27b0f8aad4fc75f048761a78efbea163dd13f7a0c3c850cb5002270",
+    "description": "The unchanged original record retains its historical source hashes and detailed evidence locations. These hashes describe the audited implementation, not subsequent readability edits."
+  },
+  "reusable_checks": {
+    "full_payload_audit": "src/validation/full_ingestion_checks.py",
+    "representative_diagnostics": "src/validation/representative_ingestion_checks.py",
+    "representative_report": "representative_ingestion_checks.json"
+  },
+  "limitations": [
+    "Integrity checks do not establish calibration accuracy, registration or independent semantic accuracy.",
+    "IMU measurement interpolation and fusion require verified units, timing and coordinate-frame metadata; see docs/imu_ingestion_review.txt.",
+    "Extra annotated-set and ground-truth map payloads are outside this recorded trajectory audit."
+  ]
+}

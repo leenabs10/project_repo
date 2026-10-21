@@ -164,12 +164,22 @@ def qualify_dataset(
         split: sum(row["split"] == split for row in reference_rows)
         for split in ("train", "validation")
     }
+    qualified_counts = {
+        split: sum(
+            row["split"] == split
+            and row["reference_origin"] == definition["reference_origin"]
+            for row in reference_rows
+        )
+        for split in ("train", "validation")
+    }
     cohort_ready = all(
-        counts[split] >= required
+        qualified_counts[split] >= required
         for split, required in definition["minimum_reference_frames"].items()
     )
     if (
         counts != reference_profile["reference_counts"]
+        or qualified_counts
+        != reference_profile.get("qualified_reference_counts", counts)
         or cohort_ready != reference_profile["benchmark_reference_ready"]
     ):
         raise ValueError("Reference cohort count/status mismatch")
@@ -203,9 +213,10 @@ def qualify_dataset(
                     or reference["group_id"] != attempt["source_group_id"]
                     or reference["task_id"] != definition["task_id"]
                     or reference["protocol_sha256"] != protocol_sha
-                    or reference["reference_origin"] != definition["reference_origin"]
                 ):
                     raise ValueError("Qualified target split/task/provenance mismatch")
+                if reference["reference_origin"] != definition["reference_origin"]:
+                    reasons.append("reference_annotation_origin_not_qualified")
                 if reference["source_rgb_sha256"] != attempt["source_sha256"][
                     "rgb"
                 ] or reference["source_semantic_sha256"] != attempt[
@@ -244,6 +255,9 @@ def qualify_dataset(
                     {
                         "record": record,
                         "source_sample_id": attempt["source_sample_id"],
+                        "source_rgb_sha256": attempt["source_sha256"]["rgb"],
+                        "condition": copy.deepcopy(attempt["condition"]),
+                        "generation_seed": attempt["seed"],
                         "task_id": definition["task_id"],
                         "target_path": target_path.relative_to(output).as_posix(),
                         "target_sha256": reference["target_sha256"],
@@ -290,6 +304,7 @@ def qualify_dataset(
             "task_id": definition["task_id"],
             "protocol_sha256": protocol_sha,
             "source_batch_profile_sha256": expected_batch_sha256,
+            "manifest_sha256": batch_profile["manifest_sha256"],
             "reference_profile_sha256": expected_reference_sha256,
             "decisions_sha256": feedback_sha,
             "reviewer": reviewer.strip() or None,

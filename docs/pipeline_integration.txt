@@ -1,13 +1,9 @@
 Pipeline organization and research environment
-Scheduled milestone: Monday, 12 October 2026. Verified completion: 13 October 2026.
-Local work on dev; not committed or pushed. main remains unchanged.
-
-Scope correction
-The earlier Day 1 statement covered the data-understanding milestone. The user's
-schedule defines this row as organizing preparation, training, prediction and
-audit workflows. Those depth-research scripts were still outside the repository;
-this integration now completes that specific row. It does not imply completion
-of label review, realistic synthesis or production sensor fusion.
+Scope
+Preparation, training, prediction and audit workflows are integrated as reusable
+project modules with explicit inputs and output locations. This integration
+record covers the depth-research workflow; it does not establish goods accuracy,
+synthetic-data realism or production sensor-fusion readiness.
 
 Completed
 - Ten legacy scripts integrated under src/ingestion, src/training, src/inference
@@ -46,24 +42,11 @@ The existing verified environment is reused, avoiding another large installation
 The exact executable path is machine-local in .tools/training_runtime.json.
 The ingestion-only .venv is not assumed to contain the CUDA training packages.
 
-Your manual tasks
-Select the Python executable from .tools/training_runtime.json in VS Code using
-Python: Select Interpreter. Review configs/checkpoint_registry.json and these
-research limits before starting future runs. No manual file moving, dependency
-reinstallation or full retraining is required to complete this organization task.
-
-Run from C:/amr-synthetic-mvp in PowerShell
-$trainingPython = (Get-Content .tools/training_runtime.json -Raw | ConvertFrom-Json).python_executable
-& $trainingPython -m unittest discover -s tests
-& $trainingPython -m src.validation.pipeline_smoke --output reports/pipeline_smoke_next
-& $trainingPython -m src.training.depth_quality --help
-& $trainingPython -m src.inference.depth_quality --help
-
-Choose fresh output locations. Explicit executable commands do not require
-PowerShell activation scripts. CUDA versions below are a verified environment
-snapshot, not a claim about current latest versions. A fresh setup can install
-requirements/torch_cu128.txt, then requirements/depth_research.txt; the complete
-MVP import checker additionally uses requirements/mvp_tools.txt.
+Execution contract
+Use the interpreter recorded in the ignored local runtime configuration. Select
+fresh output locations and preserve raw inputs and existing model results.
+Dependency versions describe the verified environment snapshot. Reproducible
+environment specifications are retained under requirements/.
 
 Checkpoint families
 models/depth_baseline: six-channel 160x90 baseline; one original checkpoint.
@@ -74,9 +57,9 @@ models/depth_quality: eight-channel 320x180 depth-only candidates; four original
 These depth experiments remain separate from the chosen goods-segmentation MVP.
 Low-resolution sensor-depth research does not prove goods accuracy or physical realism.
 
-Next work
-Build reviewed goods reference masks and triage teacher-label mistakes. Match the
-renderer viewpoint/materials to training-only images before increasing the pilot.
-Keep test membership frozen and synthetic training gated. Optional fusion and
-extra-annotation provenance remain separate evidence requirements. Publish this
-new integration batch only when the user requests publication.
+Related capabilities
+The native reference and real-only training/evaluation interfaces are documented
+in README.md and docs/preparation_readiness.txt. Reference qualification,
+generation fidelity, controlled synthetic-data comparisons and held-out evaluation
+are separate acceptance criteria. Optional fusion and extra-annotation provenance
+require their own evidence.

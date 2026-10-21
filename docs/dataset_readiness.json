@@ -1,20 +1,13 @@
 {
-  "review_date": "2026-10-12",
-  "branch": "dev",
   "head": "254fd99cf81a4241d8301c8bda4d93e1398409a2",
-  "committed": false,
-  "pushed": false,
-  "merged_into_main": false,
   "plan_source": {
-    "path": "C:\\Users\\lb_10\\Documents\\Codex\\2026-09-27\\referenced-chatgpt-conversation-this-is-an\\outputs\\Warehouse_Synthetic_Data_MVP_Plan.docx",
     "sha256": "3c69f8c83515584fe6b0b84eeff00c03e26884f0f4c1595b4674646005fa5682",
-    "scope": "Recovered eight-week warehouse image/label MVP plan; no daily subplan is specified"
+    "scope": "Warehouse image and label synthesis reference plan"
   },
   "requirements_status": "Assumptions and proposed success criteria documented; no customer interviews claimed",
   "core_ingestion_status": "passed",
   "imu_bracketing_status": "passed_with_explicit_invalid_coverage",
   "optional_imu_fusion_status": "blocked_pending_verified_export_metadata",
-  "data_understanding_day_one_status": "complete_for_defined_task_camera_examples_and_split_scope",
   "independent_reference_label_status": "pending",
   "renderer_geometry_status": "geometry_and_export_integrity_passed",
   "renderer_appearance_status": "reviewed_as_prototype_only; physical/domain realism not certified",
@@ -79,14 +72,14 @@
         "Aisle_CCW_Run_1/001135"
       ],
       "finding": "Large foreground wooden crate on the AMR is not covered by the predicted goods overlay.",
-      "status": "likely false negative under the proposed goods task; needs human reference annotation"
+      "status": "likely false negative under the proposed goods task; reference annotation verification required"
     },
     {
       "sample_ids": [
         "Aisle_CCW_Run_1/000908"
       ],
       "finding": "Some predicted goods regions lie on the robot edge and a bright ceiling artifact.",
-      "status": "likely false positives; needs human review"
+      "status": "likely false positives; label verification required"
     },
     {
       "sample_ids": [
@@ -98,7 +91,7 @@
         "Aisle_CCW_Run_1/001135"
       ],
       "finding": "Real views include low/angled viewpoints and clutter. The symmetric pilot aisle and camera height are not yet a matched scene model.",
-      "status": "domain appearance/pose review pending; synthetic training eligibility remains false"
+      "status": "appearance and pose validation pending; synthetic training eligibility remains false"
     }
   ],
   "renderer": {
@@ -164,10 +157,16 @@
     "src/validation/renderer_pilot_checks.py": "6620fee9344d1a57c65f57f9b8e8e1a42b6947ae2c1e9ef4f4666caa700b4a59"
   },
   "remaining_work": [
-    "Human reference masks and quality triage for the chosen goods task; pseudo-label agreement is not independent accuracy.",
+    "Goods-reference versioning and downstream quality evaluation; pseudo-label agreement does not establish independent accuracy.",
     "Match camera viewpoint, scene variety and materials to training-only real examples before expanding synthetic batches.",
     "Verify the Azure IMU export columns/units/frame binding/clock and image convention for optional fusion.",
     "Resolve collection/split provenance of extra annotations before admitting them to training.",
     "Freeze comparison budgets/seeds and independent evaluation protocol before real-versus-real-plus-synthetic training."
-  ]
+  ],
+  "evidence_scope": "Recorded verification snapshot; current capabilities are described by the linked task-specific readiness documents.",
+  "original_record": {
+    "path": "reports/ingestion_validation_archive/original_dataset_readiness.json",
+    "sha256": "8c3399e1c97b74d5945ec2cc55bdf0821bb7d1bf1a92c24f34eba131d1bae596"
+  },
+  "data_understanding_status": "complete_for_defined_task_camera_examples_and_split_scope"
 }

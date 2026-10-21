@@ -8,9 +8,15 @@ from src.adapters.datasets.registry import dataset_adapter
 from src.validation.dataset_acceptance import prepare_decisions, qualify_dataset
 from src.validation.reference_labels import import_references, prepare_references
 from src.validation.artifacts import verify_snapshot
+from src.validation.draft_review import prepare_draft_review
 
 
 def main():
+    """Dispatch preparation, import and dataset admission as separate operations.
+
+    Preparing an editor does not qualify its labels. Import checks submitted
+    provenance; admission also checks the exact generated batch snapshot.
+    """
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     prepare = commands.add_parser(
@@ -50,6 +56,13 @@ def main():
     decisions.add_argument("--batch-sha256", required=True)
     decisions.add_argument("--source-root", type=Path, required=True)
     decisions.add_argument("--output", type=Path, required=True)
+    review = commands.add_parser(
+        "review-drafts", help="Prepare a native annotation reference workspace"
+    )
+    for flag in ("packet", "drafts", "task", "output", "source-root"):
+        review.add_argument("--" + flag, type=Path, required=True)
+    review.add_argument("--packet-sha256", required=True)
+    review.add_argument("--drafts-sha256", required=True)
     args = parser.parse_args()
     if args.command == "prepare":
         configuration = json.loads(args.runtime.read_text(encoding="utf-8"))["dataset"]
@@ -73,6 +86,16 @@ def main():
             required = tuple(job["source_sample_ids"])
         result = prepare_references(
             adapter, args.task, args.output, required_training_ids=required
+        )
+    elif args.command == "review-drafts":
+        result = prepare_draft_review(
+            args.packet,
+            args.packet_sha256,
+            args.drafts,
+            args.drafts_sha256,
+            args.task,
+            args.output,
+            args.source_root,
         )
     elif args.command == "import":
         result = import_references(

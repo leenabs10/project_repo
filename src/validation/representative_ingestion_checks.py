@@ -1,5 +1,8 @@
-"""Representative ingestion checks and calibration-direction diagnostics.
-Requires numpy and Pillow. Raw files are read only; no model tuning is performed.
+"""Inspect representative sensor payloads and compare projection conventions.
+
+Decode the first, middle and last frame of each trajectory. Projection residuals
+use training frames only and measure axial depth in metres. Raw data is read
+only; these diagnostics do not certify registration or evaluate a model.
 """
 
 import argparse
@@ -200,7 +203,7 @@ def main():
         "interpretation": "Compare the supplied transform and its inverse; do not treat lowest depth error alone as proof of calibration accuracy. Occlusion, reflective surfaces, sensor range, and image distortion can cause residuals.",
         "coverage_limit": "First/middle/last samples decoded in each sequence; not a full-file integrity scan. No performance measurements or tuning on the test split.",
     }
-    (args.output / "week1_checks.json").write_text(
+    (args.output / "representative_ingestion_checks.json").write_text(
         json.dumps(report, indent=2), encoding="utf-8"
     )
     if preview:
@@ -232,7 +235,7 @@ def main():
         json.dumps(
             {
                 "checked": len(checks),
-                "report": str(args.output / "week1_checks.json"),
+                "report": str(args.output / "representative_ingestion_checks.json"),
                 "projection_diagnostics": diagnostics,
             },
             indent=2,

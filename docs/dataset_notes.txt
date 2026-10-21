@@ -1,5 +1,4 @@
-TorWIC-SLAM MVP: Week 1 ingestion notes
-Date: October 5, 2026
+TorWIC-SLAM ingestion contract and evidence
 
 Source: https://github.com/Viky397/TorWICDataset
 Dataset root: data/raw/torwic_slam
@@ -30,7 +29,7 @@ All 3,088 frame IDs match the expected image, depth, LiDAR and semantic IDs.
 Every pose timestamp matches its frame timestamp. Pose quaternion norms pass.
 First/middle/last samples from all three sequences decoded successfully for
 both cameras and LiDAR: nine representative samples with calibration diagnostics.
-On October 9, 2026, a full trajectory payload audit additionally passed for all
+The recorded full trajectory payload audit passed for all
 3,088 frames (21,616 files): both-camera RGB/depth/semantic decoding, image
 shapes and dtypes, semantic IDs, binary LiDAR layout and payload lengths, and
 nonempty usable depth/LiDAR. No errors were found. This does not establish
@@ -60,25 +59,21 @@ two Aisle_CW_Run_1 frames precede the corresponding IMU time spans.
 Positive depth coverage and usable LiDAR counts vary greatly between frames.
 Do not generalize the first checked sample into a dataset-wide degradation rule.
 
-Week 1 completion gate (rechecked October 9, 2026)
-Inventory, manifest construction, nine representative checks, and the full
-trajectory payload audit passed using the project's .venv. The base interpreter
-required execution outside the assistant sandbox; the environment itself works.
-The rebuilt manifest is byte-identical to data/manifests/manifest.jsonl (SHA256
-fe77b9efd233e44e45d620841b7055118b6f9c44e4f2d26ac47464a72fb56f2e).
-Fresh evidence is under reports/week1_audit_2026-10-09/; full_payload_checks.json
-records the full audit. Reusable audit: src/validation/full_ingestion_checks.py.
-The ingestion gate is satisfied for depth-only prototype training. The portable
-completion record is docs/week1_validation.json; detailed local evidence remains
-under reports/week1_audit_2026-10-09/. Existing changes to the three
-ingestion/validation scripts were verified AST-equivalent to HEAD.
-Before IMU fusion, implement explicit ordering and out-of-span handling for the
-documented timestamp anomalies. Before LiDAR-camera fusion, resolve distortion
-conventions and application-specific registration validation. Semantics supplied
-with the trajectories remain model predictions rather than manual ground truth.
+Ingestion validation
+Inventory, manifest construction, representative decoding and the full trajectory
+payload audit passed. The rebuilt manifest matches data/manifests/manifest.jsonl:
+fe77b9efd233e44e45d620841b7055118b6f9c44e4f2d26ac47464a72fb56f2e.
+The purpose-based summary is docs/ingestion_validation.json. Its evidence record
+retains original source hashes and audit locations without rewriting history.
 
-Next milestone
-Profile training data only: RGB brightness/blur, depth coverage/range, LiDAR
-valid counts/range, semantic class coverage, and their variation along the route.
-Use that evidence to define small reproducible synthetic degradations. Keep
-validation separate and reserve the test trajectory for final evaluation.
+Reusable payload audit: src/validation/full_ingestion_checks.py.
+Representative diagnostics: src/validation/representative_ingestion_checks.py.
+IMU ordering, bracketing and measurement limitations are documented separately
+in docs/imu_ingestion_review.txt. Camera-LiDAR fusion still requires verified
+distortion conventions and application-specific registration evidence.
+Trajectory semantic masks remain model predictions rather than manual targets.
+
+Downstream preparation
+Derive coverage statistics and synthetic-condition proposals from training data
+only. Keep development data separate and reserve the held-out trajectory for
+evaluation after the candidate and protocol are frozen.
