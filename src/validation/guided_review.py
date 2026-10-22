@@ -1,7 +1,7 @@
-"""Prepare reproducible AI polygon refinements and an editable comparison workspace.
+"""Prepare reproducible polygon refinements and an editable comparison workspace.
 
 This tool applies explicit annotation decisions; it does not discover objects or
-certify semantic accuracy. Original packets and human-review state stay immutable.
+certify semantic accuracy. Original packets and saved review state stay immutable.
 """
 
 import argparse
@@ -248,7 +248,8 @@ def prepare_guided_review(packet, packet_sha, refinements, output, source_root):
                 candidate_sha256=file_hash(folder / "candidate.png"),
                 refinement_specification_sha256=file_hash(refinements),
             )
-            # AI export is separate from the human-only save service and its state.
+            # Candidate provenance stays separate from confirmed saves and
+            # their review state.
             write_json(
                 folder / "ai_draft.json",
                 {
@@ -292,7 +293,7 @@ def prepare_guided_review(packet, packet_sha, refinements, output, source_root):
             prepared.append(entry)
             link = escape(entry["folder"], quote=True)
             cards.append(
-                f'<article data-sample="{escape(sample_id, quote=True)}"><h2>{escape(sample_id)}</h2><p>{escape(binding["split"])} · AI draft · <span class="progress">not saved</span></p><a href="{link}/index.html"><img src="{link}/refined_overlay.png" alt="Annotation overlay for {escape(sample_id, quote=True)}"></a><p>{escape(selected["notes"][0])}</p><a href="{link}/index.html">Open and correct this image</a> | <a href="{link}/comparison.png">Before / after</a></article>'
+                f'<article data-sample="{escape(sample_id, quote=True)}"><h2>{escape(sample_id)}</h2><p>{escape(binding["split"])} · Reference candidate · <span class="progress">not saved</span></p><a href="{link}/index.html"><img src="{link}/refined_overlay.png" alt="Annotation overlay for {escape(sample_id, quote=True)}"></a><p>{escape(selected["notes"][0])}</p><a href="{link}/index.html">Open and correct this image</a> | <a href="{link}/comparison.png">Before / after</a></article>'
             )
         write_json(output / "references.json", prepared)
         write_json(output / "refinement_statistics.json", statistics)
@@ -309,14 +310,14 @@ def prepare_guided_review(packet, packet_sha, refinements, output, source_root):
                 if row["binding"]["sample_id"] == item["sample_id"]
             )
             examples.append(
-                f'<article><h2>{escape(item["title"])}</h2><p>{escape(item["description"])}</p><img src="{escape(entry["folder"], quote=True)}/comparison.png" alt="RGB, previous draft and refined draft"><p><a href="{escape(entry["folder"], quote=True)}/index.html">Open this real example in the editor</a></p></article>'
+                f'<article><h2>{escape(item["title"])}</h2><p>{escape(item["description"])}</p><img src="{escape(entry["folder"], quote=True)}/comparison.png" alt="RGB, previous candidate and refined candidate"><p><a href="{escape(entry["folder"], quote=True)}/index.html">Open this real example in the editor</a></p></article>'
             )
         (output / "guide.html").write_text(
             help_template.replace("<!-- EXAMPLES -->", "".join(examples)),
             encoding="utf-8",
         )
         index_page = (
-            f'<!doctype html><html lang="en"><meta charset="utf-8"><title>Goods annotation references</title><style>{PAGE_STYLE}</style><h1>Goods annotation references</h1><aside><p><strong>AI drafts — human review pending. No training admission.</strong></p><p>Magenta: goods · Cyan: background · Orange: unresolved pixels.</p><p><a href="guide.html">Start here: colour rules, three real examples and painting steps</a></p><p id="summary">Saved reference versions: 0 / {len(prepared)}</p><button id="validate">Validate saved cohort</button><p id="result" role="status"></p></aside><div class="cards">'
+            f'<!doctype html><html lang="en"><meta charset="utf-8"><title>Goods annotation references</title><style>{PAGE_STYLE}</style><h1>Goods annotation references</h1><aside><p><strong>Reference candidates — qualification pending. Training disabled.</strong></p><p>Magenta: goods · Cyan: background · Orange: unresolved pixels.</p><p><a href="guide.html">Start here: colour rules, three real examples and painting steps</a></p><p id="summary">Saved reference versions: 0 / {len(prepared)}</p><button id="validate">Validate saved cohort</button><p id="result" role="status"></p></aside><div class="cards">'
             + "".join(cards)
             + "</div>"
         )

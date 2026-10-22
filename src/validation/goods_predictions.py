@@ -47,7 +47,7 @@ def label_overlay(rgb, labels):
 
 
 def export_predictions(run, run_sha, references, references_sha, output, device="cuda"):
-    """Reload one verified real model and export lossless native predictions.
+    """Reload one verified goods model and export lossless native predictions.
 
     All train/development predictions and metrics are retained. The gallery
     shows all development frames and six evenly spaced training diagnostics.
@@ -59,8 +59,11 @@ def export_predictions(run, run_sha, references, references_sha, output, device=
 
     run, references = Path(run), Path(references)
     profile = verify_snapshot(run, run_sha)
-    if profile["purpose"] != "real_only_benchmark" or profile["status"] != "passed":
-        raise ValueError("Prediction export requires a completed real-only run")
+    if (
+        profile["purpose"] not in {"real_only_benchmark", "hybrid_benchmark"}
+        or profile["status"] != "passed"
+    ):
+        raise ValueError("Prediction export requires a completed goods benchmark run")
     if profile["reference_profile_sha256"] != references_sha:
         raise ValueError("Prediction references differ from model-selection references")
     rows = load_references(references, references_sha, run / "task.json")
@@ -74,6 +77,13 @@ def export_predictions(run, run_sha, references, references_sha, output, device=
     ]:
         if saved[name] != profile[name]:
             raise ValueError("Prediction checkpoint metadata differs from its run")
+    if config["experiment_kind"] == "real_plus_synthetic" and (
+        saved.get("synthetic_profile_sha256") != profile.get("synthetic_profile_sha256")
+        or not saved.get("synthetic_profile_sha256")
+    ):
+        raise ValueError(
+            "Prediction checkpoint synthetic provenance differs from its run"
+        )
     model = build_model(config).to(device)
     model.load_state_dict(saved["state_dict"], strict=True)
     model.eval()

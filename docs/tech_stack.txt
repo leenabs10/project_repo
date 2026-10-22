@@ -13,10 +13,13 @@ The supported additional input format is a declared paired-PNG canonical manifes
 automatic arbitrary-customer ingestion and ontology mapping are not implemented.
 
 Generation
-Existing custom Blender 4.5.3 pilot remains available. Isolated BlenderProc 2.8.0
-with Blender 4.2.1 is prepared for integration. These environments remain separate
-from the host data/ML environment. Generation capability declarations reject unavailable
-workers and simulated LiDAR requests; no common scene-generation worker is claimed yet.
+Blender 4.5.3 now runs a bounded portable-scene worker with paired native RGB,
+clean axial depth, semantic/instance labels and source-bound canonical export.
+The host and renderer remain separate processes/environments. Geometry, units,
+categorical exports and independent ray fixtures pass; appearance qualification
+and scene-synthetic training admission remain open. BlenderProc 2.8.0 with Blender
+4.2.1 is downloaded but renderer dependency initialization fails at the package
+index. Capability preflight keeps that backend unavailable. See scene_generation.txt.
 The real_sensor_conditions worker implements native RGB gain and training-only depth
 missingness, with explicit customer controls and evidence-bound acceptance policies.
 LiDAR/labels are preserved; calibrated depth noise and LiDAR corruption remain blocked.
@@ -24,11 +27,11 @@ Isaac Sim is a conditional candidate, not an installed or mandatory production b
 
 ML and evaluation
 CUDA-enabled PyTorch 2.9.1+cu128 and torchvision 0.24.1+cu128 support existing depth
-research and the real-only goods training/evaluation CLI. Source checksums,
-qualified target provenance, ignored pixels and native evaluation are verified
-through known fixtures. Dataset reference qualification and controlled downstream
-comparisons remain separate acceptance criteria. No model accuracy is certified
-by software verification.
+research and the implemented goods training/evaluation CLI. Reference-version
+guards and optional weighted cross-entropy are fixture-verified. Current
+references are frozen and a bounded RGB-condition comparison is complete; its
+candidate was rejected for recall regression. Scene-synthetic utility remains open.
+See docs/goods_benchmark_status.txt.
 
 Execution, storage and distribution
 Local subprocess workers exchange portable JSON jobs and result manifests. Machine
@@ -51,7 +54,7 @@ Implemented preparation interfaces
 - TorWIC wrapper plus explicit paired-PNG dataset adapter.
 - Shared canonical cache and compatible legacy-mm export, including resized camera metadata.
 - Local worker/executor and contained storage helpers.
-- Real-sample condition jobs, common quality gates and visual diagnostics; scene integration remains pending.
+- Real-sample condition jobs and a bounded portable Cycles scene worker; scene appearance and training admission remain open.
 
 Run from the checkout using the documented data/ML interpreter
 python -m pip install -r requirements/pipeline_core.txt -r requirements/development.txt
@@ -78,7 +81,7 @@ Verified dependency versions
 - dubaidata-synthetic-pipeline: 0.1.0
 
 Verification
-- 115 contract tests passed, including customer-fixture preparation/generation, target import and dataset admission.
+- The foundation snapshot passed 115 contract tests, including customer-fixture preparation/generation, target import and dataset admission.
 - Full train/development cache arrays and complete NPZ hashes match the existing
   verified 320x180 research caches; all 2173 frames and 2173 provenance entries matched.
 - Two native multimodal samples match the original decoder; source/checkpoint hashes
@@ -105,5 +108,13 @@ the host distribution. Node.js supports development-only editor interaction chec
 the deployed workspace requires a browser and the existing Python environment.
 The declared DeepLabV3/MobileNet initialization uses the existing verified local weight
 file. A fixture optimizer step and strict reload passed at 640x360, batch size 4,
-float32. This is runtime evidence; benchmark training and utility claims remain open.
+float32. This is foundation runtime evidence; current benchmark results are recorded in docs/goods_benchmark_status.txt.
 See docs/preparation_readiness.txt for interfaces and acceptance status.
+
+Scene generation
+Blender Cycles 4.5.3 runs in an isolated worker using a portable metric cuboid
+contract, explicit optical poses and checksum-bound surface maps. NumPy verifies
+metric depth and independent geometry; Pillow retains native lossless labels.
+BlenderProc remains unavailable pending its renderer dependencies. The published
+scene pilot remains training-ineligible while appearance is unqualified.
+See docs/scene_generation.txt for verified capabilities and limitations.

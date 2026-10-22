@@ -1,0 +1,5 @@
+{
+  "blender_executable": ".tools/blender/blender.exe",
+  "training_profile": "reports/dataset_profile/summary.json",
+  "source_manifest": "data/manifests/manifest.jsonl"
+}

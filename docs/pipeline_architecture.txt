@@ -147,8 +147,10 @@ wrapper, an explicit paired-PNG manifest adapter, shared cache preparation and a
 subprocess worker/executor. Legacy research caches retain exact array and file hashes.
 The source decoder's algorithm is preserved with package-safe imports. Core schemas are
 included in an installable host package. See docs/adapter_foundation.json for evidence.
-Shared scene-generation workers, additional task adapters and remote execution/storage require
-further integration. The existing custom Blender pilot remains separately available.
+A bounded portable-scene worker now wraps the existing Cycles renderer with
+training-profile bindings, explicit task policy, canonical exports and independent
+geometry/payload checks. Appearance qualification remains open. Additional backends,
+task adapters and remote execution/storage require further integration.
 Preserve existing audits, checkpoints and source provenance.
 Real-sample condition jobs now add versioned customer controls and a fixed separate
 worker for RGB gain/depth missingness. Source conventions stay in dataset adapters;
@@ -159,8 +161,11 @@ lineage and requested-versus-achieved condition counts; training remains gated.
 The goods task adapter, source-bound target import and dataset admission now provide
 acceptance tracking. Corrected targets remain separate from publisher predictions;
 no appearance decision can promote an uncorrected prediction into a task reference.
-Next: complete dataset qualification, integrate a bounded scene worker,
-then assemble hybrid data and perform the controlled task comparison. Keep additional sensor
-methods evidence-driven. Unsupported calibrated noise and LiDAR corruption stay blocked.
+The bounded real RGB-condition comparison is complete; its recall-regressing
+candidate was rejected. Next qualify the scene pilot's appearance and coverage,
+then implement explicit scene-data admission and a matched task comparison.
+BlenderProc renderer dependency initialization remains blocked; the working scene
+backend is blender_cycles. Keep additional sensor methods evidence-driven.
+Unsupported calibrated noise, LiDAR corruption and simulated LiDAR stay blocked.
 The suite includes a non-TorWIC customer fixture, cross-split payload rejection,
 partition-stable identities, native output/mask integrity and executor-to-worker checks.

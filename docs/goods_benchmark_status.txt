@@ -1,0 +1,65 @@
+Warehouse goods benchmark status
+
+Reference dataset
+The qualified reference cohort contains 30 training and 12 development samples.
+Native geometry, source checksums, categorical IDs and PNG/RLE round-trips pass.
+All 128 frozen reference artifacts retain their hashes. Training targets are
+unchanged. Empty pallets and handling equipment are background, identifiable loads
+are goods and unresolved regions remain ignored. Model-assisted corrections retain
+anchoring and coverage limitations; independent annotation accuracy is not established.
+
+Retained model
+Mean goods IoU: 50.84% | Precision: 54.48% | Recall: 88.74%.
+These are means across seeds 17/29/43 on the current 12-frame development cohort.
+The retained model is unchanged. Scores on older reference versions are not directly
+comparable. Annotation changes require a demonstrated target error, not a lower score.
+The retained model configuration is preserved as a historical training definition;
+its original reference-packet binding remains frozen.
+
+Completed RGB-condition experiment
+Configuration                 | Goods IoU | Precision | Recall
+------------------------------|-----------|-----------|-------
+Matched final-epoch real-only  | 49.96%    | 53.99%    | 87.09%
+Real plus RGB conditions      | 50.70%    | 55.06%    | 86.63%
+
+Nine accepted native RGB variants originate from six training frames. Every seed
+uses 450 presentations and 120 updates: 404 real inputs plus 46 condition inputs,
+with original targets preserved. All three hybrid checkpoints reload strictly and
+36 native development predictions independently reproduce saved confusion counts.
+The candidate is rejected for recall regression and does not replace the retained
+model. These historical fixed-final experiment results are separate from the training
+CLI's default best-development checkpoint policy. They do not establish scene-data
+utility, statistical significance or held-out generalization.
+
+Published scene capability
+A portable cuboid scene contract and isolated Blender Cycles worker produce paired
+1280x720 RGB, clean axial depth, validity, semantic and instance outputs. Seven
+related captures cover empty equipment, compact/wide/tall loads, equipment occlusion,
+a lateral viewpoint and a distant target. Source-bound surface catalogs retain map
+hashes, license/source information, metric scale and color-space conventions.
+
+Independent checks cover 1,792 analytic rays with complete instance agreement and
+per-view p95 depth error below 0.00005 m. Target visibility and equipment occlusion
+are measured from native labels/depth. These captures share one authored warehouse;
+procedural geometry and limited diversity remain appearance limitations. Histogram
+agreement is a diagnostic rather than qualification evidence.
+
+Verification and qualification
+The isolated publication snapshot passes 201 tests and 80 subtests. Validated
+interfaces include scene/job bindings, payload integrity, task semantics, support
+constraints, target visibility and RGB-condition sampling with unchanged real targets.
+BlenderProc remains unavailable pending its separate renderer dependencies. Simulated
+LiDAR, calibrated sensor noise, physical dynamics and remote execution are unsupported.
+
+Scene appearance qualification remains pending, with no scene-generated training or
+final held-out evaluation completed. Scene-data admission and a matched scene utility
+comparison remain open. The published pipeline keeps unqualified scene outputs
+training-ineligible and preserves earlier reports, annotations and retained models.
+
+Evidence
+Reference profile SHA256: d4928f47f069b0ae29ce1c7dae9282d54e8bbb3a4b8944e291ce8422a4d39468
+Reference and RGB comparison: local reviewed_reference_verification and qualified_rgb_evaluation evidence.
+Scene generation: reports/warehouse_scenario_coverage.
+Independent scene verification: reports/warehouse_scenario_verification.
+Capabilities and limits: docs/scene_generation.txt.
+Machine-readable aggregate: docs/goods_benchmark_status.json.

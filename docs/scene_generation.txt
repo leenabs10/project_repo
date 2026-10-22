@@ -1,0 +1,104 @@
+Warehouse scene generation
+
+Implemented capability
+A portable resolved-scene contract and an isolated Blender Cycles worker generate
+paired RGB, clean axial depth, validity, semantic and instance labels at 1280x720.
+Geometry, materials, metric dimensions, optical camera poses, intrinsics and training
+profile bindings are resolved before execution. Executables and storage roots are
+deployment settings. Goods semantics live in a task adapter; they are not hardcoded
+into shared scene contracts. Unsupported backends and modalities fail preflight.
+
+Task-focused coverage
+configs/warehouse_goods_coverage.json declares seven bounded cases: empty foreground
+equipment, compact/wide/tall pallet loads, container occlusion, a lateral view of the
+occluded load and a distant floor carton. Empty pallets and handling containers are
+background; identifiable loads are goods. Stocked racks remain goods in every view.
+These are related captures of one authored warehouse, not independent customer scenes.
+The camera is explicitly pinhole with zero distortion; real export distortion and
+registration ambiguity remain unresolved.
+
+The planner validates finite dimensions, bounded controls, unique identifiers,
+registered materials and explicit floor/pallet supports. It rejects floating support
+requests, overlapping load bodies and goods penetrating equipment or structures.
+The unchanged default planner still produces the previous three-capture geometry.
+Carton sizes and positions are authored coverage intent, not customer measurements.
+Only axis-aligned cuboid assets are supported; general mesh assets require a new
+qualified adapter. Contact checks do not establish dynamics or load stability.
+
+Verified geometry and visibility
+The analytic 10 m plane establishes axial depth within 0.000001 m. Worker mesh rays
+and another 1,792 independent analytic rays agree on instance identity. Maximum
+per-view p95 analytic depth error is below 0.00005 m. Depth is float32 axial metres,
+zero invalid, with a separate boolean validity mask. Native categorical PNG exports
+round-trip exactly. Visible labels and clean depth derive from the same scene.
+
+Independent carton silhouettes verify the requested targets. Compact, wide and tall
+loads have approximately 4,281, 13,741 and 18,564 visible surface pixels. The two
+container views have approximately 63.7% and 61.4% equipment occlusion; the distant
+load retains 915 visible surface pixels. Silhouette checks omit bevels and allow
+1 cm for attached tape/labels. These figures describe synthetic scenario coverage,
+not sensor accuracy or statistical customer-domain coverage.
+
+The full suite passes 201 tests and 80 subtests, including support, overlap, finite
+control, label and known-occlusion fixtures. All 128 frozen reference artifacts are
+unchanged. Existing annotations and retained models remain valid for their recorded
+reference revision; this work does not require reannotation.
+
+Surface assets and display response
+Four original 4K Poly Haven color/roughness maps add wood and indoor floor detail.
+Publisher size/MD5 and local SHA256 bindings match; catalogs retain source/license
+URLs, color spaces and a 2 m tile scale. Floor color uses an explicit 0.25 palette
+mix; wood uses the full map. These are authored controls, not measured photometry.
+No normal or displacement maps are inferred. Shader bump affects RGB shading only.
+
+The host verifies assets before allocation and after rendering; the worker verifies
+contained paths and hashes before loading. Canonical exports embed the exact resolved
+job and catalog. External texture bytes remain in the configured asset store. Job
+document hashes isolate dataset versions while retaining scene-family grouping.
+Changed job bindings, corrupt maps and invalid categorical payloads fail validation.
+
+AgX remains primary. Standard is an unselected diagnostic saved from the same Render
+Result; scene-linear EXR is retained. A known-radiance fixture explains why authored
+strength 25 maps near 247/255 with AgX and clips with Standard at the same exposure.
+The bright-pixel cutoff and training marginal statistics are diagnostics, not fidelity
+certificates or admission gates. Customer camera response has not been calibrated.
+
+Qualification and remaining capability
+Visual inspection confirms the intended load/equipment arrangements and visible-label
+separation, while the scene still looks procedural and repetitive. Natural appearance
+and customer-domain fidelity remain unqualified. All scene outputs remain outside
+training. Scene admission, a bounded accepted dataset and a matched real-only versus
+hybrid experiment remain open; no scene-model improvement or promotion is claimed.
+
+Blender 4.5.3 renders through the explicit blender_cycles backend on OptiX. BlenderProc
+2.8.0 and Blender 4.2.1 are downloaded separately, but their renderer dependencies
+could not initialize after package-index connection failures. BlenderProc remains
+unavailable. Simulated LiDAR, moving scans, calibrated noise, physics and remote
+execution are unsupported. Isaac remains a candidate backend requiring explicit asset,
+material and sensor conversion fixtures, not an automatic or mandatory migration.
+
+Local use
+Configure runtime paths from configs/runtime/warehouse_scene.example.json and use
+fresh output paths. Optional photographic surfaces require a configured asset_root;
+workers do not download assets. Omitting --coverage-config retains the default pilot.
+
+python -m src.synthesis.warehouse_scene --profile reports/dataset_profile/summary.json --camera-config configs/warehouse_renderer.json --asset-catalog .tools/scene_assets/surface_library/catalog.json --coverage-config configs/warehouse_goods_coverage.json --output reports/warehouse_coverage_job.json
+python -m src.pipeline.scene --job reports/warehouse_coverage_job.json --runtime .tools/scene_surface_runtime.json --output reports/warehouse_coverage_run
+
+Current evidence
+reports/warehouse_scenario_coverage: resolved job, worker logs, render passes and
+canonical RGB/depth/label export.
+reports/warehouse_scenario_verification: target coverage, independent geometry,
+configuration, regression log and checksum-bound implementation snapshot.
+
+Preserved evidence
+reports/warehouse_surface_response and reports/warehouse_surface_verification retain
+the photographic material and paired display-response experiment. The earlier
+warehouse_scene_pilot, warehouse_scene_verified, warehouse_scene_verification,
+warehouse_scene_refined and warehouse_scene_refinement_verified reports remain intact.
+The first pilot's penetrating load was rejected; later placements correct that defect.
+
+Publisher references
+https://polyhaven.com/a/wooden_planks
+https://polyhaven.com/a/hangar_concrete_floor
+https://polyhaven.com/license

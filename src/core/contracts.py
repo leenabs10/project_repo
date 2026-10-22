@@ -46,6 +46,10 @@ def validate_record(record: dict) -> dict:
 def validate_job(job: dict) -> dict:
     """Validate supported portable jobs; deployment paths never belong here."""
     json.dumps(job, allow_nan=False)
+    if job.get("kind") == "generate_scene":
+        from src.core.scene import validate_scene_job
+
+        return validate_scene_job(job)
     if job.get("kind") == "generate_sensor_conditions":
         _validator("sensor_job").validate(job)
         identifiers = [condition["condition_id"] for condition in job["conditions"]]

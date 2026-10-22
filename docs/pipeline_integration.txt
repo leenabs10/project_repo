@@ -58,8 +58,8 @@ These depth experiments remain separate from the chosen goods-segmentation MVP.
 Low-resolution sensor-depth research does not prove goods accuracy or physical realism.
 
 Related capabilities
-The native reference and real-only training/evaluation interfaces are documented
-in README.md and docs/preparation_readiness.txt. Reference qualification,
-generation fidelity, controlled synthetic-data comparisons and held-out evaluation
-are separate acceptance criteria. Optional fusion and extra-annotation provenance
-require their own evidence.
+The current goods-reference and baseline contract is documented in
+docs/goods_benchmark_status.txt. Reference qualification, generation fidelity,
+controlled synthetic-data comparisons and held-out evaluation are separate
+acceptance criteria. Optional fusion and extra-annotation provenance require
+their own evidence.

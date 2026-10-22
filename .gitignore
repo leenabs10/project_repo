@@ -1,4 +1,3 @@
-ï»¿
 # AMR local files: do not upload datasets, environments, or credentials
 .venv/
 venv/

@@ -1,4 +1,4 @@
-"""Real-only goods training and native validation; fixtures never claim utility."""
+"""Goods training with qualified RGB conditions and fixed native evaluation."""
 
 import argparse
 from collections import Counter
@@ -13,6 +13,11 @@ import numpy as np
 from PIL import Image
 
 from src.adapters.storage.local import file_hash, reserve_output, source_path
+from src.training.hybrid_inputs import (
+    load_synthetic_inputs,
+    select_training_input,
+    validate_mixing,
+)
 from src.adapters.tasks.goods import (
     confusion_counts,
     load_definition,
@@ -112,6 +117,69 @@ def load_references(root, expected_sha, task, *, fixture=False):
     return rows
 
 
+def validate_loss_configuration(settings):
+    """Validate two-class cross-entropy without silently changing class costs.
+
+    Optional weights are ordered [background, goods]. Both must be finite and
+    positive. Ignore ID 255 never receives a weight or contributes supervision.
+    """
+    if (
+        not isinstance(settings, dict)
+        or set(settings) - {"name", "ignore_index", "class_weights"}
+        or settings.get("name") != "cross_entropy"
+        or type(settings.get("ignore_index")) is not int
+        or settings["ignore_index"] != 255
+    ):
+        raise ValueError("Unsupported goods loss configuration")
+    if "class_weights" in settings:
+        weights = settings["class_weights"]
+        if (
+            not isinstance(weights, list)
+            or len(weights) != 2
+            or any(
+                type(value) not in (int, float)
+                or not math.isfinite(value)
+                or value <= 0
+                for value in weights
+            )
+        ):
+            raise ValueError("Class weights require two finite positive values")
+
+
+def segmentation_loss(logits, targets, settings):
+    """Return mean supervised CE and its normalization mass for epoch accounting.
+
+    Logits are N x 2 x H x W; targets are N x H x W integer IDs 0/1/255.
+    Weighted CE divides by the sum of valid target-class weights. Record that
+    same denominator when aggregating batches; ignored logits have zero gradient.
+    Missing weights preserve the existing unweighted objective exactly.
+    """
+    import torch
+    from torch.nn import functional
+
+    validate_loss_configuration(settings)
+    weights = settings.get("class_weights")
+    weight_tensor = (
+        None
+        if weights is None
+        else torch.tensor(weights, dtype=logits.dtype, device=logits.device)
+    )
+    valid = targets != 255
+    if not bool(valid.any()):
+        raise ValueError("Training batch has no supervised pixels")
+    mass = (
+        float(valid.sum())
+        if weight_tensor is None
+        else float(weight_tensor[targets[valid]].sum())
+    )
+    return (
+        functional.cross_entropy(
+            logits, targets, weight=weight_tensor, ignore_index=255
+        ),
+        mass,
+    )
+
+
 def validate_configuration(config, *, fixture=False):
     """Reject silent preprocessing/model changes and unsupported precision modes."""
     models = {"deeplabv3_mobilenet_v3_large"}
@@ -119,20 +187,36 @@ def validate_configuration(config, *, fixture=False):
         models.add("fixture_conv")
     if (
         config.get("model") not in models
-        or config.get("experiment_kind") != "real_only"
+        or config.get("experiment_kind") not in {"real_only", "real_plus_synthetic"}
         or config.get("resampling")
         != {
             "rgb": "BOX",
             "target": "NEAREST",
             "evaluation_logits_to_native": "BILINEAR",
         }
-        or config.get("loss") != {"name": "cross_entropy", "ignore_index": 255}
         or config.get("optimizer", {}).get("name") != "AdamW"
         or config.get("batch_norm") != "frozen_running_statistics"
         or config.get("normalization")
         != {"scale": 255, "mean": [0.485, 0.456, 0.406], "std": [0.229, 0.224, 0.225]}
     ):
         raise ValueError("Unsupported goods benchmark configuration")
+    validate_loss_configuration(config.get("loss"))
+    if config["experiment_kind"] == "real_plus_synthetic":
+        validate_mixing(config.get("synthetic_mixing"))
+        if (
+            type(config.get("generation_seed")) is not int
+            or config["generation_seed"] < 0
+        ):
+            raise ValueError("Explicit nonnegative generation seed is required")
+    elif "synthetic_mixing" in config:
+        raise ValueError("Real-only configurations cannot declare synthetic mixing")
+    required_packet = config.get("required_reference_packet_sha256")
+    if required_packet is not None and (
+        not isinstance(required_packet, str)
+        or len(required_packet) != 64
+        or any(character not in "0123456789abcdef" for character in required_packet)
+    ):
+        raise ValueError("Required reference packet must be a SHA256 digest")
     for field in ("training_resolution", "native_reference_resolution"):
         if len(config[field]) != 2 or any(
             type(value) is not int or value <= 0 for value in config[field]
@@ -335,12 +419,43 @@ def train_run(
     device="cuda",
     *,
     fixture=False,
+    synthetic=None,
+    synthetic_sha=None,
 ):
-    """Train a fresh real-only run; reject unqualified inputs before GPU allocation."""
+    """Train a fresh matched run; reject unqualified inputs before GPU allocation.
+
+    Qualified conditions replace their own source RGB in existing training slots.
+    Epochs, batches, source targets, shuffle RNG and native evaluation are shared
+    with the real-only control. No additional optimization steps are introduced.
+    """
     references, task, configuration = map(Path, (references, task, configuration))
     config = json.loads(configuration.read_text())
     validate_configuration(config, fixture=fixture)
     rows = load_references(references, references_sha, task, fixture=fixture)
+    required_packet = config.get("required_reference_packet_sha256")
+    if required_packet is not None:
+        profile = verify_snapshot(references, references_sha)
+        if profile.get("packet_profile_sha256") != required_packet:
+            raise ValueError(
+                "The required reviewed annotation revision is not qualified in this cohort"
+            )
+    alternatives = {}
+    hybrid = config["experiment_kind"] == "real_plus_synthetic"
+    if hybrid != (synthetic is not None and synthetic_sha is not None) or (
+        not hybrid and (synthetic is not None or synthetic_sha is not None)
+    ):
+        raise ValueError("Hybrid runs require both admitted dataset path and checksum")
+    if hybrid:
+        synthetic = Path(synthetic)
+        alternatives = load_synthetic_inputs(
+            synthetic,
+            synthetic_sha,
+            references,
+            references_sha,
+            rows,
+            config,
+            fixture=fixture,
+        )
     if seed not in config["model_seeds"]:
         raise ValueError("Seed is outside the frozen benchmark configuration")
     if any(row["image_size"] != config["native_reference_resolution"] for row in rows):
@@ -360,6 +475,7 @@ def train_run(
             task,
             configuration,
             Path(checkpoint) if checkpoint else references,
+            Path(synthetic) if synthetic is not None else references,
             Path(__file__).parents[2] / "data/raw",
         ),
     )
@@ -369,7 +485,6 @@ def train_run(
     start = time.perf_counter()
     try:
         import torch
-        from torch.nn import functional as functional
 
         if device == "cuda" and not torch.cuda.is_available():
             raise ValueError("CUDA was requested but is unavailable")
@@ -386,6 +501,7 @@ def train_run(
         validation = [row for row in rows if row["split"] == "validation"]
         generator = torch.Generator().manual_seed(seed)
         history, sampling = [], Counter()
+        input_sampling, synthetic_presentations = Counter(), 0
         updates, best_score, best_epoch = 0, -1.0, None
         for epoch in range(config["epochs"]):
             model.train()
@@ -401,9 +517,20 @@ def train_run(
                     training[index]
                     for index in order[offset : offset + config["batch_size"]]
                 ]
+                selected_inputs = [
+                    select_training_input(references, row, alternatives, config, epoch)
+                    for row in batch
+                ]
                 inputs = torch.stack(
-                    [input_tensor(references, row, config) for row in batch]
+                    [
+                        input_tensor(root, row, config)
+                        for root, row, _ in selected_inputs
+                    ]
                 ).to(device)
+                input_sampling.update(row["sample_id"] for _, row, _ in selected_inputs)
+                synthetic_presentations += sum(
+                    changed for _, _, changed in selected_inputs
+                )
                 targets = torch.stack(
                     [target_tensor(references, row, config) for row in batch]
                 ).to(device)
@@ -414,7 +541,7 @@ def train_run(
                     )
                 optimizer.zero_grad(set_to_none=True)
                 logits = model(inputs)["out"]
-                loss = functional.cross_entropy(logits, targets, ignore_index=255)
+                loss, loss_mass = segmentation_loss(logits, targets, config["loss"])
                 if not torch.isfinite(loss) or not torch.isfinite(logits).all():
                     raise ValueError("Nonfinite training loss/output")
                 loss.backward()
@@ -427,8 +554,8 @@ def train_run(
                 optimizer.step()
                 updates += 1
                 sampling.update(row["sample_id"] for row in batch)
-                weighted_loss += float(loss.detach()) * valid_count
-                supervised += valid_count
+                weighted_loss += float(loss.detach()) * loss_mass
+                supervised += loss_mass
             metrics = native_metrics(model, references, validation, config, device)
             history.append(
                 {
@@ -454,8 +581,16 @@ def train_run(
                         "seed": seed,
                         "configuration_sha256": file_hash(configuration),
                         "reference_profile_sha256": references_sha,
+                        "synthetic_profile_sha256": synthetic_sha,
+                        "experiment_kind": config["experiment_kind"],
                         "protocol_sha256": file_hash(task),
-                        "purpose": "fixture_only" if fixture else "real_only_benchmark",
+                        "purpose": (
+                            "fixture_only"
+                            if fixture
+                            else (
+                                "hybrid_benchmark" if hybrid else "real_only_benchmark"
+                            )
+                        ),
                         "epoch": best_epoch,
                         "optimizer_updates": updates,
                     },
@@ -494,6 +629,8 @@ def train_run(
         ):
             raise ValueError("Selected checkpoint reload changed evaluation metrics")
         verify_snapshot(references, references_sha)
+        if synthetic is not None:
+            verify_snapshot(synthetic, synthetic_sha)
         if file_hash(configuration) != configuration_sha or file_hash(task) != task_sha:
             raise ValueError("Benchmark configuration/task changed during execution")
         if (
@@ -506,10 +643,15 @@ def train_run(
         write_json(output / "history.json", history)
         write_json(output / "validation_metrics.json", metrics)
         write_json(output / "sampling.json", dict(sampling))
+        write_json(output / "input_sampling.json", dict(input_sampling))
         write_implementation_snapshot(output)
         report = {
             "status": "passed",
-            "purpose": "fixture_only" if fixture else "real_only_benchmark",
+            "purpose": (
+                "fixture_only"
+                if fixture
+                else ("hybrid_benchmark" if hybrid else "real_only_benchmark")
+            ),
             "seed_run_complete": True,
             "benchmark_complete": False,
             "matched_comparison_complete": False,
@@ -529,7 +671,13 @@ def train_run(
             * math.ceil(len(training) / config["batch_size"]),
             "real_training_frames": len(training),
             "development_frames": len(validation),
-            "synthetic_training_frames": 0,
+            "synthetic_training_frames": sum(
+                len(values) for values in alternatives.values()
+            ),
+            "synthetic_presentations": synthetic_presentations,
+            "total_training_presentations": sum(sampling.values()),
+            "synthetic_profile_sha256": synthetic_sha,
+            "experiment_kind": config["experiment_kind"],
             "selected_validation_goods_iou": best_score,
             "strict_reload": "passed",
             "initial_checkpoint_sha256": file_hash(checkpoint) if checkpoint else None,
@@ -583,10 +731,10 @@ def evaluate_run(
 
     run, references = Path(run), Path(references)
     profile = verify_snapshot(run, run_sha)
-    if (
-        profile["purpose"] != ("fixture_only" if fixture else "real_only_benchmark")
-        or profile["status"] != "passed"
-    ):
+    allowed_purposes = (
+        {"fixture_only"} if fixture else {"real_only_benchmark", "hybrid_benchmark"}
+    )
+    if profile["purpose"] not in allowed_purposes or profile["status"] != "passed":
         raise ValueError("Checkpoint purpose/status does not match this evaluation")
     if profile["reference_profile_sha256"] != references_sha:
         raise ValueError("Evaluation reference snapshot differs from model selection")
@@ -595,6 +743,17 @@ def evaluate_run(
     )
     config = json.loads((run / "configuration.json").read_text())
     validate_configuration(config, fixture=fixture)
+    expected_purpose = (
+        "fixture_only"
+        if fixture
+        else (
+            "hybrid_benchmark"
+            if config["experiment_kind"] == "real_plus_synthetic"
+            else "real_only_benchmark"
+        )
+    )
+    if profile["purpose"] != expected_purpose:
+        raise ValueError("Checkpoint purpose differs from configuration")
     saved = torch.load(run / "best.pt", map_location="cpu", weights_only=True)
     for key in (
         "reference_profile_sha256",
@@ -604,6 +763,12 @@ def evaluate_run(
     ):
         if saved[key] != profile[key]:
             raise ValueError("Checkpoint metadata differs from verified run")
+    if config["experiment_kind"] == "real_plus_synthetic" and (
+        saved.get("synthetic_profile_sha256") != profile.get("synthetic_profile_sha256")
+        or not saved.get("synthetic_profile_sha256")
+        or saved.get("experiment_kind") != "real_plus_synthetic"
+    ):
+        raise ValueError("Checkpoint synthetic provenance differs from its run")
     model = build_model(config, fixture=fixture).to(device)
     model.load_state_dict(saved["state_dict"], strict=True)
     output = reserve_output(
@@ -742,6 +907,8 @@ def main():
     for flag in ("references", "task", "configuration", "checkpoint", "output"):
         train.add_argument("--" + flag, type=Path, required=True)
     train.add_argument("--references-sha256", required=True)
+    train.add_argument("--synthetic", type=Path)
+    train.add_argument("--synthetic-sha256")
     train.add_argument("--seed", type=int, required=True)
     train.add_argument("--device", choices=("cpu", "cuda"), default="cuda")
     evaluate = commands.add_parser("evaluate")
@@ -766,6 +933,8 @@ def main():
             args.output,
             args.seed,
             args.device,
+            synthetic=args.synthetic,
+            synthetic_sha=args.synthetic_sha256,
         )
     elif args.command == "evaluate":
         result = evaluate_run(

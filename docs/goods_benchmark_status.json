@@ -1,0 +1,170 @@
+{
+  "schema_version": "dubaidata.goods-status/1.0",
+  "status": "scene_geometry_verified_appearance_pending",
+  "reference_counts": {
+    "train": 30,
+    "validation": 12
+  },
+  "reference_profile_sha256": "d4928f47f069b0ae29ce1c7dae9282d54e8bbb3a4b8944e291ce8422a4d39468",
+  "annotation_packet_sha256": "3018c4cd897af5bb9e3f0425eb667bc74d0083ff693172e117d28c81087b4967",
+  "validated_reference_versions": 42,
+  "reference_origin": "reviewed_model_assisted",
+  "independent_reference_accuracy_established": false,
+  "model_seeds": [
+    17,
+    29,
+    43
+  ],
+  "retained_model": {
+    "metrics": {
+      "goods_iou": 0.5083870376142806,
+      "precision": 0.5447802166207054,
+      "recall": 0.8873720831422119
+    },
+    "configuration": "configs/benchmarks/warehouse_goods_reference_control.json",
+    "changed": false,
+    "configuration_scope": "Historical training definition; its reference-packet binding remains frozen"
+  },
+  "rgb_condition_comparison": {
+    "evaluation_profile_sha256": "e7906e77d801a9a66a386f89da5627c813b409a4e272abe02f6c9986c1e59f05",
+    "reference_profile_sha256": "d4928f47f069b0ae29ce1c7dae9282d54e8bbb3a4b8944e291ce8422a4d39468",
+    "admitted_dataset_profile_sha256": "f03a00069243907b512b1fe7bc8662eca921b667041890378400ed09b22217be",
+    "appearance_confirmation_profile_sha256": "690dbdc7ca3eac3a0883cc9373a3fceae2511d1b4897fdccc3767fdc0cbbd084",
+    "reused_control_evaluation_profile_sha256": "8f058f3aa4187f66e32848c6355bc1fa4165e418d3df5c5e5005577e4f7ab358",
+    "means": {
+      "matched_control": {
+        "goods_iou": 0.49955570070434535,
+        "precision": 0.5398661767760411,
+        "recall": 0.8709091384056752
+      },
+      "retained_model": {
+        "goods_iou": 0.5083870376142806,
+        "precision": 0.5447802166207054,
+        "recall": 0.8873720831422119
+      },
+      "rgb_conditions": {
+        "goods_iou": 0.5070043003215204,
+        "precision": 0.5505528480164589,
+        "recall": 0.8662868825819479
+      }
+    },
+    "delta": {
+      "matched_control": {
+        "goods_iou": 0.007448599617175089,
+        "precision": 0.010686671240417778,
+        "recall": -0.004622255823727328
+      },
+      "retained_model": {
+        "goods_iou": -0.0013827372927601722,
+        "precision": 0.005772631395753458,
+        "recall": -0.021085200560264084
+      }
+    },
+    "equipment_region_mean_predicted_goods_area": {
+      "matched_control": {
+        "empty_pallet": 0.5534067400734067,
+        "scissor_lift": 0.06718864468864469
+      },
+      "retained_model": {
+        "empty_pallet": 0.5898198198198198,
+        "scissor_lift": 0.017902930402930402
+      },
+      "rgb_conditions": {
+        "empty_pallet": 0.5486386386386386,
+        "scissor_lift": 0.00021062271062271065
+      }
+    },
+    "candidate_decision": {
+      "numeric_gates_passed": false,
+      "reasons": [
+        "Recall regresses against matched_control",
+        "Goods IoU does not exceed retained_model",
+        "Recall regresses against retained_model"
+      ],
+      "selected": false,
+      "status": "rejected"
+    },
+    "new_native_predictions": 36,
+    "independent_confusion_histograms": "all_matched",
+    "matched_source_budget": "passed",
+    "strict_checkpoint_reload": "all_three_passed",
+    "source_targets_changed": 0,
+    "new_real_only_training": false,
+    "held_out_test_evaluated": false,
+    "synthetic_condition_experiment_complete": true,
+    "scope": "Bounded native RGB gain from six real training scenes; not scene synthesis, physical sensor simulation or a generalization guarantee"
+  },
+  "scene_generation": {
+    "status": "scenario_geometry_and_coverage_verified",
+    "captures": 7,
+    "tests": {
+      "passed": 201,
+      "subtests_passed": 80
+    },
+    "job_sha256": "2003a76e1e77b70bf0597b072d83d36211a7d90c6980a01885fe9abc946f3f99",
+    "dataset_profile_sha256": "b1730e2f123c19ba7e23e25488780c05ff396eeb38ea04e21e8aaa763cf78172",
+    "coverage_configuration_sha256": "d98e100d25b09e48f5e5413570f9923f361520f80c2108d7f71a1a547fe7231a",
+    "coverage_sha256": "6601907400fe3b2db64792e23e2b4449994d40da90104f686a96df05a2491075",
+    "reference_artifacts_verified": 128,
+    "reference_artifacts_changed": 0,
+    "independent_rays": 1792,
+    "independent_instance_agreement": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "independent_depth_p95_metres": [
+      3.1907557264787556e-05,
+      3.1736946989990855e-05,
+      3.1736946989990855e-05,
+      3.1736946989990855e-05,
+      3.1907557264787556e-05,
+      4.735219510676458e-05,
+      3.1907557264787556e-05
+    ],
+    "image_size": [
+      1280,
+      720
+    ],
+    "default_pilot_geometry_unchanged": true,
+    "training_eligible": false,
+    "appearance_qualification": "not_established",
+    "utility_measured": false,
+    "simulated_lidar_supported": false,
+    "limitations": [
+      "Seven related views of one authored static warehouse, not seven independent customer scenes",
+      "Carton shape ratios vary within an axis-aligned cuboid family; general mesh assets are not implemented",
+      "Coverage counts describe requested synthetic cases, not statistical customer coverage",
+      "Occlusion is measured against an unbeveled analytic carton silhouette with a 1 cm surface tolerance",
+      "Natural appearance, calibrated sensor fidelity and downstream usefulness remain unqualified"
+    ],
+    "backend": "blender_cycles",
+    "evidence": "reports/warehouse_scenario_verification",
+    "verification_profile_sha256": "c7061bdd80b2cc00351555e875bd8b4554423caf0adc7d10d126af42c9b85cdf",
+    "blenderproc_available": false,
+    "physical_sensor_realism_certified": false,
+    "scene_generated_training_completed": false,
+    "final_held_out_evaluation_completed": false
+  },
+  "software_verification": {
+    "tests_passed": 201,
+    "subtests_passed": 80,
+    "scope": "Isolated publication snapshot"
+  },
+  "qualification": {
+    "scene_appearance": "pending",
+    "scene_generated_training_completed": false,
+    "final_held_out_evaluation_completed": false,
+    "model_promoted": false
+  },
+  "limitations": [
+    "Dependent video frames and repeated development use limit generalization claims",
+    "Reference corrections retain model-assistance and coverage limitations",
+    "One authored cuboid warehouse; structural checks do not establish natural appearance",
+    "Simulated LiDAR, calibrated physical sensor fidelity and remote execution remain unsupported"
+  ]
+}

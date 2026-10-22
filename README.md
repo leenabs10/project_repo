@@ -41,9 +41,9 @@ Customer data -> adapter -> standardized profile -> synthesis specification
 | Scene pilot | Custom Blender RGB/depth/label geometry and export checks passed |
 | Shared preparation | Canonical contracts, two dataset input formats and local worker/executor verified |
 | Real-sample conditions | Native RGB gain/depth-mask jobs verified; 11 passed automated checks, 7 rejected; release qualification in progress |
-| Goods baseline | Real-only training, strict reload and native evaluation verified on known fixtures; dataset qualification remains separate |
+| Goods baseline | Three real-only seeds completed; native development IoU 54.95% mean; matched synthetic comparison pending |
 | BlenderProc | Tools prepared; generation integration and acceptance pending |
-| Goods references | Native annotation, source-bound import and provenance checks implemented; reference accuracy requires separate qualification |
+| Goods references | 24 training and 12 development masks validated with model-assisted review provenance; trajectory masks are predictions |
 | Simulated LiDAR | Dedicated generation unavailable; camera point clouds are not LiDAR scans |
 | Downstream utility | Controlled goods comparison and independent evaluation required |
 
@@ -166,16 +166,16 @@ excluded from training until dataset acceptance criteria are satisfied.
 
 ## Benchmark preparation and qualification
 
-The native reference editor preserves source bindings, categorical masks and
-annotation version history. The importer retains original submission bytes and
-distinguishes model-assisted corrections from confirmed reference versions.
-Technical validation does not establish annotation accuracy or benchmark readiness.
+[Current goods benchmark status](docs/goods_benchmark_status.txt) records the frozen
+30-training/12-development references and measured RGB-condition comparison. The
+retained model remains selected: the condition candidate increased IoU against its
+matched control but reduced recall and was rejected. Revised targets differ from
+historical versions, so scores across those versions are not directly comparable.
 
-The real-only training/evaluation CLI uses explicit configurations and rejects
-unqualified targets, held-out membership and changed payload checksums. Ignored
-pixels remain excluded from supervision. Checkpoints reload strictly, and logits
-are evaluated at native reference geometry. Known-fixture execution does not
-establish customer accuracy, model improvement or synthetic-data utility.
+The source-bound training/evaluation CLI uses explicit configurations and rejects
+unqualified targets, held-out membership and stale required reference revisions.
+Ignored pixels remain excluded from supervision. Fixture execution does not
+establish customer accuracy or synthetic-data utility.
 
 ```powershell
 & $trainingPython -m src.pipeline.prepare_benchmark --help
@@ -184,5 +184,21 @@ establish customer accuracy, model improvement or synthetic-data utility.
 & $trainingPython -m src.training.goods_baseline --help
 ```
 
-Experimental training extensions, dataset-specific model results and pending
-annotation revisions are excluded from this verified software release.
+## Bounded scene generation
+
+The [scene-generation interface](docs/scene_generation.txt) resolves portable metric
+geometry and runs an isolated Blender Cycles worker. Seven native captures cover
+empty equipment, compact/wide/tall loads, equipment occlusion, a lateral viewpoint
+and a distant target. Clean axial depth and visible semantic/instance labels retain
+source-bound exports. Task semantics remain separate from renderer implementation.
+
+Independent geometry and target-visibility checks pass. The full suite passes 201
+tests and 80 subtests; all 128 frozen reference artifacts are unchanged. The scenes
+share one authored warehouse and procedural cuboid assets. Natural appearance and
+scene-data utility remain unqualified, so the outputs remain outside training.
+
+Photographic surface maps retain source/license/scale and file checksums. Canonical
+exports embed the resolved job and asset catalog. AgX is primary; a shared-render
+Standard response is diagnostic. Matching brightness statistics does not establish
+fidelity. BlenderProc remains unavailable pending its internal dependency setup;
+simulated LiDAR is unsupported. Runtime paths remain deployment configuration.

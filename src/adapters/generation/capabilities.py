@@ -23,6 +23,12 @@ class BackendCapabilities:
 
 
 BACKENDS = {
+    "blender_cycles": BackendCapabilities(
+        "blender_cycles",
+        frozenset({"rgb", "depth", "semantic", "instance"}),
+        True,
+        "Static opaque cuboid scene pilot; no LiDAR, moving scans or calibrated sensor noise.",
+    ),
     "real_sensor_conditions": BackendCapabilities(
         "real_sensor_conditions",
         frozenset({"rgb", "depth", "semantic", "lidar"}),
