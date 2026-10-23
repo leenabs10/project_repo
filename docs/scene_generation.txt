@@ -98,6 +98,18 @@ warehouse_scene_pilot, warehouse_scene_verified, warehouse_scene_verification,
 warehouse_scene_refined and warehouse_scene_refinement_verified reports remain intact.
 The first pilot's penetrating load was rejected; later placements correct that defect.
 
+Registered mesh assets
+The scene contract supports checksum-bound triangle meshes with explicit UV
+materials. Asset catalogs bind geometry and textures to source and license metadata.
+The loader checks contained NPZ paths, file/archive budgets, array types and shapes,
+finite coordinates, triangle indices, normalized bounds and nondegenerate faces.
+Pickle loading is disabled. The renderer preserves UVs and instance IDs while
+scaling normalized geometry to declared metric dimensions.
+
+Regression fixtures cover catalog verification, invalid geometry, changed source
+bytes, unsafe paths and incompatible scene/material declarations. This qualifies
+asset loading and validation; appearance and training eligibility remain separate.
+
 Publisher references
 https://polyhaven.com/a/wooden_planks
 https://polyhaven.com/a/hangar_concrete_floor

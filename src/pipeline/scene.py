@@ -62,6 +62,7 @@ def run_scene(job, runtime, output, workspace, *, timeout_seconds=1800):
         workspace / "src/synthesis/warehouse_renderer.py",
         workspace / "src/synthesis/renderer_geometry.py",
         workspace / "src/adapters/generation/material_assets.py",
+        workspace / "src/adapters/generation/mesh_assets.py",
     ]
     source_hashes = {str(path): file_hash(path) for path in sources}
     output = reserve_output(

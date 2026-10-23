@@ -22,6 +22,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "synthesis"))
 from warehouse_renderer import box, configure_cycles, material
 from renderer_geometry import axial_depth
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from mesh_assets import load_normalized_mesh
+
 
 def digest(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
@@ -108,6 +111,11 @@ def create_surface(name, specification, asset_root=None):
             1 / value for value in texture["tile_size_metres"]
         ]
         links.new(position.outputs["Position"], scale.inputs[0])
+        if texture.get("projection", "BOX") == "UV":
+            coordinates = nodes.new("ShaderNodeTexCoord")
+            coordinate_socket = coordinates.outputs["UV"]
+        else:
+            coordinate_socket = scale.outputs["Vector"]
         images = {}
         for role, binding in texture["maps"].items():
             root = asset_root.resolve()
@@ -118,10 +126,10 @@ def create_surface(name, specification, asset_root=None):
             image.colorspace_settings.name = binding["color_space"]
             node = nodes.new("ShaderNodeTexImage")
             node.image = image
-            node.projection = "BOX"
+            node.projection = "FLAT" if texture.get("projection") == "UV" else "BOX"
             node.projection_blend = 0.2
             node.extension = "REPEAT"
-            links.new(scale.outputs["Vector"], node.inputs["Vector"])
+            links.new(coordinate_socket, node.inputs["Vector"])
             images[role] = node
         palette = nodes.new("ShaderNodeMixRGB")
         palette.blend_type = "MIX"
@@ -131,6 +139,36 @@ def create_surface(name, specification, asset_root=None):
         links.new(palette.outputs["Color"], shader.inputs["Base Color"])
         links.new(images["roughness"].outputs["Color"], shader.inputs["Roughness"])
     return surface
+
+
+def create_triangle_object(specification, surface, asset_root, cache):
+    """Instantiate registered normalized geometry with unchanged UVs and IDs.
+
+    Metric dimensions scale the normalized bounds. No remeshing, bevel modifier
+    or displacement changes the registered shape. Instances share mesh data.
+    """
+    binding = specification["mesh"]
+    key = (binding["sha256"], surface.name)
+    if key not in cache:
+        arrays = load_normalized_mesh(binding, asset_root)
+        mesh = bpy.data.meshes.new(binding["asset_id"])
+        mesh.from_pydata(arrays["vertices"].tolist(), [], arrays["triangles"].tolist())
+        mesh.update()
+        uv = mesh.uv_layers.new(name="UVMap")
+        for polygon in mesh.polygons:
+            polygon.use_smooth = True
+            for loop_index in polygon.loop_indices:
+                uv.data[loop_index].uv = arrays["uv"][
+                    mesh.loops[loop_index].vertex_index
+                ]
+        mesh.materials.append(surface)
+        cache[key] = mesh
+    obj = bpy.data.objects.new(f"instance_{specification['instance_id']}", cache[key])
+    bpy.context.collection.objects.link(obj)
+    obj.location = specification["center_metres"]
+    obj.scale = specification["dimensions_metres"]
+    obj.pass_index = specification["instance_id"]
+    return obj
 
 
 def configure_camera(camera, optical_pose):
@@ -326,7 +364,13 @@ def main():
             )
             for name, value in job["materials"].items()
         }
+        mesh_cache = {}
         for obj in capture["objects"]:
+            if "mesh" in obj:
+                create_triangle_object(
+                    obj, surfaces[obj["material"]], args.asset_root, mesh_cache
+                )
+                continue
             box(
                 bpy,
                 f"instance_{obj['instance_id']}",

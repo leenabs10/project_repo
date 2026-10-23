@@ -1,8 +1,9 @@
 """Portable metric scene contracts, independent of renderer and customer formats.
 
-The initial contract deliberately supports opaque, axis-aligned cuboids only.
-Adding assets, moving sensors or LiDAR requires a versioned capability extension;
-unsupported requests must fail rather than produce misleading substitute outputs.
+Scene 1.0 supports opaque axis-aligned cuboids. Scene 1.1 adds registered,
+checksum-bound normalized triangle meshes with explicit UV materials.
+Additional geometry and sensor capabilities require versioned extensions.
+Unsupported requests are rejected.
 """
 
 import json
@@ -80,7 +81,7 @@ def validate_scene_job(job):
         ("asset_catalog_sha256",),
     )
     if (
-        job["schema_version"] != "dubaidata.scene/1.0"
+        job["schema_version"] not in {"dubaidata.scene/1.0", "dubaidata.scene/1.1"}
         or job["kind"] != "generate_scene"
         or job["units"] != "metres"
         or job["world_axes"] != "right_handed_x_right_y_forward_z_up"
@@ -195,7 +196,13 @@ def validate_scene_job(job):
                 raise ValueError("Unsupported metric material detail")
         if "texture_set" in surface:
             texture = surface["texture_set"]
-            _keys(texture, ("asset_id", "tile_size_metres", "base_color_mix", "maps"))
+            _keys(
+                texture,
+                ("asset_id", "tile_size_metres", "base_color_mix", "maps"),
+                ("projection",),
+            )
+            if texture.get("projection", "BOX") not in {"BOX", "UV"}:
+                raise ValueError("Unsupported material projection")
             if not isinstance(texture["asset_id"], str) or not texture["asset_id"]:
                 raise ValueError("Texture requires a registered asset identifier")
             tile = _vector(texture["tile_size_metres"], 3, positive=True)
@@ -226,7 +233,10 @@ def validate_scene_job(job):
                         "Texture role and color-space declaration disagree"
                     )
     textured = any("texture_set" in surface for surface in job["materials"].values())
-    if textured and not re.fullmatch(
+    mesh_bound = any(
+        "mesh" in obj for scene in job["scenes"] for obj in scene["objects"]
+    )
+    if (textured or mesh_bound) and not re.fullmatch(
         r"[0-9a-f]{64}", job.get("asset_catalog_sha256", "")
     ):
         raise ValueError("Textured scenes require an immutable asset catalog binding")
@@ -272,6 +282,7 @@ def validate_scene_job(job):
                     "material",
                     "bevel_metres",
                 ),
+                ("mesh",),
             )
             identifier = obj["instance_id"]
             if (
@@ -281,10 +292,51 @@ def validate_scene_job(job):
             ):
                 raise ValueError("Instances require unique nonzero uint16 IDs")
             identifiers.add(identifier)
-            if obj["asset_id"] != "builtin.metric_cuboid/1.0":
+            if obj["asset_id"] not in {
+                "builtin.metric_cuboid/1.0",
+                "registered.normalized_triangle_mesh/1.0",
+            }:
                 raise ValueError(
                     "Unsupported asset; register and qualify an adapter first"
                 )
+            is_mesh = obj["asset_id"] == "registered.normalized_triangle_mesh/1.0"
+            if is_mesh:
+                if (
+                    job["schema_version"] != "dubaidata.scene/1.1"
+                    or "mesh" not in obj
+                    or obj["bevel_metres"] != 0
+                ):
+                    raise ValueError(
+                        "Triangle assets require scene 1.1 and explicit unmodified mesh geometry"
+                    )
+                binding = obj["mesh"]
+                _keys(binding, ("asset_id", "path", "sha256"))
+                relative = binding["path"]
+                portable = PurePosixPath(relative)
+                if (
+                    not relative
+                    or "\\" in relative
+                    or ":" in relative
+                    or portable.is_absolute()
+                    or ".." in portable.parts
+                    or portable.suffix != ".npz"
+                    or not re.fullmatch(r"[0-9a-f]{64}", binding["sha256"])
+                ):
+                    raise ValueError(
+                        "Mesh requires a safe data-only asset path and SHA256 binding"
+                    )
+                texture = (
+                    job["materials"].get(obj["material"], {}).get("texture_set", {})
+                )
+                if (
+                    texture.get("projection") != "UV"
+                    or texture.get("asset_id") != binding["asset_id"]
+                ):
+                    raise ValueError(
+                        "Mesh geometry and UV material must bind the same registered asset"
+                    )
+            elif "mesh" in obj:
+                raise ValueError("Cuboid geometry cannot carry an ignored mesh binding")
             if not isinstance(obj["role"], str) or not re.fullmatch(
                 r"[a-zA-Z][a-zA-Z0-9_.-]*", obj["role"]
             ):
