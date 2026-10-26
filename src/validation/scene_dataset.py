@@ -18,8 +18,22 @@ from src.adapters.tasks.goods_scene import validate_goods_scene
 from src.adapters.generation.material_assets import verify_material_assets
 
 
-def validate_arrays(rgb, depth, valid, semantic, instances, camera, objects):
-    """Reject format, unit, validity, identity or taxonomy inconsistencies."""
+def validate_arrays(
+    rgb,
+    depth,
+    valid,
+    semantic,
+    instances,
+    camera,
+    objects,
+    *,
+    required_visible_class_ids=(0, 1),
+):
+    """Reject format/unit/label inconsistencies and absent required visible classes.
+
+    The default retains the original two-class pilot contract. An explicit (0,)
+    requirement permits background-only negatives without inventing goods pixels.
+    """
     shape = (camera["height"], camera["width"])
     if rgb.dtype != np.uint8 or rgb.shape != (*shape, 3):
         raise ValueError("RGB must retain declared native uint8 geometry")
@@ -56,9 +70,14 @@ def validate_arrays(rgb, depth, valid, semantic, instances, camera, objects):
     for identity in np.unique(instances):
         if np.any(semantic[instances == identity] != lookup[int(identity)]):
             raise ValueError("Equipment/goods labels disagree with scene taxonomy")
-    if not np.any(semantic == 1) or not np.any((semantic == 0) & valid):
+    if tuple(required_visible_class_ids) not in ((0,), (0, 1)):
+        raise ValueError("Unsupported visible goods/background requirement")
+    if any(
+        not np.any((semantic == category) & valid)
+        for category in required_visible_class_ids
+    ):
         raise ValueError(
-            "Goods benchmark pilot needs both visible goods and background"
+            "Goods benchmark pilot lacks required visible goods/background"
         )
 
 
@@ -148,7 +167,14 @@ def export_dataset(job, worker_root, output, *, asset_root=None):
         depth, valid = arrays["depth_axial_m"], arrays["depth_valid"]
         semantic, instances = arrays["semantic_ids"], arrays["instance_ids"]
         validate_arrays(
-            rgb, depth, valid, semantic, instances, job["camera"], capture["objects"]
+            rgb,
+            depth,
+            valid,
+            semantic,
+            instances,
+            job["camera"],
+            capture["objects"],
+            required_visible_class_ids=job.get("required_visible_class_ids", [0, 1]),
         )
         destination = output / identifier
         destination.mkdir()

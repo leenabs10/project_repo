@@ -1,0 +1,201 @@
+{
+  "schema_version": "dubaidata.warehouse-balanced/1.0",
+  "exposure_ev": -0.5,
+  "stock_seed": 2819,
+  "training_evidence_sha256": "cc27f3e66dfa2e773a138ee7ff110b916d2e5084ff3973eceacc93e478d37a35",
+  "cases": [
+    {
+      "sample_id": "balanced_carton_stack",
+      "objective": "Close stacked cartons preserve visible package boundaries",
+      "camera": [
+        0,
+        -3.8,
+        0.75,
+        0
+      ],
+      "light_scale": 1.04,
+      "stacks": [
+        {
+          "asset": "cardboard_box_01",
+          "xy": [
+            -1.15,
+            -1.6
+          ],
+          "count": 3,
+          "scale": 1.3,
+          "support": "pallet"
+        },
+        {
+          "asset": "cardboard_box_01",
+          "xy": [
+            -0.57,
+            -1.6
+          ],
+          "count": 3,
+          "scale": 1.3,
+          "support": "pallet"
+        }
+      ]
+    },
+    {
+      "sample_id": "balanced_tyre_stack",
+      "objective": "Training-supported stacked tyre cargo with original tread and openings",
+      "camera": [
+        0.25,
+        -3.7,
+        0.75,
+        -3
+      ],
+      "light_scale": 0.95,
+      "stacks": [
+        {
+          "asset": "old_tyre",
+          "xy": [
+            -0.85,
+            -1.6
+          ],
+          "count": 5,
+          "scale": 1.55,
+          "support": "pallet"
+        }
+      ]
+    },
+    {
+      "sample_id": "balanced_tyre_offset",
+      "objective": "Offset view of a dark palletized tyre stack",
+      "camera": [
+        -0.45,
+        -4.1,
+        0.7,
+        4
+      ],
+      "light_scale": 1.04,
+      "stacks": [
+        {
+          "asset": "old_tyre",
+          "xy": [
+            -0.85,
+            -1.6
+          ],
+          "count": 4,
+          "scale": 1.55,
+          "support": "pallet"
+        }
+      ]
+    },
+    {
+      "sample_id": "balanced_mixed_cargo",
+      "objective": "Carton stack near camera and distinct tyre load beyond empty equipment",
+      "camera": [
+        0,
+        -4.0,
+        0.8,
+        0
+      ],
+      "light_scale": 0.95,
+      "stacks": [
+        {
+          "asset": "cardboard_box_01",
+          "xy": [
+            -0.85,
+            -1.6
+          ],
+          "count": 3,
+          "scale": 1.5,
+          "support": "pallet"
+        },
+        {
+          "asset": "old_tyre",
+          "xy": [
+            0.9,
+            1.4
+          ],
+          "count": 4,
+          "scale": 1.4,
+          "support": "floor"
+        }
+      ]
+    },
+    {
+      "sample_id": "balanced_partial_occlusion",
+      "objective": "Empty lattice crate partly hides a short floor tyre load",
+      "camera": [
+        0.4,
+        -4.3,
+        0.7,
+        -4
+      ],
+      "light_scale": 1.04,
+      "stacks": [
+        {
+          "asset": "old_tyre",
+          "xy": [
+            0.9,
+            1.3
+          ],
+          "count": 3,
+          "scale": 1.4,
+          "support": "floor"
+        }
+      ]
+    },
+    {
+      "sample_id": "balanced_large_cartons",
+      "objective": "Large pallet carton stack extends foreground size coverage",
+      "camera": [
+        -0.25,
+        -3.5,
+        0.8,
+        3
+      ],
+      "light_scale": 0.95,
+      "stacks": [
+        {
+          "asset": "cardboard_box_01",
+          "xy": [
+            -0.85,
+            -1.6
+          ],
+          "count": 3,
+          "scale": 1.7,
+          "support": "pallet"
+        }
+      ]
+    },
+    {
+      "sample_id": "balanced_distant_load",
+      "objective": "Smaller distant cargo retains range and equipment context",
+      "camera": [
+        0.3,
+        -5.1,
+        0.8,
+        -3
+      ],
+      "light_scale": 1.04,
+      "stacks": [
+        {
+          "asset": "cardboard_box_01",
+          "xy": [
+            -0.3,
+            2.0
+          ],
+          "count": 2,
+          "scale": 1.5,
+          "support": "floor"
+        }
+      ]
+    },
+    {
+      "sample_id": "balanced_empty_equipment",
+      "objective": "Empty foreground pallet and lattice crate remain background",
+      "camera": [
+        0,
+        -4.8,
+        0.7,
+        0
+      ],
+      "light_scale": 0.95,
+      "stacks": []
+    }
+  ]
+}

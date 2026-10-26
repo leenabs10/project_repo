@@ -13,6 +13,8 @@ from src.adapters.generation.material_assets import verify_material_assets
 from src.adapters.generation.mesh_assets import load_normalized_mesh
 from src.adapters.storage.local import file_hash
 from src.core.scene import validate_scene_job
+from src.validation.mesh_geometry import triangle_distance, scene_intersections
+from src.synthesis.warehouse_surfaces import bind_surfaces
 from tests.test_scene_pipeline import fixture_job
 
 
@@ -150,3 +152,50 @@ class MeshAssetTests(unittest.TestCase):
                     ] = "BOX"
                 with self.assertRaises(ValueError):
                     validate_scene_job(altered)
+
+    def test_surface_binding_preserves_geometry_and_rejects_unknown_materials(self):
+        job, catalog = self.job_and_catalog()
+        config = dict(
+            schema_version="dubaidata.surface-bindings/1.0",
+            surfaces={"concrete": dict(asset_id="fixture.mesh", base_color_mix=0.5)},
+        )
+        changed = bind_surfaces(job, catalog, job["asset_catalog_sha256"], config)
+        self.assertEqual(changed["scenes"], job["scenes"])
+        config["surfaces"]["typo"] = config["surfaces"].pop("concrete")
+        with self.assertRaises(ValueError):
+            bind_surfaces(job, catalog, job["asset_catalog_sha256"], config)
+
+
+class IndependentMeshRayTests(unittest.TestCase):
+    def test_two_sided_triangle_uses_axial_parameter(self):
+        triangles = np.array([[[-1, -1, 10], [1, -1, 10], [0, 1, 10]]], dtype=float)
+        self.assertAlmostEqual(
+            triangle_distance(np.zeros(3), np.array([0, 0, 1]), triangles), 10
+        )
+        self.assertAlmostEqual(
+            triangle_distance(np.zeros(3), np.array([0, 0, 2]), triangles[:, ::-1]), 5
+        )
+        self.assertTrue(
+            np.isinf(triangle_distance(np.zeros(3), np.array([1, 0, 1]), triangles))
+        )
+
+    def test_nearest_cuboid_wins_without_mesh_or_simulator(self):
+        job = dict(camera=dict(intrinsics=[20, 20, 16, 16]))
+        capture = dict(
+            optical_camera_to_world=np.eye(4).tolist(),
+            objects=[
+                dict(
+                    instance_id=1,
+                    center_metres=[0, 0, 10.5],
+                    dimensions_metres=[4, 4, 1],
+                ),
+                dict(
+                    instance_id=2,
+                    center_metres=[0, 0, 8.5],
+                    dimensions_metres=[2, 2, 1],
+                ),
+            ],
+        )
+        result = scene_intersections(job, capture, None, [(16, 16)])[0]
+        self.assertEqual(result["instance_id"], 2)
+        self.assertEqual(result["depth_axial_metres"], 8)

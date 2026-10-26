@@ -13,6 +13,10 @@ def validate_goods_scene(job):
     validate_scene_job(job)
     if job["taxonomy"] != {"0": "background", "1": "identifiable_goods"}:
         raise ValueError("The goods pilot requires its declared binary taxonomy")
+    if job.get("required_visible_class_ids", [0, 1]) not in ([0], [0, 1]):
+        raise ValueError(
+            "Goods captures require background; background-only is explicit"
+        )
     for capture in job["scenes"]:
         for obj in capture["objects"]:
             if obj["role"] not in ("goods", "equipment", "structure"):

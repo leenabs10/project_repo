@@ -13,17 +13,12 @@ import random
 
 from src.adapters.storage.local import file_hash
 from src.synthesis.warehouse_scenarios import validate_coverage
+from src.synthesis.warehouse_surfaces import bind_surfaces
 from src.adapters.tasks.goods_scene import validate_goods_scene
 
 
 def build_job(profile, profile_sha256, camera, *, coverage=None):
-    """Resolve geometry, materials and optical poses from training-only evidence.
-
-    ``profile_sha256`` binds the supplied profile; ``camera`` declares native
-    dimensions, pinhole intrinsics and metric clip planes. Optional ``coverage``
-    selects bounded authored cases. The returned job contains all sampled values
-    and is validated before any simulator process or output allocation.
-    """
+    """Freeze every object, material and pose before a renderer is launched."""
     if profile.get("split") != "train" or profile.get("status") != "passed":
         raise ValueError("A passing training-only customer profile is required")
     if coverage is not None:
@@ -300,7 +295,10 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--asset-catalog", type=Path)
     parser.add_argument("--coverage-config", type=Path)
+    parser.add_argument("--surface-bindings", type=Path)
     args = parser.parse_args()
+    if args.surface_bindings and not args.asset_catalog:
+        parser.error("--surface-bindings requires --asset-catalog")
     configuration = json.loads(args.camera_config.read_text(encoding="utf-8"))
     source_camera = configuration["camera"]
     camera = dict(
@@ -344,6 +342,13 @@ def main():
         # not an inferred customer camera response or automatic qualification.
         job["render"].update(view_transform="AgX", response_candidates=["Standard"])
         validate_goods_scene(job)
+    if args.surface_bindings:
+        job = bind_surfaces(
+            job,
+            catalog,
+            file_hash(args.asset_catalog),
+            json.loads(args.surface_bindings.read_text(encoding="utf-8")),
+        )
     with args.output.open("x", encoding="utf-8") as stream:
         json.dump(job, stream, indent=2, allow_nan=False)
     print(

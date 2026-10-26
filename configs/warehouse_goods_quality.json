@@ -1,0 +1,14 @@
+{
+  "schema_version": "dubaidata.warehouse-quality/1.0",
+  "stock_seed": 2819,
+  "cases": [
+    {"sample_id":"quality_empty_equipment","objective":"Empty pallet and open lattice crate remain background; rack stock remains goods","camera":[0,-5.1,1.30,0],"light_scale":1.0,"loads":[]},
+    {"sample_id":"quality_carton_close","objective":"Source-backed carton with visible worn corners on a background pallet","camera":[0.25,-4.9,1.25,-3],"light_scale":1.0,"loads":[{"asset":"cardboard_box_01","variant":"back","support":"pallet","xy":[-0.85,-1.6],"scale":1.7}]},
+    {"sample_id":"quality_bag_load","objective":"Identifiable sealed bag is goods; its empty transport equipment remains background","camera":[-0.35,-4.8,1.25,3],"light_scale":0.92,"loads":[{"asset":"cement_bag","variant":"front","support":"pallet","xy":[-0.85,-1.6],"scale":1.15}]},
+    {"sample_id":"quality_mixed_packaging","objective":"Separate carton and sealed bag use their own visible geometry and labels","camera":[0,-4.8,1.30,0],"light_scale":1.05,"loads":[{"asset":"cardboard_box_01","variant":"front","support":"pallet","xy":[-1.14,-1.6],"scale":0.95},{"asset":"cement_bag","variant":"back","support":"pallet","xy":[-0.60,-1.6],"scale":0.90}]},
+    {"sample_id":"quality_crate_occlusion","objective":"Lattice crate occludes part of a floor carton; crate apertures retain true background or load labels","camera":[0,-4.8,1.25,0],"light_scale":1.0,"loads":[{"asset":"cardboard_box_01","variant":"back","support":"floor","xy":[0.9,1.15],"scale":1.8}]},
+    {"sample_id":"quality_near_far","objective":"Near carton and distant sealed bag cover different apparent object sizes","camera":[-0.45,-5.3,1.35,3],"light_scale":0.88,"loads":[{"asset":"cardboard_box_01","variant":"front","support":"pallet","xy":[-0.85,-1.6],"scale":1.4},{"asset":"cement_bag","variant":"front","support":"floor","xy":[-0.15,4.0],"scale":1.1}]},
+    {"sample_id":"quality_partial_stock","objective":"Asymmetric rack occupancy and an off-centre floor carton vary coverage without changing taxonomy","camera":[0.50,-5.4,1.40,-4],"light_scale":1.08,"loads":[{"asset":"cardboard_box_01","variant":"back","support":"floor","xy":[-0.30,1.7],"scale":1.5}]},
+    {"sample_id":"quality_equipment_view","objective":"Closer view of open equipment distinguishes empty containers from stocked goods","camera":[0.55,-4.6,1.25,-4],"light_scale":0.95,"loads":[]}
+  ]
+}

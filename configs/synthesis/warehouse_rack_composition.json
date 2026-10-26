@@ -1,0 +1,140 @@
+{
+  "schema_version": "dubaidata.warehouse-composition/1.0",
+  "job_id": "warehouse_goods_rack_composition",
+  "source_job_sha256": "a1b7192f0683eef7484db2e4719f644cb644d584b8eac3e3bcbaa37223ce1c98",
+  "source_sample_id": "balanced_tyre_offset",
+  "training_evidence_sha256": "cc27f3e66dfa2e773a138ee7ff110b916d2e5084ff3973eceacc93e478d37a35",
+  "remove_instance_ids": [
+    454,
+    455,
+    456,
+    457,
+    466,
+    830,
+    831,
+    832,
+    833,
+    834,
+    835,
+    836,
+    837,
+    876,
+    877,
+    878,
+    879
+  ],
+  "pallet_template_ids": [
+    830,
+    831,
+    832,
+    833,
+    834,
+    835,
+    836,
+    837
+  ],
+  "pallet_centres_xy_metres": [
+    [
+      3.05,
+      -1.05
+    ],
+    [
+      3.05,
+      0
+    ],
+    [
+      3.05,
+      1.05
+    ]
+  ],
+  "load_templates": {
+    "tyres": {
+      "evidence_family": "stacked_tyres",
+      "assets": [
+        "polyhaven.old_tyre.front.4k",
+        "polyhaven.old_tyre.back.4k"
+      ],
+      "materials": [
+        "cargo_old_tyre_front",
+        "cargo_old_tyre_back"
+      ],
+      "scale": 1.1,
+      "count": 5
+    },
+    "cartons": {
+      "evidence_family": "stacked_cartons",
+      "assets": [
+        "polyhaven.cardboard_box_01.front.4k",
+        "polyhaven.cardboard_box_01.back.4k"
+      ],
+      "materials": [
+        "cargo_cardboard_box_01_front",
+        "cargo_cardboard_box_01_back"
+      ],
+      "scale": 1.55,
+      "count": 2
+    }
+  },
+  "cases": [
+    {
+      "sample_id": "rack_tyres_wide",
+      "objective": "Adjacent palletized tyre columns beneath the first rack beam",
+      "camera": [
+        -0.45,
+        -5.4,
+        0.7,
+        0
+      ],
+      "loads": [
+        "tyres",
+        "tyres",
+        "tyres"
+      ]
+    },
+    {
+      "sample_id": "rack_tyres_offset",
+      "objective": "Offset view preserves structural occlusion of adjacent tyre columns",
+      "camera": [
+        0.45,
+        -4.8,
+        0.7,
+        0
+      ],
+      "loads": [
+        "tyres",
+        "tyres",
+        "tyres"
+      ]
+    },
+    {
+      "sample_id": "rack_mixed_wide",
+      "objective": "Identifiable carton cargo beside two tyre columns beneath shelving",
+      "camera": [
+        -0.45,
+        -5.4,
+        0.7,
+        0
+      ],
+      "loads": [
+        "cartons",
+        "tyres",
+        "tyres"
+      ]
+    },
+    {
+      "sample_id": "rack_mixed_offset",
+      "objective": "Offset view of carton and tyre cargo with natural rack occlusion",
+      "camera": [
+        0.45,
+        -4.8,
+        0.7,
+        0
+      ],
+      "loads": [
+        "cartons",
+        "tyres",
+        "tyres"
+      ]
+    }
+  ]
+}

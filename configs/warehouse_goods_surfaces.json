@@ -1,0 +1,12 @@
+{
+  "schema_version": "dubaidata.surface-bindings/1.0",
+  "surfaces": {
+    "wood": {"asset_id": "polyhaven.wooden_planks.4k", "base_color_mix": 1.0},
+    "concrete": {"asset_id": "polyhaven.hangar_concrete_floor.4k", "base_color_mix": 0.7},
+    "paper": {"asset_id": "ambientcg.Cardboard004.2k", "base_color_mix": 0.95},
+    "carton_0": {"asset_id": "ambientcg.Cardboard004.2k", "base_color_mix": 0.55},
+    "carton_1": {"asset_id": "ambientcg.Cardboard004.2k", "base_color_mix": 0.75},
+    "carton_2": {"asset_id": "ambientcg.Cardboard004.2k", "base_color_mix": 0.85},
+    "carton_3": {"asset_id": "ambientcg.Cardboard004.2k", "base_color_mix": 0.65}
+  }
+}

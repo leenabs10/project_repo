@@ -78,7 +78,7 @@ def validate_scene_job(job):
             "materials",
             "scenes",
         ),
-        ("asset_catalog_sha256",),
+        ("asset_catalog_sha256", "required_visible_class_ids"),
     )
     if (
         job["schema_version"] not in {"dubaidata.scene/1.0", "dubaidata.scene/1.1"}
@@ -116,6 +116,20 @@ def validate_scene_job(job):
         )
     ):
         raise ValueError("Taxonomy requires declared uint8 IDs; 255 remains reserved")
+    if "required_visible_class_ids" in job:
+        required = job["required_visible_class_ids"]
+        if (
+            not isinstance(required, list)
+            or not required
+            or any(
+                type(value) is not int or str(value) not in taxonomy
+                for value in required
+            )
+            or len(set(required)) != len(required)
+        ):
+            raise ValueError(
+                "Required visible classes must be unique declared taxonomy IDs"
+            )
     camera = job["camera"]
     _keys(
         camera, ("width", "height", "intrinsics", "near_metres", "far_metres", "model")
