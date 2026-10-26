@@ -10,10 +10,14 @@ import sys
 import numpy as np
 from PIL import Image, ImageDraw
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "ingestion"))
 from dataset_profile import safe_path, select_training
-from torwic_loader import CONFIRMED_SPLITS, MODALITIES, calibration
+from torwic_loader import calibration
+
+# Preserve the legacy profiling import while adapters use the dataset contract.
+from src.adapters.datasets.torwic_splits import evaluation_records
 
 
 def file_hash(path):
@@ -29,36 +33,6 @@ def goods_mask(semantic):
     if semantic.dtype != np.uint8 or semantic.ndim != 2 or np.any(semantic > 15):
         raise ValueError("Expected native uint8 semantic IDs 0..15")
     return (semantic == 7).astype(np.uint8)
-
-
-def evaluation_records(records):
-    """Verify trajectory/path/date membership before freezing evaluation metadata."""
-    if len({record["sample_id"] for record in records}) != len(records):
-        raise ValueError("Duplicate dataset sample IDs")
-    groups = {}
-    for record in records:
-        sequence = record["sequence_id"]
-        expected = CONFIRMED_SPLITS.get(sequence)
-        if expected is None or (record["split"], record["collection_date"]) != expected:
-            raise ValueError("Unknown or inconsistent confirmed sequence split/date")
-        if record["sample_id"] != f"{sequence}/{record['frame_id']}":
-            raise ValueError("Inconsistent sample/sequence/frame IDs")
-        for key in list(MODALITIES) + ["imu_left_path", "imu_right_path"]:
-            if Path(record[key]).parts[:2] != (sequence, sequence):
-                raise ValueError("Record modality path crosses its assigned trajectory")
-        groups.setdefault(record["split"], []).append(
-            {
-                "sample_id": record["sample_id"],
-                "sequence_id": sequence,
-                "collection_date": record["collection_date"],
-                "timestamp_seconds": record["timestamp_seconds"],
-                "rgb_path": record["rgb_path"],
-                "semantic_path": record["semantic_path"],
-            }
-        )
-    if set(groups) != {"train", "validation", "test"}:
-        raise ValueError("Expected complete train, validation and held-out test groups")
-    return groups
 
 
 def main():

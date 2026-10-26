@@ -34,20 +34,26 @@ allocation was approximately 1.15 GiB; reserved memory was approximately 1.37 Gi
 including the reload check. This is a runtime observation, not a full-run memory bound.
 
 Dataset qualification status
-The original preparation evidence is preserved in docs/preparation_readiness.json.
-The current reference cohort contains 30 training and 12 development samples with
-saved source-bound review provenance. The bounded RGB-condition experiment is
-recorded in docs/goods_benchmark_status.txt; its candidate was rejected for recall
-regression. Scene appearance qualification and scene-data admission remain pending.
+The original preparation snapshot recorded zero qualified references and zero
+training-eligible variants. Initial reference validation qualified 24 training
+and 12 development masks; the current revised cohort has 30 training and 12
+development masks with preserved reviewer and version provenance. The current
+reference revision and retained model are recorded in docs/goods_benchmark_status.txt.
+Nine RGB-condition variants and eight rendered scene samples have separate admitted
+snapshots. Both bounded comparison candidates failed their declared utility rules;
+no model was promoted. Results are recorded in docs/scene_benchmark_results.txt. The original pilot's 11 automated passes and 7
+rejections remain unchanged; rejected cases are not silently replaced.
 
 Capability boundaries
-Reference validation, sensor/scene fidelity, matched utility comparisons and final
-held-out evaluation have separate acceptance criteria. Runtime fixtures establish
-interface correctness rather than task accuracy. Model-assisted references can
-retain anchoring bias; these pilot counts do not establish statistical adequacy.
-Fusion and unsupported sensor generation retain their existing restrictions.
+Benchmark execution, independent task results, matched synthetic-data comparisons
+and scene-backend integration remain separate milestones. The runtime fixture does
+not establish convergence, accuracy or data utility. Reference correction
+retains potential anchoring bias. The configured reference counts are
+pilot requirements, not statistical adequacy guarantees. Fusion and unsupported
+sensor-generation capabilities retain their existing restrictions.
 
 References
-docs/goods_benchmark_status.txt: current reference and benchmark evidence.
-docs/preparation_readiness.json: original preparation aggregate evidence.
+configs/tasks/warehouse_goods.json: task definition and reference criteria.
+configs/benchmarks/warehouse_goods.json: declared comparison configuration.
+docs/preparation_readiness.json: aggregate qualification evidence.
 src/pipeline/prepare_benchmark.py: preparation, import and admission interfaces.

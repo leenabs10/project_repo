@@ -163,7 +163,7 @@ def prepare_guided_review(packet, packet_sha, refinements, output, source_root):
 
     Only existing train/development members are allowed. RGB and semantic source
     hashes are verified without opening depth, LiDAR, or held-out payloads. Every
-    new mask retains its parent mask hash, edit specification, and AI provenance.
+    new mask retains its parent mask hash, edit specification and annotation origin.
     This prepares no human attestations, admitted dataset, or training run.
     """
     packet, refinements, source_root = map(Path, (packet, refinements, source_root))
@@ -222,7 +222,7 @@ def prepare_guided_review(packet, packet_sha, refinements, output, source_root):
             with Image.open(parent_folder / "candidate.png") as image:
                 previous = np.array(image)
             width, height = record["image_size"]
-            # Sparse AI hints may exceed review coverage requirements. Check their
+            # Sparse correction hints may exceed review coverage requirements. Check their
             # format here; enforce the unchanged coverage limit on the new draft.
             validate_target(previous, (height, width), 1.0)
             selected = specification["samples"][sample_id]

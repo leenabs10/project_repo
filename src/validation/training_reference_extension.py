@@ -1,6 +1,6 @@
 """Prepare selected training annotations without changing an existing cohort.
 
-Explicit AI polygon hints start from ignored pixels. Predicted semantic classes
+Explicit polygon correction hints start from ignored pixels. Predicted semantic classes
 are hashed for source lineage, never copied into new reference labels.
 """
 

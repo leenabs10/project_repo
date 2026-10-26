@@ -21,7 +21,7 @@ import torch
 from torch import nn
 from torch.utils.data import DataLoader
 
-from src.profiling.task_dataset_review import evaluation_records
+from src.adapters.datasets.torwic_splits import evaluation_records
 from src.training import depth_baseline, depth_context, depth_quality
 from src.training.runtime import PROJECT_ROOT, require_cached_ids, require_output
 
@@ -192,9 +192,10 @@ def audit_caches(project, raw_root, manifest, output):
                         raise ValueError(f"Raw source hash changed: {row['sample_id']}")
                     source_hashes[modality + "_sha256"] = digest
                     payloads.append(payload)
-                with Image.open(io.BytesIO(payloads[0])) as rgb_image, Image.open(
-                    io.BytesIO(payloads[1])
-                ) as depth_image:
+                with (
+                    Image.open(io.BytesIO(payloads[0])) as rgb_image,
+                    Image.open(io.BytesIO(payloads[1])) as depth_image,
+                ):
                     native_rgb = np.array(rgb_image)
                     native_depth = np.array(depth_image)
                     if native_rgb.dtype != np.uint8 or native_rgb.shape != (

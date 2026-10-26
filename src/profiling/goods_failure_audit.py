@@ -14,7 +14,7 @@ import numpy as np
 from PIL import Image
 
 from src.adapters.storage.local import file_hash, reserve_output, source_path
-from src.training.goods_benchmark import load_references
+from src.validation.goods_references import load_references
 from src.training.scene_inputs import load_scene_inputs
 from src.validation.artifacts import artifact_hashes, verify_snapshot, write_json
 from src.validation.scene_admission import require_snapshot_digest

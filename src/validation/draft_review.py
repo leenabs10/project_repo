@@ -1,4 +1,4 @@
-"""Immutable native review packets preloaded from source-bound AI corrections."""
+"""Immutable native review packets preloaded from source-bound correction candidates."""
 
 import hashlib
 from html import escape

@@ -77,7 +77,7 @@ def export_predictions(run, run_sha, references, references_sha, output, device=
     ]:
         if saved[name] != profile[name]:
             raise ValueError("Prediction checkpoint metadata differs from its run")
-    if config["experiment_kind"] == "real_plus_synthetic" and (
+    if config["experiment_kind"] != "real_only" and (
         saved.get("synthetic_profile_sha256") != profile.get("synthetic_profile_sha256")
         or not saved.get("synthetic_profile_sha256")
     ):
@@ -196,7 +196,7 @@ def export_predictions(run, run_sha, references, references_sha, output, device=
 <a href="../../index.html">Baseline summary</a><h1>Goods prediction diagnostics</h1>
 <p>Reference/prediction overlays: magenta goods, cyan background, orange ignored reference. Prediction overlays cover the complete image; only valid reference pixels are scored.</p>
 <p>Error colours: green correct goods; magenta false goods; yellow missed goods; orange ignored target; dark grey correct background. Click a panel for its native image.</p>
-<p>Development frames were used for checkpoint selection. Training frames diagnose fitting. Neither is a held-out test result. References are model-assisted corrections.</p>"""
+<p>Development frames were used for checkpoint selection. Training frames diagnose fitting. Neither is a held-out test result. Reference versions and annotation provenance are preserved in metadata.</p>"""
     (output / "index.html").write_text(
         html + "".join(cards) + "</html>", encoding="utf-8"
     )

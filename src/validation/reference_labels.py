@@ -304,7 +304,7 @@ def import_references(
             submission
         ) - required_fields - {"reviewer_kind"}:
             raise ValueError("Unexpected or missing reference submission fields")
-        # Historical browser exports attest a human check. AI corrections must
+        # Historical browser exports attest a reviewer check. Automated corrections must
         # declare their origin and never inherit that reference qualification.
         reviewer_kind = submission.get("reviewer_kind", "human")
         if not isinstance(reviewer_kind, str) or reviewer_kind not in {"human", "ai"}:

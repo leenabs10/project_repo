@@ -8,7 +8,7 @@ from src.adapters.datasets.paired_images import read_pair
 from src.adapters.storage.local import file_hash, source_path
 from src.core.contracts import SCHEMA_VERSION, validate_record
 from src.ingestion.torwic_loader import calibration, load_sample
-from src.profiling.task_dataset_review import evaluation_records
+from src.adapters.datasets.torwic_splits import evaluation_records
 
 
 class TorwicAdapter:

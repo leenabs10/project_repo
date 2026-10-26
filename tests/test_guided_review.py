@@ -1,4 +1,4 @@
-"""Explicit AI refinement geometry, lineage and human-approval isolation."""
+"""Correction geometry, source lineage and independent acceptance isolation."""
 
 import json
 import unittest

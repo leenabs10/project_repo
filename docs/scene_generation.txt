@@ -1,116 +1,124 @@
 Warehouse scene generation
 
-Implemented capability
-A portable resolved-scene contract and an isolated Blender Cycles worker generate
-paired RGB, clean axial depth, validity, semantic and instance labels at 1280x720.
-Geometry, materials, metric dimensions, optical camera poses, intrinsics and training
-profile bindings are resolved before execution. Executables and storage roots are
-deployment settings. Goods semantics live in a task adapter; they are not hardcoded
-into shared scene contracts. Unsupported backends and modalities fail preflight.
+Current supported-scene experiment
+The revised tyre/carton batch is explicitly accepted, admitted and evaluated.
+Mean goods IoU decreases from 49.66% for matched real replay to 48.23% with scenes;
+precision and recall also decrease. The candidate fails the declared utility rule.
+Scene expansion is paused; the retained model and locked test remain unchanged.
+See docs/scene_benchmark_results.txt for native recounts, seed/frame outcomes and
+remaining limits. The earlier accepted-batch and replacement-experiment sections
+below remain separate historical evidence.
 
-Task-focused coverage
-configs/warehouse_goods_coverage.json declares seven bounded cases: empty foreground
-equipment, compact/wide/tall pallet loads, container occlusion, a lateral view of the
-occluded load and a distant floor carton. Empty pallets and handling containers are
-background; identifiable loads are goods. Stocked racks remain goods in every view.
-These are related captures of one authored warehouse, not independent customer scenes.
-The camera is explicitly pinhole with zero distortion; real export distortion and
-registration ambiguity remain unresolved.
+Contact refinement
+A separate revision corrects nine carton positions while preserving tyre geometry,
+camera/material settings and class roles. Its eight paired exports and the exact
+frozen reference cohort pass independent checks. This revision has its own explicit
+acceptance and frozen source/admission binding. Its completed experiment fails the
+utility rule. See docs/scene_contact_review.txt and docs/scene_benchmark_results.txt.
 
-The planner validates finite dimensions, bounded controls, unique identifiers,
-registered materials and explicit floor/pallet supports. It rejects floating support
-requests, overlapping load bodies and goods penetrating equipment or structures.
-The unchanged default planner still produces the previous three-capture geometry.
-Carton sizes and positions are authored coverage intent, not customer measurements.
-Only axis-aligned cuboid assets are supported; general mesh assets require a new
-qualified adapter. Contact checks do not establish dynamics or load stability.
+Portable interface
+Resolved intent separates metric geometry, camera poses, materials, sensor
+conventions and training-only conditioning from executable paths and storage roots.
+The isolated backend is blender_cycles. Scene 1.0 supports static opaque cuboids;
+scene 1.1 additionally supports registered normalized triangle assets and UV maps.
+Goods semantics remain in the task adapter, outside the dataset-independent core.
 
-Verified geometry and visibility
-The analytic 10 m plane establishes axial depth within 0.000001 m. Worker mesh rays
-and another 1,792 independent analytic rays agree on instance identity. Maximum
-per-view p95 analytic depth error is below 0.00005 m. Depth is float32 axial metres,
-zero invalid, with a separate boolean validity mask. Native categorical PNG exports
-round-trip exactly. Visible labels and clean depth derive from the same scene.
+Source-backed appearance coverage
+Eight native 1280x720 captures cover empty equipment, a pallet carton, a sealed bag,
+mixed packaging, crate occlusion, near/far objects and offset aisle views. Rack
+occupancy is resolved asymmetrically with a fixed seed. Footplates, original floor
+and wood materials, camera offsets and bounded light differences add scene detail.
+The configuration is configs/warehouse_goods_quality.json; the resolver is
+src.synthesis.warehouse_quality. The older four-view mesh pilot remains preserved.
 
-Independent carton silhouettes verify the requested targets. Compact, wide and tall
-loads have approximately 4,281, 13,741 and 18,564 visible surface pixels. The two
-container views have approximately 63.7% and 61.4% equipment occlusion; the distant
-load retains 915 visible surface pixels. Silhouette checks omit bevels and allow
-1 cm for attached tape/labels. These figures describe synthetic scenario coverage,
-not sensor accuracy or statistical customer-domain coverage.
+Three source meshes provide distinct carton, sealed cement-bag and open lattice-
+crate geometry. Original 4K color/roughness maps retain source UVs. Uniform scaling
+preserves source proportions. Front/back orientations are derivatives of each
+source, not six independent assets. The bag is an exploratory packaging case;
+it is not a verified TorWIC inventory item or an inferred customer requirement.
+All cases are authored; the aisle is not a reconstruction of the customer warehouse.
 
-The full suite passes 201 tests and 80 subtests, including support, overlap, finite
-control, label and known-occlusion fixtures. All 128 frozen reference artifacts are
-unchanged. Existing annotations and retained models remain valid for their recorded
-reference revision; this work does not require reannotation.
+The source files match publisher byte sizes/MD5 values and local SHA256 bindings.
+The asset catalog retains source/license URLs, conversion details and derivatives.
+The restricted glTF converter accepts one opaque, untransformed mesh primitive,
+checks accessor ranges and array budgets, rotates Y-up to Z-up and flips UV V.
+Unsupported transparency, transforms, extensions and sparse/interleaved data fail.
+No source scripts, normal maps or displacement maps are applied. The renderer
+computes mesh normals. Conversion and execution remain separate adapters.
 
-Surface assets and display response
-Four original 4K Poly Haven color/roughness maps add wood and indoor floor detail.
-Publisher size/MD5 and local SHA256 bindings match; catalogs retain source/license
-URLs, color spaces and a 2 m tile scale. Floor color uses an explicit 0.25 palette
-mix; wood uses the full map. These are authored controls, not measured photometry.
-No normal or displacement maps are inferred. Shader bump affects RGB shading only.
+Geometry and target integrity
+RGB, axial depth, validity, semantic and instance outputs share one scene/camera.
+A known 10 m plane establishes axial depth. Native arrays and categorical PNG
+round-trips pass. Empty pallets and handling containers remain background; their
+identifiable loads remain goods. Crate openings preserve the actual visible surface
+behind them rather than receiving filled rectangular masks.
 
-The host verifies assets before allocation and after rendering; the worker verifies
-contained paths and hashes before loading. Canonical exports embed the exact resolved
-job and catalog. External texture bytes remain in the configured asset store. Job
-document hashes isolate dataset versions while retaining scene-family grouping.
-Changed job bindings, corrupt maps and invalid categorical payloads fail validation.
+The independent checker src.validation.scene_quality balances goods mesh, equipment
+mesh and structure rays. All 2,048 instance hits match; per-view p95 depth error is
+below 0.00005 m. An additional 16 rays verify visible loads through crate openings.
+These establish geometric correspondence, not measured sensor accuracy. Foreground
+loads retain 590 to 22,979 native visible pixels. All 128 real-reference artifacts
+retain their hashes. Pallet footprints, separate load overlap and cross-role
+penetration are checked before rendering. Bounding boxes do not certify stability.
 
-AgX remains primary. Standard is an unselected diagnostic saved from the same Render
-Result; scene-linear EXR is retained. A known-radiance fixture explains why authored
-strength 25 maps near 247/255 with AgX and clips with Standard at the same exposure.
-The bright-pixel cutoff and training marginal statistics are diagnostics, not fidelity
-certificates or admission gates. Customer camera response has not been calibrated.
+Software and experiment compatibility
+The complete current suite passes 230 tests and 112 subtests. Default pytest
+collection targets tests/, excluding frozen implementation copies inside reports.
+Fixtures cover conversion, units/UVs, disk budgets, support/collisions, source split,
+balanced rays, admission, paired targets, checkpoint declarations and comparison.
 
-Qualification and remaining capability
-Visual inspection confirms the intended load/equipment arrangements and visible-label
-separation, while the scene still looks procedural and repetitive. Natural appearance
-and customer-domain fidelity remain unqualified. All scene outputs remain outside
-training. Scene admission, a bounded accepted dataset and a matched real-only versus
-hybrid experiment remain open; no scene-model improvement or promotion is claimed.
+Active scene benchmark configs explicitly declare checkpoint_policy=final_epoch
+and selection_metric=null. Validation and comparison recognize the exact legacy
+validation-IoU metadata on previously frozen final-epoch controls as redundant.
+The effective selection policy remains final epoch. Contradictory declarations fail.
+No saved control configuration, checkpoint, prediction or metric is rewritten.
+The source-bound control snapshot verifies unchanged and can be reused; this
+metadata clarification does not require retraining.
 
-Blender 4.5.3 renders through the explicit blender_cycles backend on OptiX. BlenderProc
-2.8.0 and Blender 4.2.1 are downloaded separately, but their renderer dependencies
-could not initialize after package-index connection failures. BlenderProc remains
-unavailable. Simulated LiDAR, moving scans, calibrated noise, physics and remote
-execution are unsupported. Isaac remains a candidate backend requiring explicit asset,
-material and sensor conversion fixtures, not an automatic or mandatory migration.
+Dataset eligibility and utility
+All eight captures have source-bound appearance/label acceptance for the bounded
+experiment. Original exports remain quarantined; the admitted snapshot is separate.
+src.validation.scene_admission verifies exact dataset/job hashes, independent
+geometry, task/cohort versions and split isolation before creating a separate
+eligible snapshot. Pending decisions and stale evidence fail. The original source
+export and all prior reports remain intact.
 
-Local use
-Configure runtime paths from configs/runtime/warehouse_scene.example.json and use
-fresh output paths. Optional photographic surfaces require a configured asset_root;
-workers do not download assets. Omitting --coverage-config retains the default pilot.
+src.training.scene_inputs verifies admission and selects RGB with its own rendered
+visible target. It never attaches a real source mask to a newly generated scene.
+The fixed-final comparison uses seeds 17/29/43, 15 epochs, batch size 4, identical
+initialization and 120 updates/450 presentations per seed. Scene replacement uses
+20% of training slots; evaluation inputs and targets remain real and unchanged.
+Mean IoU must improve without mean precision or recall regression. Independent
+native prediction recounts are required; model promotion is never automatic.
+The customer scene arm and utility comparison are complete. Mean IoU decreases
+48.63% -> 48.50% and recall decreases 89.76% -> 82.71%; the candidate is rejected.
+All 72 native development predictions independently reproduce saved scores. The
+retained model is unchanged. Held-out evaluation has not run. Detailed outcomes
+and distribution observations are in docs/scene_benchmark_results.txt.
 
-python -m src.synthesis.warehouse_scene --profile reports/dataset_profile/summary.json --camera-config configs/warehouse_renderer.json --asset-catalog .tools/scene_assets/surface_library/catalog.json --coverage-config configs/warehouse_goods_coverage.json --output reports/warehouse_coverage_job.json
-python -m src.pipeline.scene --job reports/warehouse_coverage_job.json --runtime .tools/scene_surface_runtime.json --output reports/warehouse_coverage_run
+Qualification limits
+Appearance acceptance covers this bounded batch. One authored aisle layout is reused. Three meshes do not establish broad diversity,
+photographic whole-scene fidelity or customer-domain coverage. Image statistics are
+diagnostics, not appearance gates or a calibrated camera response. No physical
+stability, moving scans, simulated LiDAR, calibrated noise or remote execution is
+implemented. BlenderProc remains unavailable pending its separate dependencies.
+Additional backends, including Isaac, are selected when requirements justify them
+and require their own validated asset/material/sensor conversion and fixtures.
 
-Current evidence
-reports/warehouse_scenario_coverage: resolved job, worker logs, render passes and
-canonical RGB/depth/label export.
-reports/warehouse_scenario_verification: target coverage, independent geometry,
-configuration, regression log and checksum-bound implementation snapshot.
-
-Preserved evidence
-reports/warehouse_surface_response and reports/warehouse_surface_verification retain
-the photographic material and paired display-response experiment. The earlier
-warehouse_scene_pilot, warehouse_scene_verified, warehouse_scene_verification,
-warehouse_scene_refined and warehouse_scene_refinement_verified reports remain intact.
-The first pilot's penetrating load was rejected; later placements correct that defect.
-
-Registered mesh assets
-The scene contract supports checksum-bound triangle meshes with explicit UV
-materials. Asset catalogs bind geometry and textures to source and license metadata.
-The loader checks contained NPZ paths, file/archive budgets, array types and shapes,
-finite coordinates, triangle indices, normalized bounds and nondegenerate faces.
-Pickle loading is disabled. The renderer preserves UVs and instance IDs while
-scaling normalized geometry to declared metric dimensions.
-
-Regression fixtures cover catalog verification, invalid geometry, changed source
-bytes, unsafe paths and incompatible scene/material declarations. This qualifies
-asset loading and validation; appearance and training eligibility remain separate.
+Evidence
+reports/warehouse_appearance_coverage: resolved job, renderer logs and native dataset.
+reports/warehouse_appearance_quality: independent rays and per-instance coverage.
+reports/warehouse_appearance_delivery: source/config snapshots, tests, publisher
+bindings, aperture verification, appearance diagnostics and control compatibility.
+reports/goods_scene_control: unchanged trained control seeds, predictions and metrics.
+Admission, matched experiment and independent native/frame evidence are in
+reports/warehouse_scene_admitted, reports/goods_scene_comparison and
+reports/goods_scene_experiment_audit. All earlier reports remain in place.
 
 Publisher references
+https://polyhaven.com/a/cardboard_box_01
+https://polyhaven.com/a/cement_bag
+https://polyhaven.com/a/plastic_crate_01
 https://polyhaven.com/a/wooden_planks
 https://polyhaven.com/a/hangar_concrete_floor
 https://polyhaven.com/license

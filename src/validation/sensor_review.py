@@ -61,7 +61,7 @@ def write_review(output: Path, clean_records: list[dict], attempts: list[dict]) 
         draw = ImageDraw.Draw(panel)
         draw.text(
             (5, 5),
-            f"{attempt['source_sample_id']} | {attempt['condition']['condition_id']} | pending human review",
+            f"{attempt['source_sample_id']} | {attempt['condition']['condition_id']} | qualification pending",
             fill="black",
         )
         paths = (

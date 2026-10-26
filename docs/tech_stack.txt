@@ -16,8 +16,9 @@ Generation
 Blender 4.5.3 now runs a bounded portable-scene worker with paired native RGB,
 clean axial depth, semantic/instance labels and source-bound canonical export.
 The host and renderer remain separate processes/environments. Geometry, units,
-categorical exports and independent ray fixtures pass; appearance qualification
-and scene-synthetic training admission remain open. BlenderProc 2.8.0 with Blender
+categorical exports and independent ray fixtures pass. Eight captures have bounded
+appearance/label acceptance and verified training admission; the matched scene
+candidate is rejected by measured recall/IoU regression. BlenderProc 2.8.0 with Blender
 4.2.1 is downloaded but renderer dependency initialization fails at the package
 index. Capability preflight keeps that backend unavailable. See scene_generation.txt.
 The real_sensor_conditions worker implements native RGB gain and training-only depth
@@ -54,7 +55,7 @@ Implemented preparation interfaces
 - TorWIC wrapper plus explicit paired-PNG dataset adapter.
 - Shared canonical cache and compatible legacy-mm export, including resized camera metadata.
 - Local worker/executor and contained storage helpers.
-- Real-sample condition jobs and a bounded portable Cycles scene worker; scene appearance and training admission remain open.
+- Real-sample condition jobs and a bounded portable Cycles scene worker; bounded scene admission and a matched three-seed comparison are verified; broader fidelity remains open.
 
 Run from the checkout using the documented data/ML interpreter
 python -m pip install -r requirements/pipeline_core.txt -r requirements/development.txt
@@ -111,10 +112,40 @@ file. A fixture optimizer step and strict reload passed at 640x360, batch size 4
 float32. This is foundation runtime evidence; current benchmark results are recorded in docs/goods_benchmark_status.txt.
 See docs/preparation_readiness.txt for interfaces and acceptance status.
 
-Scene generation
-Blender Cycles 4.5.3 runs in an isolated worker using a portable metric cuboid
-contract, explicit optical poses and checksum-bound surface maps. NumPy verifies
-metric depth and independent geometry; Pillow retains native lossless labels.
-BlenderProc remains unavailable pending its renderer dependencies. The published
-scene pilot remains training-ineligible while appearance is unqualified.
-See docs/scene_generation.txt for verified capabilities and limitations.
+Scene generation and comparison
+The active engine is Blender Cycles 4.5.3 with OptiX, isolated from the existing
+PyTorch environment. Portable scene 1.1 adds bounded normalized triangle/UV data;
+asset storage and executable paths remain deployment configuration. NumPy handles
+independent triangle intersections, clean depth and data-only mesh arrays. Pillow
+retains native lossless RGB/categorical exports. No additional ML environment was
+installed for this extension. BlenderProc availability remains unchanged.
+
+Scene admission, rendered-target loading and the fixed-final comparison CLI pass
+known-fixture checks. The full suite passes 230 tests and 112 subtests. The real-only
+control, eight-sample scene admission and three-seed hybrid comparison are complete.
+The candidate fails the recall/IoU quality rule; the retained model is unchanged. Source-backed meshes do not establish production fidelity
+or scalability. See docs/scene_generation.txt for capability boundaries and evidence.
+
+Appearance coverage and verification
+Restricted glTF conversion produces checksum-bound, data-only normalized meshes.
+The current asset library has three source geometries with original 4K color and
+roughness maps. Eight authored captures exercise packaging, empty equipment,
+occlusion and camera/light differences. Independent NumPy triangle/cuboid checks
+balance goods, equipment and structural surfaces. Root pytest collection excludes
+frozen reports. No additional ML packages or production infrastructure were added.
+
+Preserved-exposure comparison
+The training-supported scene resolver adds registered tyre cargo and training-only
+object evidence. PyTorch retains every primary real input and accumulates a bounded
+class-balanced auxiliary loss before the same optimizer step. Matched real replay
+controls additional computation. No new ML packages were installed. The complete
+suite passes 230 tests and 112 subtests. Current execution and limits are described
+in docs/supported_scene_protocol.txt.
+
+Supported-scene execution
+The revised eight-scene admission, paired loader and matched three-seed experiment
+are complete. Independent recounts verify all 72 native development predictions.
+The candidate fails the utility rule; no model is promoted. No new packages,
+production infrastructure or training-engine changes were required. The existing
+233-test/112-subtest verification remains applicable. Current evidence and limits
+are in docs/scene_benchmark_results.txt.
