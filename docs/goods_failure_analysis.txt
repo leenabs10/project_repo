@@ -1,0 +1,115 @@
+Goods synthesis failure analysis
+===============================
+
+Scope
+The completed preserved-exposure candidate remains rejected: mean IoU 49.66%
+for matched real replay versus 48.23% with rendered scenes. The diagnostic audit
+profiles 30 real training references, eight admitted scenes and all 72 saved native
+development predictions. Training coverage and development error diagnosis are
+stored separately. No model is fitted and no target, source image or held-out
+test payload is changed or evaluated.
+
+Measured findings
+Dark goods account for 10.05% of primary real foreground pixels, 11.06% of replay
+auxiliary foreground and 6.35% of scene auxiliary foreground. These are raw pixel
+exposure fractions, not gradient contributions. The existing loss separately
+normalizes goods and background, so a pixel fraction alone does not describe its
+effect on optimization. Dark is fixed display luminance below 50 on an 8-bit
+Pillow RGB-to-L conversion; it is not calibrated sensor radiance.
+
+The reviewed training frame Aisle_CCW_Run_1/000227 already labels a visible tyre
+load as goods. Within one explicit diagnostic rectangle on those unchanged labels,
+88.29% of the goods pixels are dark. Executed rendered tyre pixels are 45.62% dark
+and contribute 12.45% of scene auxiliary foreground. A selected real region and
+rendered visible-instance statistics are different populations. The real
+rectangle is measured at native resolution; rendered counts use the 640x360
+training derivative. This contrast
+indicates a representation gap but is not a causal or dataset-wide estimate.
+
+The two pure tyre views receive 7 of 60 auxiliary presentations; empty-equipment
+and partial-occlusion views receive 20. Source-instance accounting includes tyre
+surfaces in other views and avoids equating a scene name with every visible object.
+All eight donors are visited, but the hash schedule does not enforce equal quotas.
+
+Real training contains two background-only references, 000482 and 000880. They
+remain in the primary stream. The current auxiliary loss requires both classes
+and excludes them from replay donors. None of the eight rendered views is fully
+background: the empty-equipment view still includes goods on the shelves. A
+background-only auxiliary mode needs its own explicit normalization contract.
+
+Native development errors
+Mean miss rate on scorable dark goods increases from 26.45% to 40.41% across
+seeds 17, 29 and 43. On the tyre-load frame 000753, the whole-frame goods miss
+rate increases from 38.69% to 55.00%. These rates exclude ignored targets and
+are separate from object-family-specific accuracy.
+
+The background-only frame 000470 improves: false-positive rate decreases from
+25.28% to 22.28%, although it remains high. Do not describe all background errors
+as regressions or infer equipment-specific rates from binary foreground targets.
+Per-frame false-positive and false-negative rates are retained for all twelve
+development frames. Missing-class denominators remain null. A small positive
+region, such as the 247 scorable goods pixels in 000941, limits interpretation
+of frame-specific recall. Reference versions are unchanged.
+
+Interpretation
+Uneven donor exposure, insufficient dark foreground representation, appearance
+differences and negative-example limitations remain plausible contributors. This
+audit does not isolate their causal effects. Adding a tyre mesh and preserving
+class mass did not establish a task improvement. Existing annotations must not be
+changed solely because a candidate scores lower. Repeated development use and
+related video frames limit independent generalization evidence.
+
+Donor-schedule follow-up
+The smallest interpretable contrast is a deterministic per-scene quota schedule
+on the same accepted eight-scene export. Preserve source images and masks, the
+reference cohort, all 450 primary real presentations, 60 auxiliary inputs, 120
+updates, auxiliary loss weight 0.2, foreground class mass, initialization, three
+seeds and final checkpoint policy. Derive quotas from training evidence and source
+metadata only. Retain the completed replay and original scene-schedule results,
+report every outcome, and require higher mean IoU without precision or recall
+regression. Do not change appearance, loss and sampling together in this contrast.
+This ablation has now been frozen, executed and independently audited. Mean IoU
+rises from 48.23% to 49.38% but remains below replay at 49.66%; recall is 87.77%
+versus 88.80%. It fails the utility rule. The additional tyre exposure does not
+resolve dark-goods misses. See docs/sampling_benchmark_results.txt for all outcomes.
+Scene expansion, broad reannotation and final held-out evaluation remain deferred.
+
+Implementation and verification
+CLI: python -m src.profiling.goods_failure_audit --help
+The auditor requires explicit reference, control, scene and admission hashes. It
+checks native prediction membership, source roles, RGB/target checksums, executed
+input counts and all confusion totals before and after analysis. It never loads
+a model. Training intensity uses BOX RGB and nearest-neighbour categorical masks
+at 640x360; development partitions use native 1280x720 pixels.
+
+The failure-audit verification passed 240 tests and 130 subtests; the completed
+sampling extension passes 244 tests and 143 subtests. New fixtures cover half-open intensity bins,
+ignored pixels, undefined rates, weighted exposure, invalid IDs/arrays, visible
+source roles source mutation and mandatory snapshot identities. Original experiment and reference hashes remain
+unchanged. Reports retain the full executed command bindings and fixture log.
+
+Evidence
+reports/goods_failure_analysis: reusable audit output and executed exposure.
+reports/goods_failure_investigation: findings, bound diagnostic regions and tests.
+reports/goods_supported_results_audit: unchanged matched experiment recounts.
+docs/scene_benchmark_results.txt: complete retained comparison outcomes.
+
+Material investigation
+Four isolated tyre-material captures preserve native labels and depth exactly.
+The appearance response is modest; no training benefit or qualified realism is
+claimed. See docs/tyre_appearance_qualification.txt for diagnostics and source bindings.
+
+Equipment contrast execution readiness
+The exact 30-training/12-development reference cohort is fully reverified. Six
+empty/loaded renders and matched negative/mixed schedules pass input checks.
+Pending decisions are rejected before admission; model performance remains
+unmeasured for this intervention. See docs/equipment_pair_protocol.txt.
+
+Completed equipment contrast
+The six accepted paired captures reduce mean dark-goods misses (37.34% to 18.54%)
+and improve the background-only frame's FP rate (22.52% to 19.80%). Aggregate
+precision nevertheless falls from 55.86% to 54.40%; mean IoU falls from 51.63% to
+51.42%. Recall rises from 87.42% to 90.40%. The candidate fails the utility rule.
+These are matched three-seed results; binary masks do not identify every error's
+object family. Existing references remain unchanged. Prioritize distinct real
+training coverage before scaling this generator. See docs/equipment_pair_results.txt.

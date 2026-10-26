@@ -1,0 +1,142 @@
+Training-supported synthesis and preserved-exposure protocol
+
+Purpose
+Improve object coverage, protect real-data exposure and isolate synthetic utility
+from additional training computation. The completed replacement experiment remains
+preserved and rejected. Its metrics are not reused as the new matched control.
+
+Training-only object support
+All 30 qualified training references were inspected, plus 72 uniformly spaced RGB
+sources from the training trajectory. No development/test sensor payload was used
+to derive this coverage. Native training frames 000223 and 000239 show stacked
+tyres as palletized cargo; qualified training references also show close stacked
+cartons and wrapped loads. The visual inventory is a coverage assessment with
+source hashes, not new independently validated segmentation ground truth.
+Wrapped loads remain a documented gap: transparent wrapping is unsupported and
+is not silently approximated with an opaque box or inferred labels.
+
+Generated coverage and appearance
+Eight new native views cover close carton columns, palletized tyre stacks,
+camera offsets, mixed cargo, partial occlusion, distant loads and empty equipment.
+The registered tyre retains source tread geometry and original 4K color/roughness
+maps. A proper metric rotation places the tyre flat; uniform scaling preserves
+shape. Carton geometry, floor/wood maps and equipment labels remain source-bound.
+Exposure, lower camera viewpoints and rack colors are authored training-informed
+variations; no calibrated camera response or reconstructed warehouse is claimed.
+
+The initial pre-contact export averages 12.27% foreground image coverage versus
+10.54% across the
+30 qualified real training references. Both low/high coverage cases pass the
+training-derived checks. Mean display luma is 121.36 on an 8-bit scale. These
+statistics do not prove natural appearance. One authored aisle, repeated source
+assets, no normal/displacement maps, no transparent wrapping and no physical
+stability simulation remain limitations. Empty equipment stays background;
+identifiable visible cargo stays goods. No hidden surfaces are inferred.
+
+All 2,048 independent instance rays match, including 1,280 targeted mesh rays.
+Per-view p95 axial-depth error is below 0.00004 m. This is geometric correspondence,
+not physical sensor accuracy. Native images, masks and depth/validity arrays pass
+structural and lossless export checks. All 128 real-reference artifacts are unchanged.
+
+Real exposure and foreground balance
+Every original real input/target remains in the primary stream: 30 frames x 15
+epochs = 450 primary real presentations per seed. The new mode does not replace
+any real slot. One auxiliary input is processed every second optimizer update:
+60 auxiliary presentations within the same 120 updates, or 510 total per seed.
+The real-replay control receives real training donors; the scene arm receives
+only admitted rendered RGB with its own visible target. Both use the same schedule,
+loss weight 0.2, model, initialization, resolution, optimizer and checkpoint policy.
+Extra computation is matched between the two new arms. It differs from the old
+450-presentation replacement experiment, so their scores are contextual only.
+
+Auxiliary foreground/background losses are averaged separately, then weighted
+using the exact real-training scorable foreground fraction 0.14835623268065162 at
+640x360. This prevents a large rendered background from changing the auxiliary
+class mass solely through pixel count. It does not guarantee a particular gradient
+norm, raw foreground exposure or model score. Stored labels are never modified.
+The original primary real cross-entropy remains unchanged. Auxiliary donors need
+both scorable classes; original negative frames remain in the primary stream.
+Sampling is training-only and hash-deterministic, without changing the primary
+source-slot order or consuming its generator. Losses/gradients must remain finite.
+
+Frozen reevaluation
+Seeds: 17, 29, 43. Fixed final checkpoint after 15 epochs; no intermediate
+development prediction selects the checkpoint. Native 1280x720 scoring uses the
+same 12 real development references. Compare the scene arm against the new real-
+replay arm, with matched 450 primary real + 60 auxiliary presentations and 120
+updates. Independently recount every native prediction and report per-seed and
+frame-weighted results, precision and recall. Mean goods IoU must improve without
+mean precision or recall regression. Report all outcomes and retain rejected runs.
+No model promotion is automatic, and the locked test remains disabled.
+
+Current execution state
+The revised batch received explicit appearance/label acceptance and passed
+admission and paired-loader checks. Both three-seed arms are complete:
+Real replay: IoU 49.66% | Precision 53.02% | Recall 88.80%.
+Real + scene: IoU 48.23% | Precision 51.52% | Recall 88.55%.
+The candidate fails the predefined improvement rule and is not promoted. All 72
+native development predictions reproduce the saved counts independently. Each
+seed preserves every primary real frame exactly 15 times, plus 60 matched auxiliary
+inputs within 120 updates. All 128 reference artifacts remain unchanged. Scene
+expansion is paused pending targeted failure analysis. The locked test is untouched.
+See docs/scene_benchmark_results.txt for all seed/frame outcomes and limitations.
+
+Contact refinement
+The accepted contact revision averages 12.24% foreground image coverage; its
+training-derived coverage gates pass. A separate revision corrects nine carton positions while preserving tyre geometry,
+camera/material settings and class roles. Its eight paired exports and the exact
+frozen reference cohort pass independent checks. This revision has its own explicit
+acceptance and frozen source/admission binding. Its completed experiment fails the
+utility rule. See docs/scene_contact_review.txt and docs/scene_benchmark_results.txt.
+
+Verification and interfaces
+The complete suite passes 230 tests and 112 subtests. Fixtures exercise class-mass
+invariance under duplicated background, invalid policies, preserved source counts,
+paired targets, three-seed replay/scene execution, support/overlap checks and split
+evidence. The planner CLI reproduces the exact verified scene job.
+Resolver: python -m src.synthesis.warehouse_balanced --help
+Admission: python -m src.validation.scene_admission --help
+Training/comparison: python -m src.pipeline.scene_benchmark --help
+
+Evidence
+reports/training_coverage_profile: qualified training target statistics.
+reports/warehouse_training_coverage: resolved job and native rendered outputs.
+reports/warehouse_training_coverage_geometry: independent rays and source visibility.
+reports/warehouse_training_coverage_audit: object/source evidence and coverage gates.
+reports/goods_supported_protocol: frozen configs, implementation and predeclared rules.
+reports/goods_supported_replay_control: three trained/reloaded control seeds.
+reports/goods_supported_control_audit: exposure verification and native recounts.
+Previous data, reference versions, experiments and report history remain intact.
+
+Source attribution
+Powered by Poly Haven: https://polyhaven.com/
+Tyre: https://polyhaven.com/a/old_tyre
+Carton: https://polyhaven.com/a/cardboard_box_01
+Asset license: https://polyhaven.com/license
+
+Current execution evidence
+reports/goods_supported_acceptance/profile.json
+reports/warehouse_supported_admitted/profile.json
+reports/goods_supported_loader_verification/profile.json
+reports/goods_supported_contact_protocol/profile.json
+reports/goods_supported_replay_control/profile.json
+reports/goods_supported_scene_arm/profile.json
+reports/goods_supported_comparison/profile.json
+reports/goods_supported_results_audit/profile.json
+reports/scene_contact_verification/geometry/profile.json
+
+Completed failure analysis
+The source-bound audit measures executed foreground/intensity exposure, visible
+rendered families and native error strata. Real references and model checkpoints
+are unchanged. The analysis reproduces exactly; its verification passed 240 tests
+and 130 subtests. The completed sampling extension passes 244 tests/143 subtests.
+See docs/goods_failure_analysis.txt for measured findings and the proposed
+source-preserving donor-schedule ablation. No further training has run.
+
+Completed donor-sampling contrast
+The optional balanced cycle policy visits every admitted scene 7 or 8 times per
+60 auxiliary inputs. Exact source payloads, loss, primary real exposure and update
+budgets are unchanged. The three-seed candidate reaches 49.38% IoU, below replay
+at 49.66%, and fails the declared rule. Its recall is 87.77% versus 88.80%.
+The retained model is unchanged. See docs/sampling_benchmark_results.txt and
+reports/goods_sampling_protocol for the fixed rules and complete evidence.

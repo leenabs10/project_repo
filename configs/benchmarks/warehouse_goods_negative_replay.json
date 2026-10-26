@@ -1,0 +1,85 @@
+{
+  "schema_version": "dubaidata/1.0",
+  "task_id": "warehouse_visible_goods",
+  "status": "frozen_for_qualified_reference_execution",
+  "model": "deeplabv3_mobilenet_v3_large",
+  "initialization": "Same locally verified generic pretrained checkpoint; replace the final class head identically per seed; no automatic download",
+  "initial_checkpoint_sha256": "fc3c493d68e89cc31ef488c803d5d7dd2f3190fb570598faa49fef69be8e5e70",
+  "input_channels": [
+    "rgb"
+  ],
+  "training_resolution": [
+    640,
+    360
+  ],
+  "native_reference_resolution": [
+    1280,
+    720
+  ],
+  "resampling": {
+    "rgb": "BOX",
+    "target": "NEAREST",
+    "evaluation_logits_to_native": "BILINEAR"
+  },
+  "normalization": {
+    "scale": 255,
+    "mean": [
+      0.485,
+      0.456,
+      0.406
+    ],
+    "std": [
+      0.229,
+      0.224,
+      0.225
+    ]
+  },
+  "loss": {
+    "name": "cross_entropy",
+    "ignore_index": 255
+  },
+  "optimizer": {
+    "name": "AdamW",
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001
+  },
+  "epochs": 15,
+  "batch_size": 4,
+  "model_seeds": [
+    17,
+    29,
+    43
+  ],
+  "generation_seed": 7331,
+  "selection_metric": null,
+  "metrics": [
+    "goods_iou",
+    "goods_dice",
+    "precision",
+    "recall",
+    "valid_pixels",
+    "reference_coverage"
+  ],
+  "comparison": "paired_equipment_vs_matched_negative_replay",
+  "budget_matching": "450 primary real + 60 auxiliary inputs; 30 background-only and 30 mixed donors per seed in both arms; 120 updates, same initialization and fixed final checkpoint",
+  "independence_limitations": "Whole trajectories define splits. Nearby frames are dependent and repeated development selection is disclosed. Report undefined foreground metrics explicitly.",
+  "test_access": "disabled_until_candidate_and_protocol_are_frozen",
+  "improvement_claim": "Requires completed matched multi-seed experiments and qualified real references; configuration or smoke checks do not demonstrate improvement",
+  "experiment_kind": "real_only",
+  "batch_norm": "frozen_running_statistics",
+  "experiment_name": "Goods negative/mixed matched negative_replay",
+  "hypothesis": "Empty/loaded equipment auxiliary examples reduce false goods detections while matched negative/mixed replay controls additional supervision",
+  "required_reference_packet_sha256": "3018c4cd897af5bb9e3f0425eb667bc74d0083ff693172e117d28c81087b4967",
+  "checkpoint_policy": "final_epoch",
+  "acceptance_rule": "Mean goods IoU improves with no mean precision or recall regression; no automatic model promotion",
+  "auxiliary_training": {
+    "strategy": "preserve_real_exposure",
+    "interval_updates": 2,
+    "loss_weight": 0.2,
+    "foreground_fraction": 0.14835623268065162,
+    "missing_class_policy": "background_only_zero_foreground_mass"
+  },
+  "auxiliary_sampling": {
+    "strategy": "balanced_presence_cycle"
+  }
+}

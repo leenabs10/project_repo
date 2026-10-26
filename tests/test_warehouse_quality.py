@@ -14,6 +14,10 @@ from src.synthesis.warehouse_quality import (
     build_quality_job,
     validate_quality_configuration,
 )
+from src.training.goods_benchmark import (
+    checkpoint_selection_metric,
+    validate_configuration,
+)
 from src.validation.scene_quality import (
     sample_role_pixels,
     stable_interior,
@@ -206,6 +210,22 @@ class WarehouseQualityTests(unittest.TestCase):
                     build_quality_job(*inputs)
 
 
+class CheckpointDeclarationTests(unittest.TestCase):
+    def test_fixed_final_has_no_selection_metric_and_legacy_evidence_stays_valid(self):
+        path = (
+            Path(__file__).parents[1]
+            / "configs/benchmarks/warehouse_goods_scene_control.json"
+        )
+        config = json.loads(path.read_text())
+        self.assertIsNone(config["selection_metric"])
+        self.assertIsNone(checkpoint_selection_metric(config))
+        validate_configuration(config)
+        config["selection_metric"] = "validation_goods_iou"
+        self.assertIsNone(checkpoint_selection_metric(config))
+        validate_configuration(config)
+        config["selection_metric"] = "training_loss"
+        with self.assertRaisesRegex(ValueError, "checkpoint-selection"):
+            validate_configuration(config)
 
 
 class RoleRaySamplingTests(unittest.TestCase):

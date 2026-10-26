@@ -1,0 +1,89 @@
+{
+  "schema_version": "dubaidata/1.0",
+  "task_id": "warehouse_visible_goods",
+  "status": "frozen_for_qualified_reference_execution",
+  "model": "deeplabv3_mobilenet_v3_large",
+  "initialization": "Same locally verified generic pretrained checkpoint; replace the final class head identically per seed; no automatic download",
+  "initial_checkpoint_sha256": "fc3c493d68e89cc31ef488c803d5d7dd2f3190fb570598faa49fef69be8e5e70",
+  "input_channels": [
+    "rgb"
+  ],
+  "training_resolution": [
+    640,
+    360
+  ],
+  "native_reference_resolution": [
+    1280,
+    720
+  ],
+  "resampling": {
+    "rgb": "BOX",
+    "target": "NEAREST",
+    "evaluation_logits_to_native": "BILINEAR"
+  },
+  "normalization": {
+    "scale": 255,
+    "mean": [
+      0.485,
+      0.456,
+      0.406
+    ],
+    "std": [
+      0.229,
+      0.224,
+      0.225
+    ]
+  },
+  "loss": {
+    "name": "cross_entropy",
+    "ignore_index": 255
+  },
+  "optimizer": {
+    "name": "AdamW",
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001
+  },
+  "epochs": 15,
+  "batch_size": 4,
+  "model_seeds": [
+    17,
+    29,
+    43
+  ],
+  "generation_seed": 7331,
+  "selection_metric": "validation_goods_iou",
+  "metrics": [
+    "goods_iou",
+    "goods_dice",
+    "precision",
+    "recall",
+    "valid_pixels",
+    "reference_coverage"
+  ],
+  "comparison": "fixed_reference_real_only_vs_source_condition_substitution",
+  "budget_matching": "Same 30 source slots, 15 epochs, batch size 4, 120 updates and 450 presentations per seed as the current control. Conditions replace only their own source input; development inputs and all targets remain fixed.",
+  "independence_limitations": "Whole trajectories define splits. Nearby frames are dependent and repeated development selection is disclosed. Report undefined foreground metrics explicitly.",
+  "test_access": "disabled_until_candidate_and_protocol_are_frozen",
+  "improvement_claim": "Requires completed matched multi-seed experiments and qualified real references; configuration or smoke checks do not demonstrate improvement",
+  "experiment_kind": "real_plus_synthetic",
+  "batch_norm": "frozen_running_statistics",
+  "experiment_name": "Goods bounded RGB condition comparison",
+  "hypothesis": "Test whether accepted bounded RGB gain variants improve goods perception without precision or recall regression.",
+  "required_reference_packet_sha256": "8a2b471a773fd5c2c966f2b45586b3069a707bb9eafc2b966ad95232a2d77ae4",
+  "synthetic_mixing": {
+    "strategy": "replace_source_input",
+    "substitution_probability": 0.5,
+    "conditions": [
+      {
+        "condition_id": "reduced_brightness",
+        "method": "rgb_gain",
+        "gain": 0.93
+      },
+      {
+        "condition_id": "increased_brightness",
+        "method": "rgb_gain",
+        "gain": 1.07
+      }
+    ]
+  }
+}

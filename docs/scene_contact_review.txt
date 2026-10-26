@@ -1,0 +1,60 @@
+Training-supported scene contact qualification
+=============================================
+
+Revision
+Geometry inspection identified 11-15 mm carton-stack gaps caused by stacking
+asset bounding boxes instead of irregular mesh surfaces. The separate revision
+translates nine cartons vertically across four views, leaving 0.2 mm clearance
+between adjacent carton surfaces. Tyre geometry, source meshes, UV materials,
+equipment, cameras, lighting and class IDs are unchanged. All eight RGB, depth
+and categorical-label sets were rendered together from the revised job.
+
+Verification
+The revised job reproduces exactly from its original source and contact algorithm.
+All 2,048 independent geometry rays match the rendered instance IDs, including
+1,280 rays targeting goods and equipment meshes. Maximum per-view p95 axial-depth
+residual is below 0.00004 m. Visible semantic pixels agree with source roles:
+cartons and tyres are goods; empty pallets and handling crates are background.
+Lattice openings preserve whichever surface is visible behind the equipment.
+The empty-equipment view contains shelf stock and is not an all-negative image.
+
+Mean foreground coverage is 12.24%; training-derived low/high and median coverage
+gates pass. The complete regression suite passes 233 tests and 112 subtests.
+These checks establish correspondence and coverage, not appearance acceptance,
+physical stability, sensor fidelity or downstream model improvement.
+
+Reference integrity
+The required frozen cohort was located and independently verified: all 128
+artifacts match profile d4928f47f069b0ae29ce1c7dae9282d54e8bbb3a4b8944e291ce8422a4d39468.
+The earlier mismatch referred to an older local pointer, not missing or modified
+frozen references. No annotation version was substituted or overwritten.
+
+Qualification status
+All eight revised exports received explicit appearance and label acceptance and
+passed source-bound admission and native paired-loader checks. Their separate
+protocol was frozen before training; the original batch and protocol are intact.
+The completed three-seed comparison fails its utility rule: IoU 49.66% -> 48.23%,
+precision 53.02% -> 51.52%, recall 88.80% -> 88.55%. All 72 native development
+predictions were independently recounted. Scene expansion is paused. The retained
+model is unchanged; no promotion or held-out test evaluation has occurred.
+Appearance/geometry qualification does not imply training benefit.
+
+One authored aisle, repeated damage/textures, uniform lighting, unsupported
+transparent wrapping and unverified load stability remain limitations. Vertical
+contact alone does not establish a physically stable stack.
+
+Source bindings
+Original dataset profile:
+61d7fe044a97e644c7d6cb0700b741af7ed551c1bb93648b2ea9d6400152d2d9
+Revised dataset profile:
+a1c7b6a3e5af79270495d0e2a553dd892360243e8f51c02b8093ce5ba40e8874
+Revised job:
+a1b7192f0683eef7484db2e4719f644cb644d584b8eac3e3bcbaa37223ce1c98
+Original frozen protocol profile:
+87ec3e5a9fae97955a3b3b5d34a7aa69104ec5f2bc74a2c4ee50e688872885f3
+
+Implementation: src/synthesis/mesh_stacking.py.
+Geometry evidence: reports/scene_contact_verification/geometry/profile.json.
+Current admission: reports/warehouse_supported_admitted/profile.json.
+Experiment audit: reports/goods_supported_results_audit/profile.json.
+Previous source-bound reports remain intact for reproducibility.

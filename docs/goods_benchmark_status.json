@@ -1,6 +1,5 @@
 {
-  "schema_version": "dubaidata.goods-status/1.0",
-  "status": "scene_geometry_verified_appearance_pending",
+  "status": "equipment_pair_comparison_complete_candidate_rejected",
   "reference_counts": {
     "train": 30,
     "validation": 12
@@ -8,24 +7,418 @@
   "reference_profile_sha256": "d4928f47f069b0ae29ce1c7dae9282d54e8bbb3a4b8944e291ce8422a4d39468",
   "annotation_packet_sha256": "3018c4cd897af5bb9e3f0425eb667bc74d0083ff693172e117d28c81087b4967",
   "validated_reference_versions": 42,
-  "reference_origin": "reviewed_model_assisted",
-  "independent_reference_accuracy_established": false,
+  "control_metrics": {
+    "goods_iou": 0.5083870376142806,
+    "precision": 0.5447802166207054,
+    "recall": 0.8873720831422119
+  },
+  "candidate_metrics": null,
+  "candidate_accepted": false,
+  "selected_configuration": "configs/benchmarks/warehouse_goods_reference_control.json",
+  "selection_reason": "Retained model unchanged; later candidates did not satisfy promotion gates",
+  "pallet_region_false_positive_rate": null,
   "model_seeds": [
     17,
     29,
     43
   ],
-  "retained_model": {
-    "metrics": {
-      "goods_iou": 0.5083870376142806,
-      "precision": 0.5447802166207054,
-      "recall": 0.8873720831422119
-    },
-    "configuration": "configs/benchmarks/warehouse_goods_reference_control.json",
-    "changed": false,
-    "configuration_scope": "Historical training definition; its reference-packet binding remains frozen"
+  "optimizer_updates_per_seed": 120,
+  "native_prediction_masks_recomputed": 72,
+  "tests": {
+    "passed": 174,
+    "subtests_passed": 47,
+    "elapsed_seconds": 33.73,
+    "scope": "Earlier local preparation snapshot; not a new test run"
   },
-  "rgb_condition_comparison": {
+  "condition_validation": {
+    "technical_cases_passed": 11,
+    "rgb_candidates": 9,
+    "depth_only_excluded": 2,
+    "original_rejections_preserved": 7,
+    "qualification": "accepted_for_bounded_rgb_experiment",
+    "training_eligible": true,
+    "requires_reference_rebinding": false,
+    "reference_profile_sha256": "d4928f47f069b0ae29ce1c7dae9282d54e8bbb3a4b8944e291ce8422a4d39468",
+    "profile_sha256": "df298fdb8686d14b060ae8b7aa803300d2f2b8bcc7b6e6d7de6287a7da4ec7bc",
+    "source_count": 6,
+    "training_target_pixels_changed": 0,
+    "assistant_visual_screen_complete": true,
+    "appearance_acceptance_recorded": true,
+    "accepted_rgb_variants": 9,
+    "requested_rgb_variants": 12,
+    "admitted_profile_sha256": "f03a00069243907b512b1fe7bc8662eca921b667041890378400ed09b22217be",
+    "confirmation_channel": "in_chat",
+    "physical_sensor_realism_certified": false
+  },
+  "historical_scores_on_other_targets_are_directly_comparable": false,
+  "held_out_test_evaluated": false,
+  "synthetic_data_utility_measured": true,
+  "hybrid_preparation": {
+    "reference_profile_sha256": "d4928f47f069b0ae29ce1c7dae9282d54e8bbb3a4b8944e291ce8422a4d39468",
+    "configuration_sha256": "052ae91b0d5abd0b331ae68bc173422173175b0dc0139741716d75246374734f",
+    "readiness_profile_sha256": "630e1ad99c5671c70210d124aabfe9e304060a9bce13bd54481d54ecc24568b0",
+    "final_epoch_fixture_profile_sha256": "ca6089a80174a21a1bb99bd2034b32c21f4848c59d0b45a3fabba74e9d8e556c",
+    "final_epoch_condition_runner_fixture_verified": true,
+    "pending_inputs_rejected_before_output": true,
+    "proposed_source_sampling": {
+      "real": 404,
+      "condition": 46,
+      "total": 450
+    },
+    "schedule_scope": "Conditional on acceptance of all nine variants; any subset requires a fresh frozen schedule",
+    "model_seeds": [
+      17,
+      29,
+      43
+    ],
+    "source_slots": 30,
+    "optimizer_updates_per_seed": 120,
+    "checkpoint_selection": "fixed_final_epoch",
+    "real_only_controls_reused": true,
+    "condition_qualification": "accepted",
+    "requires_reference_rebinding": false,
+    "customer_training_executed": true,
+    "synthetic_data_utility_measured": true,
+    "held_out_test_evaluated": false,
+    "comparison_complete": true,
+    "candidate_selected": false,
+    "outcome": "Rejected for recall regression; retain existing model"
+  },
+  "metric_scope": "Same retained model and saved native predictions on the reviewed 30/12 reference revision; changed scores are not model improvement",
+  "current_reference_semantic_qualification": "Five source-bound editor attestations validated; model-assisted references retain anchoring and coverage limitations",
+  "corrected_reference_accuracy_measured": true,
+  "targeted_correction": {
+    "status": "saved_reference_replacements_validated",
+    "reported_ids": [
+      "Aisle_CW_Run_1/001036",
+      "Aisle_CW_Run_1/000000",
+      "Aisle_CW_Run_1/000941",
+      "Aisle_CW_Run_1/000470",
+      "Aisle_CW_Run_1/000847"
+    ],
+    "correction_packet_profile_sha256": "3018c4cd897af5bb9e3f0425eb667bc74d0083ff693172e117d28c81087b4967",
+    "base_reference_profile_sha256": "1e8906f2a19978209102dc579fc2f0e19a5481b2d5e6e901f9a9ec9cef0c116a",
+    "original_reference_versions_preserved": 42,
+    "unflagged_references_to_carry_forward": 37,
+    "training_reference_masks_changed": 0,
+    "correction_native_geometry": [
+      1280,
+      720
+    ],
+    "source_rgb_changed": false,
+    "all_correction_png_and_rle_roundtrips_exact": true,
+    "focused_fixture_tests": {
+      "passed": 15,
+      "subtests_passed": 4
+    },
+    "training_runs_complete": 9,
+    "model_seeds": [
+      17,
+      29,
+      43
+    ],
+    "optimizer_updates_per_run": 120,
+    "source_presentations_per_run": 450,
+    "checkpoint_selection": "fixed_final_epoch_without_development_selection",
+    "crop_candidate_status": "rejected_iou_and_recall_regression",
+    "targeted_candidate_status": "rejected_equipment_region_regression",
+    "diagnostic_scope": "Predicted-goods area in visible equipment regions; not full-scene IoU, precision or recall",
+    "region_diagnostics": {
+      "empty_pallet": {
+        "control": {
+          "per_seed": [
+            0.5407507507507507,
+            0.6281781781781782,
+            0.4912912912912913
+          ],
+          "mean_predicted_goods_fraction": 0.5534067400734067
+        },
+        "crop_candidate": {
+          "per_seed": [
+            0.4308708708708709,
+            0.6259259259259259,
+            0.47436436436436435
+          ],
+          "mean_predicted_goods_fraction": 0.5103870537203871
+        },
+        "targeted_candidate": {
+          "per_seed": [
+            0.5663363363363363,
+            0.5501401401401401,
+            0.7036936936936937
+          ],
+          "mean_predicted_goods_fraction": 0.6067233900567234
+        }
+      },
+      "scissor_lift": {
+        "control": {
+          "per_seed": [
+            0.0003021978021978022,
+            0.04788461538461539,
+            0.15337912087912087
+          ],
+          "mean_predicted_goods_fraction": 0.06718864468864469
+        },
+        "crop_candidate": {
+          "per_seed": [
+            0.019862637362637364,
+            0.0,
+            0.0
+          ],
+          "mean_predicted_goods_fraction": 0.0066208791208791215
+        },
+        "targeted_candidate": {
+          "per_seed": [
+            0.08046703296703296,
+            0.054532967032967034,
+            0.010247252747252748
+          ],
+          "mean_predicted_goods_fraction": 0.04841575091575092
+        }
+      }
+    },
+    "model_errors_fully_resolved": false,
+    "replacement_model_selected": false,
+    "new_development_accuracy_claimed": true,
+    "held_out_test_evaluated": false,
+    "synthetic_data_utility_measured": false,
+    "latest_feedback": "All five native editor versions saved and confirmed",
+    "admitted_replacements": 5,
+    "saved_native_versions_at_resumption": 0,
+    "saved_native_versions": 5,
+    "accuracy_scope": "Retained model rescored on revised development targets; no model improvement claim"
+  },
+  "published_software_snapshot": {
+    "commit": "8fe525e01320b78fe55363cf86f356944786cdf9",
+    "tests_passed": 156,
+    "subtests_passed": 28,
+    "scope": "Isolated selective publication; experimental working files excluded"
+  },
+  "historical_comparison": {
+    "reference_profile_sha256": "1e8906f2a19978209102dc579fc2f0e19a5481b2d5e6e901f9a9ec9cef0c116a",
+    "annotation_packet_sha256": "8a2b471a773fd5c2c966f2b45586b3069a707bb9eafc2b966ad95232a2d77ae4",
+    "control_metrics": {
+      "goods_iou": 0.5797956810012276,
+      "precision": 0.6282635774615686,
+      "recall": 0.8854158060775188
+    },
+    "candidate_metrics": {
+      "goods_iou": 0.585122367798436,
+      "precision": 0.6467014760765277,
+      "recall": 0.8602028389497294
+    },
+    "pallet_region_false_positive_rate": {
+      "control": 0.5898198198198198,
+      "candidate": 0.5811711711711712
+    },
+    "selection_reason": "Recall decreased by 2.52 percentage points; retain the unweighted control"
+  },
+  "candidate_metrics_status": "Both crop candidates evaluated on revised targets and rejected; see frozen_candidate_comparison",
+  "reviewed_reference_revision": {
+    "profile_sha256": "abc5bff289b7b00af99c44da57aedd95bdb62a2c46908d8a81f0f63eb55ba4bf",
+    "reference_profile_sha256": "d4928f47f069b0ae29ce1c7dae9282d54e8bbb3a4b8944e291ce8422a4d39468",
+    "base_reference_profile_sha256": "1e8906f2a19978209102dc579fc2f0e19a5481b2d5e6e901f9a9ec9cef0c116a",
+    "validated_saved_exports": 5,
+    "additional_pixel_edits_vs_prepared_replacements": 0,
+    "unchanged_reference_versions_preserved": 37,
+    "training_targets_changed": 0,
+    "prediction_masks_independently_recounted": 36,
+    "additional_scorable_pixels_per_seed": 648213,
+    "crosscheck_sha256": "d18781a4a57a6e8342e77350854045acaffa3c5ddad22944a2893fa2fd7fd7fe",
+    "retrained": false,
+    "new_model_inference": false,
+    "original_runtime_reference_pointer_changed": false
+  },
+  "frozen_candidate_comparison": {
+    "profile_sha256": "8f058f3aa4187f66e32848c6355bc1fa4165e418d3df5c5e5005577e4f7ab358",
+    "reference_profile_sha256": "d4928f47f069b0ae29ce1c7dae9282d54e8bbb3a4b8944e291ce8422a4d39468",
+    "means": {
+      "retained_model": {
+        "goods_iou": 0.5083870376142806,
+        "precision": 0.5447802166207054,
+        "recall": 0.8873720831422119
+      },
+      "matched_control": {
+        "goods_iou": 0.49955570070434535,
+        "precision": 0.5398661767760411,
+        "recall": 0.8709091384056752
+      },
+      "broad_crop": {
+        "goods_iou": 0.4973194659215955,
+        "precision": 0.5513881507795897,
+        "recall": 0.8354738926293613
+      },
+      "targeted_crop": {
+        "goods_iou": 0.513451987488971,
+        "precision": 0.5477599825228971,
+        "recall": 0.8896816743998789
+      }
+    },
+    "equipment_region_mean_predicted_goods_area": {
+      "retained_model": {
+        "empty_pallet": 0.5898198198198198,
+        "scissor_lift": 0.017902930402930402
+      },
+      "matched_control": {
+        "empty_pallet": 0.5534067400734067,
+        "scissor_lift": 0.06718864468864469
+      },
+      "broad_crop": {
+        "empty_pallet": 0.5103870537203871,
+        "scissor_lift": 0.0066208791208791215
+      },
+      "targeted_crop": {
+        "empty_pallet": 0.6067233900567234,
+        "scissor_lift": 0.04841575091575091
+      }
+    },
+    "candidate_gates": {
+      "broad_crop": {
+        "numeric_gates_passed": false,
+        "reasons": [
+          "Goods IoU does not exceed matched_control",
+          "Recall regresses against matched_control",
+          "Goods IoU does not exceed retained_model",
+          "Recall regresses against retained_model"
+        ],
+        "selected": false,
+        "status": "rejected"
+      },
+      "targeted_crop": {
+        "numeric_gates_passed": false,
+        "reasons": [
+          "empty_pallet predicted-goods area regresses against matched_control",
+          "empty_pallet predicted-goods area regresses against retained_model",
+          "scissor_lift predicted-goods area regresses against retained_model",
+          "Preserve the prior empty-pallet regression rejection"
+        ],
+        "selected": false,
+        "status": "rejected"
+      }
+    },
+    "candidate_selected": false,
+    "checkpoint_reload": "strict_for_all_nine_runs",
+    "independent_confusion_histograms": "all_matched",
+    "prior_diagnostic_predictions_reproduced_exactly": 45,
+    "new_native_predictions_exported": 108,
+    "retained_predictions_recounted": 36,
+    "training_targets_changed": 0,
+    "retrained": false,
+    "held_out_test_evaluated": false,
+    "synthetic_data_utility_measured": false
+  },
+  "runtime_restoration": {
+    "status": "verified",
+    "python_version": "3.12.10",
+    "torch": "2.9.1+cu128",
+    "torchvision": "0.24.1+cu128",
+    "method": "Installed CPython virtual environment reusing unchanged pinned packages",
+    "downloads_or_package_upgrades": false,
+    "security_policy_changed": false,
+    "cuda_checks_passed": true,
+    "strict_checkpoint_reloads": 9,
+    "historical_native_predictions_reproduced_exactly": 45,
+    "reference_and_scoring_fixture_tests_passed": 7,
+    "candidate_policy_fixture_tests_passed": 4
+  },
+  "training_coverage_audit": {
+    "profile_sha256": "df298fdb8686d14b060ae8b7aa803300d2f2b8bcc7b6e6d7de6287a7da4ec7bc",
+    "training_sources": 30,
+    "training_groups": [
+      "Aisle_CCW_Run_1"
+    ],
+    "pixel_counts": {
+      "background": 16702305,
+      "goods": 2913703,
+      "ignored": 8031992
+    },
+    "goods_fraction_of_scorable_training_pixels": 0.14853700100448572,
+    "negative_only_training_sources": [
+      "Aisle_CCW_Run_1/000880",
+      "Aisle_CCW_Run_1/000482"
+    ],
+    "negative_only_source_count": 2,
+    "mean_training_fit": {
+      "goods_iou": 0.9441783713513292,
+      "precision": 0.9617522361362374,
+      "recall": 0.9809474976230133
+    },
+    "highest_training_background_error_frames": [
+      {
+        "sample_id": "Aisle_CCW_Run_1/000397",
+        "goods": 109202,
+        "mean_background_predicted_goods_fraction": 0.038647469438224884
+      },
+      {
+        "sample_id": "Aisle_CCW_Run_1/000624",
+        "goods": 290680,
+        "mean_background_predicted_goods_fraction": 0.02746277683609075
+      },
+      {
+        "sample_id": "Aisle_CCW_Run_1/000426",
+        "goods": 112794,
+        "mean_background_predicted_goods_fraction": 0.019858131892893035
+      },
+      {
+        "sample_id": "Aisle_CCW_Run_1/000283",
+        "goods": 170691,
+        "mean_background_predicted_goods_fraction": 0.019111879573294493
+      },
+      {
+        "sample_id": "Aisle_CCW_Run_1/000340",
+        "goods": 190843,
+        "mean_background_predicted_goods_fraction": 0.015699604962742385
+      },
+      {
+        "sample_id": "Aisle_CCW_Run_1/000538",
+        "goods": 26569,
+        "mean_background_predicted_goods_fraction": 0.014476924534110014
+      }
+    ],
+    "interpretation": "Training fit is not generalization evidence. Label counts are model-assisted references, not an independently audited object inventory. Brightness derivatives do not add physical scene/equipment coverage.",
+    "held_out_test_evaluated": false
+  },
+  "historical_hybrid_preparation": {
+    "reference_profile_sha256": "1e8906f2a19978209102dc579fc2f0e19a5481b2d5e6e901f9a9ec9cef0c116a",
+    "control_profile_sha256": "9260610429cd1196b9b8767efe6792b18d621cc2509df54528dfb9202fa6cf13",
+    "verification_profile_sha256": "8e59b01621937dfc65372f6892b7a3ee51e2ee910f5e4343b83657f1c1949329",
+    "configuration_sha256": "e1f08de27160a05c34a09c8497e71b35739652f6bb4d5fa5b8c4977c619434a4",
+    "source_sampling": {
+      "real": 404,
+      "synthetic": 46,
+      "total": 450
+    },
+    "sampling_scope": "Proposed schedule if all nine variants are admitted; identical per-source conditions across model seeds",
+    "source_slots": 30,
+    "development_frames": 12,
+    "model_seeds": [
+      17,
+      29,
+      43
+    ],
+    "optimizer_updates_per_seed": 120,
+    "confirmed_masks_preserved": 42,
+    "cuda_fixture": {
+      "status": "passed",
+      "precision": "float32",
+      "training_resolution": [
+        640,
+        360
+      ],
+      "native_evaluation": [
+        1280,
+        720
+      ],
+      "peak_allocated_bytes": 1235542528,
+      "scope": "One update on four known fixture inputs; no customer accuracy evidence"
+    },
+    "condition_qualification": "pending",
+    "customer_training_executed": false,
+    "synthetic_data_utility_measured": false,
+    "held_out_test_evaluated": false,
+    "requires_reference_rebinding": true
+  },
+  "qualified_rgb_comparison": {
     "evaluation_profile_sha256": "e7906e77d801a9a66a386f89da5627c813b409a4e272abe02f6c9986c1e59f05",
     "reference_profile_sha256": "d4928f47f069b0ae29ce1c7dae9282d54e8bbb3a4b8944e291ce8422a4d39468",
     "admitted_dataset_profile_sha256": "f03a00069243907b512b1fe7bc8662eca921b667041890378400ed09b22217be",
@@ -95,20 +488,15 @@
     "scope": "Bounded native RGB gain from six real training scenes; not scene synthesis, physical sensor simulation or a generalization guarantee"
   },
   "scene_generation": {
-    "status": "scenario_geometry_and_coverage_verified",
-    "captures": 7,
-    "tests": {
-      "passed": 201,
-      "subtests_passed": 80
-    },
-    "job_sha256": "2003a76e1e77b70bf0597b072d83d36211a7d90c6980a01885fe9abc946f3f99",
-    "dataset_profile_sha256": "b1730e2f123c19ba7e23e25488780c05ff396eeb38ea04e21e8aaa763cf78172",
-    "coverage_configuration_sha256": "d98e100d25b09e48f5e5413570f9923f361520f80c2108d7f71a1a547fe7231a",
-    "coverage_sha256": "6601907400fe3b2db64792e23e2b4449994d40da90104f686a96df05a2491075",
-    "reference_artifacts_verified": 128,
-    "reference_artifacts_changed": 0,
-    "independent_rays": 1792,
+    "status": "appearance_accepted_admission_and_comparison_complete",
+    "captures": 8,
+    "dataset_profile_sha256": "b0ab21316da06b5bb87bc465337a04af4760842e89b2a66faa4f379b42047bf6",
+    "job_sha256": "e5086248a0ff2a4f79927cf06e1a6d6d457e38ae81dc6edb3bf248e0797978d3",
+    "geometry_profile_sha256": "90750346564a85924dc44ec8e2bcd0b50d792ef9e717b357f84c8f943a732b83",
+    "independent_rays": 2048,
+    "independent_mesh_rays": 1280,
     "independent_instance_agreement": [
+      1.0,
       1.0,
       1.0,
       1.0,
@@ -118,53 +506,369 @@
       1.0
     ],
     "independent_depth_p95_metres": [
-      3.1907557264787556e-05,
-      3.1736946989990855e-05,
-      3.1736946989990855e-05,
-      3.1736946989990855e-05,
-      3.1907557264787556e-05,
-      4.735219510676458e-05,
-      3.1907557264787556e-05
+      3.1034240929983525e-05,
+      3.098893928221713e-05,
+      4.0107091791252714e-05,
+      3.195735504046837e-05,
+      3.406225603241886e-05,
+      4.564482115432256e-05,
+      3.7746819934625364e-05,
+      2.8637714245549617e-05
     ],
-    "image_size": [
-      1280,
-      720
+    "aperture_rays": 16,
+    "aperture_geometry_passed": true,
+    "reference_artifacts_changed": 0,
+    "reference_artifacts_verified": 128,
+    "source_mesh_asset_count": 3,
+    "derived_orientation_variants": 6,
+    "source_texture_resolution": [
+      4096,
+      4096
     ],
-    "default_pilot_geometry_unchanged": true,
-    "training_eligible": false,
-    "appearance_qualification": "not_established",
-    "utility_measured": false,
-    "simulated_lidar_supported": false,
+    "uniform_aspect_ratio": true,
+    "full_suite": {
+      "passed": 225,
+      "subtests_passed": 105
+    },
+    "control_profile_sha256": "b838d77a420e3439879baaa4f75dd4827ce0a0a8de1a2a285e13afa1eefe4352",
+    "control_reuse_verified": true,
+    "gallery_http_payloads_verified": 27,
+    "scene_admitted_samples": 8,
+    "scene_training_started": true,
+    "matched_customer_comparison_complete": true,
+    "scene_utility_measured": true,
+    "held_out_test_evaluated": false,
+    "candidate_promoted": false,
     "limitations": [
-      "Seven related views of one authored static warehouse, not seven independent customer scenes",
-      "Carton shape ratios vary within an axis-aligned cuboid family; general mesh assets are not implemented",
-      "Coverage counts describe requested synthetic cases, not statistical customer coverage",
-      "Occlusion is measured against an unbeveled analytic carton silhouette with a 1 cm surface tolerance",
-      "Natural appearance, calibrated sensor fidelity and downstream usefulness remain unqualified"
+      "One authored aisle layout is reused; no photographic whole-scene fidelity or customer inventory match is established",
+      "Sealed bag is an authored packaging coverage case, not a verified TorWIC inventory item",
+      "Three source meshes and six orientation variants do not establish broad asset diversity",
+      "No physical stability, sensor noise, normal-map fidelity or simulated LiDAR is established"
     ],
-    "backend": "blender_cycles",
-    "evidence": "reports/warehouse_scenario_verification",
-    "verification_profile_sha256": "c7061bdd80b2cc00351555e875bd8b4554423caf0adc7d10d126af42c9b85cdf",
-    "blenderproc_available": false,
-    "physical_sensor_realism_certified": false,
-    "scene_generated_training_completed": false,
-    "final_held_out_evaluation_completed": false
+    "evidence": "reports/warehouse_appearance_delivery",
+    "verification_profile_sha256": "2f932dc8e6b0a3af88fc2963379b49205347875c7aa903d60124e2a39cecd935",
+    "previous_mesh_verification_profile_sha256": "e5e87e9117df9a0d4349f0a6ad1215ed4853b67e73ff4b8be99d0855244a2708",
+    "original_export_training_eligible": false,
+    "admitted_dataset_training_eligible": true,
+    "scene_training_complete": true,
+    "admission_profile_sha256": "d5cacc026827021fd9128e6042ba4134a8a0efb9e07fa8870da41a1954cac6cc",
+    "admission_evidence": "reports/warehouse_scene_admitted"
   },
-  "software_verification": {
-    "tests_passed": 201,
-    "subtests_passed": 80,
-    "scope": "Isolated publication snapshot"
+  "active_scene_experiment": {
+    "status": "comparison_complete_candidate_rejected",
+    "real_only_control": {
+      "goods_iou": 0.4863110374096748,
+      "precision": 0.5147749621508669,
+      "recall": 0.8976419273024266
+    },
+    "real_plus_scene": {
+      "goods_iou": 0.48504047357675356,
+      "precision": 0.5421804289062752,
+      "recall": 0.8270879865143228
+    },
+    "control_profile_sha256": "b838d77a420e3439879baaa4f75dd4827ce0a0a8de1a2a285e13afa1eefe4352",
+    "model_seeds": [
+      17,
+      29,
+      43
+    ],
+    "optimizer_updates_per_seed": 120,
+    "presentations_per_seed": 450,
+    "scene_substitution_probability": 0.2,
+    "checkpoint_policy": "final_epoch",
+    "matched_comparison_complete": true,
+    "candidate_promoted": false,
+    "historical_rgb_comparison_reused": false,
+    "held_out_test_evaluated": false,
+    "selection_metric": null,
+    "control_reuse_verified": true,
+    "mean_deltas": {
+      "goods_iou": -0.0012705638329212343,
+      "precision": 0.027405466755408225,
+      "recall": -0.07055394078810384
+    },
+    "quality_rule_passed": false,
+    "per_seed_presentations": {
+      "real": 356,
+      "scene": 94,
+      "total": 450
+    },
+    "comparison_profile_sha256": "fa93fe39eaec057f3c1d71656f873568f87aa4d46a8b8a47995777e3e5c6ac54",
+    "comparison_evidence": "reports/goods_scene_comparison",
+    "audit_profile_sha256": "dd0b9368a61f79d0a58d42980562fddbcb2a653e23f4d2929d31cb96a93fef94",
+    "native_development_masks_independently_recounted": 72,
+    "frame_mean_goods_iou": {
+      "real_only": 0.4199583087354483,
+      "real_plus_scene": 0.3869487254066492
+    },
+    "distribution_profile_sha256": "60dc050d2943dd70b19bfabe41bc04c6972088bdaa50e3df19cbc45eb7c2dedc"
   },
-  "qualification": {
-    "scene_appearance": "pending",
-    "scene_generated_training_completed": false,
-    "final_held_out_evaluation_completed": false,
-    "model_promoted": false
+  "supported_scene_reevaluation": {
+    "status": "matched_comparison_complete_candidate_rejected",
+    "training_payloads_inspected": 72,
+    "qualified_training_references_profiled": 30,
+    "training_object_evidence": "Stacked tyres in Aisle_CCW_Run_1/000223 and /000239; stacked cartons in qualified training references",
+    "source_dataset_profile_sha256": "a1c7b6a3e5af79270495d0e2a553dd892360243e8f51c02b8093ce5ba40e8874",
+    "job_sha256": "a1b7192f0683eef7484db2e4719f644cb644d584b8eac3e3bcbaa37223ce1c98",
+    "protocol_profile_sha256": "516a44e51adbddfc26ffcc8a6075066e1847638065deff47fd2b5be148aa945c",
+    "primary_real_presentations": 450,
+    "auxiliary_presentations": 60,
+    "total_presentations": 510,
+    "optimizer_updates": 120,
+    "auxiliary_loss_weight": 0.2,
+    "foreground_class_mass": 0.14835623268065162,
+    "real_replay_control": {
+      "goods_iou": 0.49664005923991783,
+      "precision": 0.530236243194185,
+      "recall": 0.8880021113628662
+    },
+    "control_audit_profile_sha256": "1e7f8582f6ce75d1f3ae9ff9d062872f2387e37d08411ed4a6c831545246dddd",
+    "new_scene_accepted": true,
+    "new_scene_admitted": true,
+    "new_scene_arm_complete": true,
+    "new_synthetic_utility_measured": true,
+    "full_suite": {
+      "passed": 233,
+      "subtests_passed": 112,
+      "scope": "Existing final regression verification; training engine unchanged for this execution"
+    },
+    "candidate_promoted": false,
+    "held_out_test_evaluated": false,
+    "contact_revision": {
+      "dataset_profile_sha256": "a1c7b6a3e5af79270495d0e2a553dd892360243e8f51c02b8093ce5ba40e8874",
+      "job_sha256": "a1b7192f0683eef7484db2e4719f644cb644d584b8eac3e3bcbaa37223ce1c98",
+      "cartons_translated": 9,
+      "reference_profile_sha256": "d4928f47f069b0ae29ce1c7dae9282d54e8bbb3a4b8944e291ce8422a4d39468",
+      "reference_artifacts_verified": 128,
+      "independent_geometry_verified": true,
+      "appearance_accepted": true,
+      "training_eligible": true,
+      "full_suite": {
+        "passed": 233,
+        "subtests_passed": 112
+      },
+      "evidence": "reports/goods_supported_results_audit/profile.json",
+      "matched_comparison_complete": true,
+      "utility_rule_passed": false,
+      "geometry_evidence": "reports/scene_contact_verification/geometry/profile.json",
+      "acceptance_evidence": "reports/goods_supported_acceptance/profile.json"
+    },
+    "quality_rule_passed": false,
+    "scene_metrics": {
+      "goods_iou": 0.4823026664819128,
+      "precision": 0.5151838517412795,
+      "recall": 0.8854581803402
+    },
+    "mean_deltas": {
+      "goods_iou": -0.014337392758005052,
+      "precision": -0.0150523914529056,
+      "recall": -0.002543931022666257
+    },
+    "comparison_profile_sha256": "cecfbd79fb449c643b4791910c8d74212f0592199817dc004d4950d299b05c8f",
+    "audit_profile_sha256": "24de28dcb2469fd35e905b2d9465c6b6a695419a2dd3cbefe724e4bb7004012a",
+    "current_protocol_profile_sha256": "516a44e51adbddfc26ffcc8a6075066e1847638065deff47fd2b5be148aa945c",
+    "admitted_profile_sha256": "f46c321f712ff9627d53922aed1537ab2f9ff1a98152927b9b5398153f5b2894",
+    "scene_arm_profile_sha256": "728a2fbba1e7b3446fbdb47e5701e91adda822a4ff6dca5d812e3872df7969ab",
+    "scene_expansion_paused": true,
+    "initial_export_binding": {
+      "source_dataset_profile_sha256": "61d7fe044a97e644c7d6cb0700b741af7ed551c1bb93648b2ea9d6400152d2d9",
+      "job_sha256": "5804e5657fff4450c36d49ff572dd1c12d6f51fabe3dc14292fbfd8f8b96085a",
+      "protocol_profile_sha256": "87ec3e5a9fae97955a3b3b5d34a7aa69104ec5f2bc74a2c4ee50e688872885f3",
+      "coverage_audit_profile_sha256": "02887bcce7b20f4d0b76df4773d1170f78848cd6a7465e32b4746e2738769799"
+    },
+    "parent_protocol_profile_sha256": "87ec3e5a9fae97955a3b3b5d34a7aa69104ec5f2bc74a2c4ee50e688872885f3",
+    "geometry_evidence_profile_sha256": "2c9c8d0bf1438536164d822186d1bca6d469c3705ebc09d89b8050cb522e1b80",
+    "foreground_image_fraction_mean": 0.12237101236979167,
+    "current_coverage_gates": {
+      "has_low_foreground_view": true,
+      "has_high_foreground_view": true,
+      "median_inside_training_interquartile_to_p90": true
+    }
   },
-  "limitations": [
-    "Dependent video frames and repeated development use limit generalization claims",
-    "Reference corrections retain model-assistance and coverage limitations",
-    "One authored cuboid warehouse; structural checks do not establish natural appearance",
-    "Simulated LiDAR, calibrated physical sensor fidelity and remote execution remain unsupported"
-  ]
+  "control_metrics_context": "Retained reference model; the matched replay control is recorded under supported_scene_reevaluation",
+  "failure_analysis": {
+    "status": "completed",
+    "audit_profile_sha256": "0c392e626396e3701057e49af8c8a5ac0709594db5975b2a3eecef435c64d81c",
+    "findings_profile_sha256": "4fbefe712e6519a806a0142ba1e54dfb2b3bc7efa3886a4bc9a27623d7d0868e",
+    "training_references": 30,
+    "scenes": 8,
+    "native_predictions_partitioned": 72,
+    "replay_auxiliary_dark_goods_fraction": 0.1105708827330449,
+    "scene_auxiliary_dark_goods_fraction": 0.06346879201721924,
+    "dark_goods_false_negative_rate": {
+      "real_replay": 0.2644791831984341,
+      "real_plus_scene": 0.40407078241548966
+    },
+    "next_contrast": "Donor-quota ablation completed; candidate rejected. Next priority is training-source appearance/geometry qualification.",
+    "causal_explanation_established": false,
+    "full_suite": {
+      "passed": 240,
+      "subtests_passed": 130
+    },
+    "training_performed": false,
+    "reference_labels_changed": false,
+    "held_out_test_evaluated": false,
+    "audit_reproduced_byte_for_byte": true,
+    "current_verification_evidence": "reports/goods_failure_analysis_current/profile.json"
+  },
+  "latest_experiment": "equipment_pair_comparison",
+  "sampling_ablation": {
+    "status": "completed_candidate_rejected",
+    "configuration": "configs/benchmarks/warehouse_goods_balanced_sampling.json",
+    "means": {
+      "real_replay": {
+        "goods_iou": 0.49664005923991783,
+        "precision": 0.530236243194185,
+        "recall": 0.8880021113628662,
+        "frame_mean_goods_iou": 0.4135017630523888,
+        "dark_goods_false_negative_rate": 0.2644791831984341
+      },
+      "original_scene": {
+        "goods_iou": 0.4823026664819128,
+        "precision": 0.5151838517412795,
+        "recall": 0.8854581803402,
+        "frame_mean_goods_iou": 0.39823255533210894,
+        "dark_goods_false_negative_rate": 0.40407078241548966
+      },
+      "balanced_scene": {
+        "goods_iou": 0.49375684396040787,
+        "precision": 0.5301618724071372,
+        "recall": 0.8777422554549302,
+        "frame_mean_goods_iou": 0.40016569078685865,
+        "dark_goods_false_negative_rate": 0.43007194625191764
+      }
+    },
+    "mean_deltas_vs_replay": {
+      "goods_iou": -0.0028832152795099653,
+      "precision": -7.43707870478616e-05,
+      "recall": -0.010259855907935989
+    },
+    "donor_sampling": {
+      "control": {
+        "strategy": "independent_hash"
+      },
+      "scene": {
+        "strategy": "balanced_scene_cycle"
+      }
+    },
+    "protocol_profile_sha256": "2fb2f2e8f06fe39db0b22e90c283e9c6648253fb9dbd3bcc763a4ee4bd4cf8cb",
+    "scene_arm_profile_sha256": "f58a3687c74856af3d325b321ae38d8e42952781535a34f7a4a7e9fd098ed5e4",
+    "comparison_profile_sha256": "b94f62cf68dae0211e0fcc38d56a06c2815d41968a01a63eae646aef29d725df",
+    "audit_profile_sha256": "50016080606c19dcc4e3b0d4f8a481e25faf6045da74176f57e9523c3df279e8",
+    "primary_real_presentations": 450,
+    "auxiliary_presentations": 60,
+    "optimizer_updates": 120,
+    "visits_per_scene": [
+      7,
+      8
+    ],
+    "source_payloads_changed": false,
+    "reference_labels_changed": false,
+    "full_suite": {
+      "passed": 244,
+      "subtests_passed": 143
+    },
+    "quality_rule_passed": false,
+    "candidate_promoted": false,
+    "held_out_test_evaluated": false
+  },
+  "appearance_investigation": {
+    "status": "material_pilot_geometry_verified_appearance_unqualified",
+    "captures": 4,
+    "source": "training_only",
+    "dataset_profile_sha256": "a572a456f4a46817da7e1c7e3292ead3102c1c6b3e7a283c4c75c00952cf0374",
+    "job_sha256": "fe4ed99fe135953c5d090fd037f9cb127392410b09068ae58421554afddbd91e",
+    "quality_profile_sha256": "ac749c65af38932d25ae7d3e4d4e14540ca03d475dcdf7646f24326229fae415",
+    "independent_rays": 1024,
+    "native_depth_and_labels_exactly_equal": true,
+    "reference_artifacts_changed": 0,
+    "training_eligible": false,
+    "new_model_trained": false,
+    "scene_utility_measured": false,
+    "held_out_test_evaluated": false,
+    "report": "docs/tyre_appearance_qualification.txt",
+    "next_factor": "Training-supported load scale, shelf placement and occlusion"
+  },
+  "equipment_pair_execution_readiness": {
+    "status": "completed_candidate_rejected",
+    "preflight_profile_sha256": "128d7bffa8b61a2253ad4c3b9938f8665819e8ffe412bb3f59dc8fd9ded8370f",
+    "protocol_profile_sha256": "8d36d019ee3fcc62a8e74fcd552caef0575b8a7863a503ab32d9dbc0ad93d718",
+    "dataset_profile_sha256": "fb20220815bd4b617a8266250b38f21c751736f06cc30070048310ebe3d3b13f",
+    "reference_profile_sha256": "d4928f47f069b0ae29ce1c7dae9282d54e8bbb3a4b8944e291ce8422a4d39468",
+    "reference_artifacts_verified": 128,
+    "reference_artifacts_changed": 0,
+    "tests": {
+      "tests_passed": 256,
+      "subtests_passed": 168,
+      "seconds": 73.8,
+      "log_sha256": "3f7b93895e8370b12278c0bb74e74b3f453d82e506606284445cca30b413030b"
+    },
+    "training_eligible": true,
+    "customer_experiment_executed": true,
+    "held_out_test_evaluated": false,
+    "report": "docs/equipment_pair_protocol.txt",
+    "exact_batch_acceptance_recorded": true,
+    "comparison_profile_sha256": "5be755f8970f2309f7aea55d7d3cff5ec8a943eccbd3734d829e18d64abb977b"
+  },
+  "equipment_pair_comparison": {
+    "status": "completed",
+    "source_profiles": {
+      "control": "210f2383b4572c87e061d7461b50c39a180cfd43b7603a5e5f8d9bc9e680b0fb",
+      "scene": "71c1e55cd344b1ba59c0e09de002b85d75072bbeb7f981d7e221f7a9932b2fd0",
+      "comparison": "5be755f8970f2309f7aea55d7d3cff5ec8a943eccbd3734d829e18d64abb977b",
+      "error_audit": "ad6394fb7889bc4f801db534ba56936e20e666350324f427d5767b47f596f718",
+      "admission": "44a875a2db3032c0abb3ddfb41b40e99d863d831a6a86f9040dff2f005d05408",
+      "execution": "68f595e2bb8e0076524e4725df10bb7b5af2c4461cea8f0eb765b1d6945ef8e5"
+    },
+    "results_audit_profile_sha256": "5e62cc74c1015e28475ae66f4482b03fede02f3a8b4840496d283a1615d9afed",
+    "reference_profile_sha256": "d4928f47f069b0ae29ce1c7dae9282d54e8bbb3a4b8944e291ce8422a4d39468",
+    "real_only": {
+      "goods_iou": 0.5163440698792909,
+      "precision": 0.5585906897846337,
+      "recall": 0.8741829801717825,
+      "background_false_positive_rate": 0.07621685244629432,
+      "goods_miss_rate": 0.12581701982821744,
+      "incorrect_goods_prediction_fraction": 0.4414093102153664,
+      "pixel_error": 0.0811265195296486,
+      "pixel_accuracy": 0.9188734804703514,
+      "frame_mean_goods_iou": 0.41431170023766933,
+      "dark_goods_miss_rate": 0.3734327884462783
+    },
+    "real_plus_scene": {
+      "goods_iou": 0.5141642002446364,
+      "precision": 0.54403068935527,
+      "recall": 0.9039990657142484,
+      "background_false_positive_rate": 0.08355400717745502,
+      "goods_miss_rate": 0.09600093428575161,
+      "incorrect_goods_prediction_fraction": 0.45596931064473,
+      "pixel_error": 0.08478606488084868,
+      "pixel_accuracy": 0.9152139351191514,
+      "frame_mean_goods_iou": 0.41642815020753493,
+      "dark_goods_miss_rate": 0.1853674019996826
+    },
+    "mean_deltas": {
+      "goods_iou": -0.002179869634654552,
+      "precision": -0.014560000429363673,
+      "recall": 0.029816085542465842,
+      "background_false_positive_rate": 0.0073371547311607,
+      "goods_miss_rate": -0.02981608554246583,
+      "incorrect_goods_prediction_fraction": 0.014560000429363618,
+      "pixel_error": 0.003659545351200083,
+      "pixel_accuracy": -0.0036595453512000553,
+      "frame_mean_goods_iou": 0.002116449969865597,
+      "dark_goods_miss_rate": -0.1880653864465957
+    },
+    "frame_outcomes": {
+      "gain": 4,
+      "regression": 7,
+      "unchanged": 1
+    },
+    "native_predictions_recounted": 72,
+    "reference_artifacts_verified": 128,
+    "reference_artifacts_changed": 0,
+    "quality_rule_passed": false,
+    "candidate_promoted": false,
+    "held_out_test_evaluated": false,
+    "report": "docs/equipment_pair_results.txt"
+  }
 }

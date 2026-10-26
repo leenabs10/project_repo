@@ -1,0 +1,96 @@
+Goods decision-threshold diagnostic
+==================================
+
+Outcome
+Increasing the goods decision threshold improves pixel-weighted precision and
+goods IoU on the reused development cohort, while reducing recall and frame-mean
+IoU. This is an inference operating-point change, not a training improvement.
+The retained model and historical equipment-experiment rejection are unchanged.
+
+Native development metrics (mean of seeds 17, 29 and 43)
+Arm              Threshold   Goods IoU   Precision   Recall   Frame-mean IoU
+Real-only             0.50      51.63%      55.86%   87.42%           41.43%
+Real-only             0.60      52.11%      57.13%   85.79%           41.07%
+Real-only             0.70      52.43%      58.46%   83.82%           40.74%
+Real-only             0.80      52.82%      60.38%   81.18%           40.35%
+Real-only             0.90      53.19%      63.95%   76.53%           39.25%
+Real-only             0.95      51.51%      66.66%   70.20%           36.71%
+Real + synthetic      0.50      51.42%      54.40%   90.40%           41.64%
+Real + synthetic      0.60      52.21%      55.88%   88.90%           41.49%
+Real + synthetic      0.70      52.99%      57.56%   87.05%           41.20%
+Real + synthetic      0.80      53.74%      59.76%   84.30%           40.53%
+Real + synthetic      0.90      54.71%      63.95%   79.17%           39.01%
+Real + synthetic      0.95      54.98%      68.79%   73.36%           36.98%
+
+Protocol
+The six thresholds were declared before inference. Each arm uses its existing
+three final checkpoints; training, references, normalization and image geometry
+are unchanged. Native float32 logits are bilinearly resized with
+align_corners=False before thresholding. A pixel is goods when the two-class
+logit margin exceeds log(t/(1-t)); at 0.50 this preserves argmax ties as
+background. Threshold probabilities are not calibrated confidence estimates.
+Ignored targets remain excluded. One threshold is shared across all seeds;
+no per-frame or per-seed threshold selection is permitted.
+
+The declared exploratory selection maximizes mean seed IoU subject to precision
+not falling below the same arm's 0.50 baseline, breaking ties by lower threshold.
+It selects real-only 0.90 and synthetic 0.95. This rule deliberately does not
+guarantee recall preservation and is separate from the historical utility rule.
+No candidate is automatically promoted or accepted by this selection.
+
+Tradeoffs
+Synthetic 0.70 gains 1.57 pp IoU and 3.16 pp precision against its own 0.50
+baseline, but loses 3.35 pp recall. Every seed gains aggregate IoU and precision.
+Five frames gain mean IoU, five regress, and two remain unchanged. Frame 000753
+loses 3.57 pp and 000376 loses 3.61 pp; the dark-goods benefit is partly lost.
+Its frame-mean IoU falls from 41.64% to 41.20%.
+
+Against the original real-only 0.50 control, synthetic 0.70 gains 1.36 pp IoU
+and 1.70 pp precision, but loses 0.37 pp recall. When both arms use 0.70,
+synthetic gains 0.56 pp IoU and loses 0.90 pp precision. Neither comparison
+passes the historical no-precision-or-recall-regression rule.
+
+Synthetic 0.60 exceeds the original real-only 0.50 aggregate metrics, but its
+precision difference is only 0.0165 pp and its precision is below the real-only
+0.60 arm. This development-selected difference does not reverse the original
+rejection or establish synthetic utility. Independently selecting thresholds
+for each arm is also not an isolated comparison of synthetic training benefit.
+
+Synthetic 0.95 has the highest tested mean IoU, but recall drops to 73.36% and
+seven frames regress in mean IoU. It is the grid boundary, not an established
+optimum or a general segmentation solution. No 90% precision/IoU claim is met.
+
+Verification and limits
+All six checkpoints strictly reload. All 72 original native prediction masks
+are reproduced pixel for pixel and all 432 threshold-mask exports are recounted
+after lossless PNG export. All 128 reference artifacts are reverified. Local
+fixtures check background tie behavior, ignored pixels, known confusion counts
+and rejection of nonfinite margins and invalid thresholds.
+
+The existing pinned Python 3.12.15 / PyTorch 2.9.1+cu128 shared runtime was used
+on the RTX 5070 Laptop GPU, one float32 frame per inference batch, four CPU
+threads. Verification, inference and exports took 26.42 seconds. PyTorch peak
+allocated GPU memory was 89,206,272 bytes; this is not total device memory use
+or an accepted-sample throughput measurement. No packages were installed.
+
+The same 12 dependent development frames support threshold selection. Repeated
+development use and model-assisted reference provenance limit conclusions.
+These are exploratory, development-selected results, not independent evidence
+of generalization. No training, reference changes, locked-test evaluation or
+model promotion occurred. Broader reviewed real coverage remains the priority
+before another training experiment; threshold, data and loss changes must be
+evaluated as separate interventions.
+
+Source bindings
+Required reference profile SHA256:
+d4928f47f069b0ae29ce1c7dae9282d54e8bbb3a4b8944e291ce8422a4d39468
+Real-only source profile SHA256:
+210f2383b4572c87e061d7461b50c39a180cfd43b7603a5e5f8d9bc9e680b0fb
+Synthetic source profile SHA256:
+71c1e55cd344b1ba59c0e09de002b85d75072bbeb7f981d7e221f7a9932b2fd0
+Threshold protocol SHA256:
+9194dbc28702e0ca283a3f98e4c6f06555c4da9b7421f79b33d29ea93d690c83
+Threshold diagnostic profile SHA256:
+e2fdbd025509b10ad1249adb14ef735210833b770a531477e77880a10c80626d
+Saved-mask recount and analysis profile SHA256:
+ecde846cd3404a1e9f27fda2305a51be0bd6d84e0fc0f60a5165e7ac18443496

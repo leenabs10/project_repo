@@ -1,0 +1,198 @@
+Goods scene benchmark results
+
+Latest empty/loaded equipment contrast
+New matched real-only versus real + synthetic: IoU 51.63% -> 51.42%, precision
+55.86% -> 54.40%, recall 87.42% -> 90.40%. The candidate fails the utility rule
+and is not promoted. All three seeds and all 72 native predictions are verified.
+See docs/equipment_pair_results.txt. Earlier comparisons remain below with their
+original bindings; their controls are not substitutes for this new protocol.
+
+Latest donor-sampling contrast
+The same accepted eight-scene batch was evaluated with balanced donor cycles.
+Mean IoU: real replay 49.66%, original scene schedule 48.23%, balanced schedule
+49.38%. Balanced precision is 53.02% and recall 87.77%. The candidate fails the
+declared rule, and the retained model is unchanged. All three seeds and every
+development frame are retained. See docs/sampling_benchmark_results.txt for the
+matched protocol, native recounts and remaining data-quality limits.
+The sections below retain the earlier comparisons under their original bindings.
+
+Current supported-scene comparison
+==================================
+
+Outcome
+The revised eight-scene batch received explicit appearance/label acceptance and
+passed admission and native paired-loader checks. The matched three-seed
+experiment completed and failed its predeclared utility rule. The candidate is
+rejected for promotion; the retained model is unchanged. Scene expansion is
+paused pending targeted failure analysis. No real reference was edited and the
+locked test set remains unevaluated.
+
+Matched development results (mean of seeds 17, 29, 43)
+Metric                  Real replay     Real + scene       Change
+Goods IoU                49.66%        48.23%          -1.43 pp
+Precision                53.02%        51.52%          -1.51 pp
+Recall                   88.80%        88.55%          -0.25 pp
+Frame-mean goods IoU      41.35%        39.82%          -1.53 pp
+
+Native scorable pixels are aggregated within each seed before averaging seeds.
+Frame-mean IoU instead weights the twelve frames equally within each seed.
+Three frames improve, eight regress and one is unchanged by mean IoU. All 72
+native development masks were independently recounted. Undefined recall on the
+no-foreground frame remains null. All 128 frozen reference artifacts match.
+
+Paired changes by seed
+17: IoU -1.51 pp; precision +0.50 pp; recall -6.15 pp
+29: IoU -3.70 pp; precision -4.06 pp; recall +0.02 pp
+43: IoU +0.90 pp; precision -0.96 pp; recall +5.36 pp
+These results fail the declared requirement of higher mean IoU without lower
+mean precision or recall. Three seeds, related video frames and repeated use of
+the development cohort do not establish statistical significance or generalization.
+
+Protocol and executed exposure
+Both arms preserve all 30 real training frames exactly 15 times: 450 primary real
+presentations. Each adds 60 auxiliary inputs within 120 optimizer updates. The
+control uses 60 real replay inputs, for 510 real presentations; the scene arm uses
+60 accepted rendered inputs, for 450 real plus 60 rendered presentations. Every
+rendered RGB input is paired with its own categorical target. Initialization,
+optimizer, 640x360 training, 1280x720 evaluation, auxiliary weight 0.2 and training-
+derived foreground mass 0.14835623268065162 are matched. Checkpoints are fixed at
+epoch 15, with no intermediate development scoring. Strict reload checks pass.
+
+The prior real-replay control was reused only after verifying its exact sources,
+configuration, training implementation and reference cohort. The contact revision
+changes nine carton Z positions; tyre geometry and all other scene settings are
+preserved. Its new source/admission binding was frozen before scene training.
+The earlier 450-presentation replacement experiment is a separate comparison.
+
+Runtime
+The new scene seeds took 36.70 seconds on average inside the recorded training
+scope. Maximum recorded CUDA tensor allocation was 1.24 GiB. Hardware: NVIDIA
+GeForce RTX 5070 Laptop GPU; float32; batch size 4. Timing excludes scene rendering
+and subsequent prediction-gallery export. It is not an end-to-end throughput or
+scalability benchmark.
+
+Observed failures and limits
+Largest frame-mean IoU regressions:
+Aisle_CW_Run_1/000753: IoU -10.83 pp
+Aisle_CW_Run_1/000094: IoU -4.18 pp
+Aisle_CW_Run_1/000188: IoU -3.73 pp
+Inspection across all three seeds shows persistent missed regions on the large
+dark tyre load in 000753, despite adding a tyre asset. The strongest gain is
+000376 (+7.24 pp). Predictions also assign goods to background structures and
+equipment. Only nonignored reference pixels contribute to the reported scores;
+display overlays cover the whole image. These observations do not establish a
+single causal explanation or justify changing labels to raise a score.
+
+The fixed auxiliary schedule visits every scene but is not condition-balanced:
+the two pure tyre views receive 7 of 60 auxiliary inputs, mixed cargo receives 7,
+and empty-equipment/partial-occlusion views receive 20. Class-mass weighting does
+not guarantee balanced object-family exposure or realistic appearance. One aisle,
+repeated source damage, uniform lighting, opaque materials and authored camera
+placement retain a substantial domain gap. Physical sensor fidelity is unverified.
+
+Decision and next investigation
+Retain existing references, the control and all candidate artifacts. Pause scene
+expansion and additional customer-model runs. Before another declared experiment,
+use training-only evidence to audit object-family exposure, empty-equipment
+negatives, foreground scale, occlusion and material/lighting coverage. Broader
+claims require additional scene-independent qualified real evaluation coverage.
+Reannotation is warranted only for demonstrated label errors. Any changed cohort,
+sampler, generator or loss requires a new binding and matched comparison; do not
+select favourable subsets or alter this completed result after seeing its scores.
+
+Evidence
+Acceptance: reports/goods_supported_acceptance
+Admitted batch: reports/warehouse_supported_admitted
+Paired loader: reports/goods_supported_loader_verification
+Frozen source revision: reports/goods_supported_contact_protocol
+Real-replay control: reports/goods_supported_replay_control
+Scene arm: reports/goods_supported_scene_arm
+Comparison: reports/goods_supported_comparison
+Independent audit: reports/goods_supported_results_audit
+
+Earlier slot-replacement experiment
+===================================
+
+Outcome
+The eight appearance/label-qualified scenes passed admission and native paired
+loader checks. The matched three-seed experiment completed. Its candidate is
+rejected because mean IoU decreased and recall regressed on all three seeds.
+The retained model and all real references remain unchanged. No locked-test
+evaluation or automatic model promotion occurred.
+
+Matched development results (mean of seeds 17, 29, 43)
+Metric                  Real-only       Real + scene       Change
+Goods IoU               48.63%          48.50%             -0.13 pp
+Precision               51.48%          54.22%             +2.74 pp
+Recall                  89.76%          82.71%             -7.06 pp
+Frame-mean goods IoU    42.00%          38.69%             -3.30 pp
+
+IoU, precision and recall first aggregate native scorable pixels within each seed,
+then average the three seed scores. Frame-mean IoU weights development frames
+equally within each seed before averaging seeds. Five frames improve, six regress
+and one is unchanged by mean IoU. All 72 native development prediction masks were
+independently recounted. Undefined recall on the no-foreground frame remains null;
+it is not replaced by zero or a perfect score.
+
+Paired IoU changes by seed
+17: -5.16 pp | 29: -0.77 pp | 43: +5.54 pp
+Paired recall changes by seed
+17: -4.89 pp | 29: -7.64 pp | 43: -8.64 pp
+The experiment fails the predeclared mean-IoU/precision/recall nonregression rule.
+Three seeds and dependent frames do not establish statistical significance or
+unbiased generalization. Historical RGB-condition scores use a different protocol.
+
+Protocol and execution
+Both arms use the same generic initialization, model, optimizer, 640x360 training,
+native 1280x720 evaluation, 30 real training references and 12 real development
+references. Per seed: 15 epochs, batch size 4, 120 optimizer updates and 450
+presentations. The hybrid schedule replaces 94 slots with scene inputs, leaving
+356 real presentations. All eight accepted scenes are exercised. RGB and its own
+rendered visible target are replaced together. Evaluation inputs/targets remain
+real. Checkpoints are fixed at the final epoch; earlier development scoring is
+disabled. Saved checkpoints pass strict reload and independent native recounts.
+The completed real-only control is reused without modifying its saved artifacts.
+
+Distribution observations
+At actual training resolution and executed presentation counts, goods occupy
+14.84% of supervised pixels in the control versus 12.24% in the hybrid arm.
+Ignored-pixel coverage changes from 29.08% to 23.18%. The hybrid uses fewer real
+presentations and more fully labelled rendered background. Presentation-weighted
+mean luma changes from 128.72 to 124.49 (8-bit display values).
+These measured differences and the visual domain gap are plausible contributors;
+the experiment does not isolate their causal effects.
+
+The largest frame-mean IoU regression is Aisle_CW_Run_1/000753 (-22.53 pp).
+Visual inspection shows reduced detection of the large dark tire load. The current
+synthetic batch contains cartons and sealed bags, with no tire-like load asset.
+This is a coverage limitation and prediction error, not evidence that the saved
+reference requires reannotation. Nearby frames and repeated development use limit
+the independence of this diagnosis.
+
+Next coverage requirements
+Prioritize training-supported goods diversity, dark rounded/irregular loads,
+foreground size and occlusion coverage, warehouse material/light variation and
+equipment negatives. Match target coverage and record real exposure when designing
+the next bounded protocol. Freeze its configuration before running it; do not alter
+this completed experiment or select post-hoc subsets to report a gain. Additional
+repeated development trials increase selection bias and must be disclosed.
+Appearance qualification, physical sensor fidelity and downstream task utility
+remain separate conclusions. Current acceptance is limited to the bounded batch.
+
+Evidence
+Acceptance and provenance: reports/warehouse_scene_acceptance
+Admitted dataset: reports/warehouse_scene_admitted
+Native paired loader: reports/warehouse_scene_loader_verification
+Control: reports/goods_scene_control
+Hybrid seeds: reports/goods_scene_hybrid
+Matched comparison: reports/goods_scene_comparison
+Independent native/frame audit: reports/goods_scene_experiment_audit
+Executed data distribution: reports/goods_scene_distribution
+All prior source exports, masks, reports and retained checkpoints remain intact.
+
+Completed failure analysis
+The source-bound audit measures executed foreground/intensity exposure, visible
+rendered families and native error strata. Real references and model checkpoints
+are unchanged. The analysis reproduces exactly and all 240 tests/130 subtests pass.
+See docs/goods_failure_analysis.txt for measured findings and the proposed
+source-preserving donor-schedule ablation. No further training has run.

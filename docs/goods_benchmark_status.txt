@@ -1,65 +1,239 @@
-Warehouse goods benchmark status
+Goods benchmark status
+======================
 
-Reference dataset
-The qualified reference cohort contains 30 training and 12 development samples.
-Native geometry, source checksums, categorical IDs and PNG/RLE round-trips pass.
-All 128 frozen reference artifacts retain their hashes. Training targets are
-unchanged. Empty pallets and handling equipment are background, identifiable loads
-are goods and unresolved regions remain ignored. Model-assisted corrections retain
-anchoring and coverage limitations; independent annotation accuracy is not established.
+Latest equipment-pair comparison
+The six accepted empty/loaded captures passed admission and the hybrid loader.
+Both new three-seed arms completed. Matched real-only versus real + synthetic:
+IoU 51.63% -> 51.42%; precision 55.86% -> 54.40%; recall 87.42% -> 90.40%.
+Dark-goods misses fall from 37.34% to 18.54%, but aggregate background false
+positives increase. Four frames gain in mean IoU, seven regress and one is
+unchanged. The candidate fails the utility rule and is not promoted. All 72
+native masks reproduce their saved counts; all 128 reference artifacts match.
+The source/config snapshot matches the verified 256-test/168-subtest protocol.
+See docs/equipment_pair_results.txt for every seed, limits and next priorities.
 
-Retained model
-Mean goods IoU: 50.84% | Precision: 54.48% | Recall: 88.74%.
-These are means across seeds 17/29/43 on the current 12-frame development cohort.
-The retained model is unchanged. Scores on older reference versions are not directly
-comparable. Annotation changes require a demonstrated target error, not a lower score.
-The retained model configuration is preserved as a historical training definition;
-its original reference-packet binding remains frozen.
+Appearance investigation
+Four material-only tyre captures pass paired native depth/label preservation and
+1,024 independent geometry rays. Darker diffuse material makes a modest difference;
+representative scale, placement, occlusion and surroundings remain unresolved.
+The pilot is outside training; no new utility measurement or model promotion is
+claimed. See docs/tyre_appearance_qualification.txt. Existing metrics remain valid.
 
-Completed RGB-condition experiment
-Configuration                 | Goods IoU | Precision | Recall
-------------------------------|-----------|-----------|-------
-Matched final-epoch real-only  | 49.96%    | 53.99%    | 87.09%
-Real plus RGB conditions      | 50.70%    | 55.06%    | 86.63%
+Latest sampling result
+The completed sampling-only contrast gives IoU 49.66% for real replay, 48.23%
+for the original scene schedule and 49.38% for balanced scene cycles. Balanced
+recall is 87.77% versus 88.80% for replay, so the candidate fails the utility rule.
+The sampler is opt-in; no model is promoted. All 72 new-comparison masks reproduce
+their saved counts; 128 reference artifacts remain unchanged. All 244 tests and
+143 subtests pass. See docs/sampling_benchmark_results.txt.
 
-Nine accepted native RGB variants originate from six training frames. Every seed
-uses 450 presentations and 120 updates: 404 real inputs plus 46 condition inputs,
-with original targets preserved. All three hybrid checkpoints reload strictly and
-36 native development predictions independently reproduce saved confusion counts.
-The candidate is rejected for recall regression and does not replace the retained
-model. These historical fixed-final experiment results are separate from the training
-CLI's default best-development checkpoint policy. They do not establish scene-data
-utility, statistical significance or held-out generalization.
+Original supported-scene result
+The revised eight scenes are accepted and admitted. The completed matched
+three-seed comparison gives real replay versus real + scene:
+IoU 49.66% -> 48.23%; precision 53.02% -> 51.52%; recall 88.80% -> 88.55%.
+The candidate fails the predeclared utility rule and is not promoted. All 72 native
+development predictions were independently recounted; three frames improve, eight
+regress and one is unchanged. All 128 frozen reference artifacts match.
+Each seed preserves 450 primary real presentations and adds 60 auxiliary inputs
+within 120 updates. Scene expansion is paused pending targeted failure analysis.
+The retained model, earlier results and locked test remain unchanged. See
+docs/scene_benchmark_results.txt for the comparison, limits and next investigation.
 
-Published scene capability
-A portable cuboid scene contract and isolated Blender Cycles worker produce paired
-1280x720 RGB, clean axial depth, validity, semantic and instance outputs. Seven
-related captures cover empty equipment, compact/wide/tall loads, equipment occlusion,
-a lateral viewpoint and a distant target. Source-bound surface catalogs retain map
-hashes, license/source information, metric scale and color-space conventions.
+Failure analysis
+The completed diagnostic audit measures lower dark-goods auxiliary exposure,
+uneven scene sampling and missing all-background scene coverage. Native dark-goods
+miss rate rises from 26.45% to 40.41%; the background-only frame's false-positive
+rate improves from 25.28% to 22.28%. These are associations, not isolated causes.
+The source-preserving donor-quota ablation is now complete and also fails the
+utility rule. The retained model, references and accepted scenes are unchanged. See docs/goods_failure_analysis.txt.
 
-Independent checks cover 1,792 analytic rays with complete instance agreement and
-per-view p95 depth error below 0.00005 m. Target visibility and equipment occlusion
-are measured from native labels/depth. These captures share one authored warehouse;
-procedural geometry and limited diversity remain appearance limitations. Histogram
-agreement is a diagnostic rather than qualification evidence.
+Validated reference revision
+All five reported development references now have saved, source-bound editor
+exports with reviewer provenance. Source checksums, native 1280 x 720 geometry,
+categorical IDs and exact PNG/RLE round-trips pass. The saved masks match the
+prepared replacements without additional pixel edits. All original versions
+are preserved; the other 37 references and all 30 training targets are unchanged.
+The revised cohort contains 30 training and 12 development samples. Empty pallets
+and handling equipment are background, identifiable loads are goods, and unresolved
+regions remain ignored. Structural checks and attestation do not establish
+independent annotation accuracy or eliminate reference anchoring bias.
 
-Verification and qualification
-The isolated publication snapshot passes 201 tests and 80 subtests. Validated
-interfaces include scene/job bindings, payload integrity, task semantics, support
-constraints, target visibility and RGB-condition sampling with unchanged real targets.
-BlenderProc remains unavailable pending its separate renderer dependencies. Simulated
-LiDAR, calibrated sensor noise, physical dynamics and remote execution are unsupported.
+Retained model on revised references
+Goods IoU: 50.84% | Precision: 54.48% | Recall: 88.74%
+These are means of seeds 17/29/43 across all 12 development frames. Thirty-six
+unchanged native prediction masks were recounted, with exact confusion counts
+independently reproduced using a separate histogram implementation. No training,
+new inference, prediction edits or model replacement occurred.
 
-Scene appearance qualification remains pending, with no scene-generated training or
-final held-out evaluation completed. Scene-data admission and a matched scene utility
-comparison remain open. The published pipeline keeps unqualified scene outputs
-training-ineligible and preserves earlier reports, annotations and retained models.
+The revised targets make 648,213 additional pixels scorable per seed and expose
+more false positives. The historical 57.98% IoU used different targets. This
+change measures reference correction, not model improvement or deterioration.
+The labels must not be changed merely to recover the previous score.
+
+Historical matched comparison
+Metric (mean of three seeds) | Unweighted control | Weighted candidate
+----------------------------|--------------------|-------------------
+Goods IoU                   | 57.98%             | 58.51%
+Precision                   | 62.83%             | 64.67%
+Recall                      | 88.54%             | 86.02%
+
+These values apply to the unchanged frozen references, including the five now
+disputed development targets. They are retained for reproducibility, not claimed
+as accuracy on corrected references. The weighted candidate remains rejected
+because recall decreased by 2.52 percentage points. The earlier 61.06% result
+used different targets and is not a direct improvement comparison.
+
+The historical comparison used seeds 17/29/43, 15 epochs, batch size 4 and
+120 updates per seed. Seventy-two native prediction masks were independently
+recounted; strict checkpoint reload and separate evaluation passed. Training
+used float32 RGB at 640 x 360, with logits resized to native 1280 x 720 geometry
+before classification. Development reuse limits generalization claims.
+
+Frozen model comparison
+Model (mean of three seeds) | Goods IoU | Precision | Recall
+----------------------------|-----------|-----------|-------
+Retained model              | 50.84%    | 54.48%    | 88.74%
+Matched final-epoch control  | 49.96%    | 53.99%    | 87.09%
+Broad crop candidate        | 49.73%    | 55.14%    | 83.55%
+Targeted crop candidate     | 51.35%    | 54.78%    | 88.97%
+
+All arms use the same revised native development references. The nine fixed
+final-epoch checkpoints passed strict reload and produced 108 native prediction
+masks. Thirty-six retained-model predictions were recounted. Independent
+confusion histograms match every score. All 45 earlier diagnostic predictions
+were reproduced pixel-for-pixel under the restored runtime.
+
+Broad crop is rejected because IoU and recall regress. Targeted crop is rejected
+despite its small aggregate gains: empty-pallet predicted-goods area rises from
+58.98% in the retained model to 60.67%, and scissor-lift area rises from 1.79%
+to 4.84%. Equipment-region area is a diagnostic, not full-scene accuracy.
+The matched final-epoch control uses a different checkpoint-selection policy
+from the retained historical model. No new model is selected and none was
+retrained. Repeated development reuse remains a limitation.
+
+Evaluation runtime
+CUDA evaluation works through an installed-CPython 3.12.10 virtual environment
+using the unchanged PyTorch 2.9.1+cu128 and torchvision 0.24.1+cu128 packages.
+No package downloads, upgrades or machine security changes were required.
+Seven reference/scoring fixture tests and four candidate-policy fixture tests
+pass. These focused checks are separate from historical full-suite counts.
+
+Training coverage and accepted condition experiment
+The 30 training references come from one trajectory. Goods occupy 14.85% of
+scorable training pixels; two frames have no identified goods. Training IoU is
+94.42% versus 50.84% on development for the retained model. This is consistent
+with overfitting/coverage limitations, without proving a unique cause or label error.
+
+Nine bounded RGB-gain variants from six source frames received explicit
+appearance acceptance and passed dataset admission against the revised references.
+Mask qualification inherits the unchanged, previously reviewed source targets.
+Nine of twelve requested RGB cases are admitted; three RGB rejections remain
+excluded. Two technically passing depth-only cases do not enter the RGB task;
+all seven original automated rejections remain preserved. This is bounded
+brightness variation, not new scene geometry or calibrated sensor simulation.
+
+Matched RGB experiment (mean of seeds 17/29/43)
+Model                       | Goods IoU | Precision | Recall
+----------------------------|-----------|-----------|-------
+Fixed-final real-only       | 49.96%    | 53.99%    | 87.09%
+Real plus RGB conditions    | 50.70%    | 55.06%    | 86.63%
+Retained historical model   | 50.84%    | 54.48%    | 88.74%
+
+Against the matched control, IoU increases by 0.74 percentage points and precision
+by 1.07, while recall decreases by 0.46. The condition candidate is rejected by
+the declared recall nonregression rule and does not replace the retained model.
+The historical retained model used a different checkpoint-selection policy.
+These development results do not establish a statistically significant gain.
+
+Every new seed uses the same 30 source slots, 450 presentations and 120 updates:
+404 original inputs plus 46 condition inputs. All targets remain unchanged.
+The three existing final-epoch real-only controls were reused. All three hybrid
+checkpoints passed strict reload; 36 native predictions were exported and their
+confusion counts independently reproduced. No held-out evaluation occurred.
+
+The bounded generate-to-admission-to-hybrid-to-evaluation workflow is complete.
+The experiment has a mixed result; a successful replacement or general synthetic
+utility claim is not established. Geometry/equipment coverage remains an open issue.
+
+Software evidence
+The earlier local preparation suite passed 174 tests and 47 subtests. The
+selectively published real-only software snapshot passed 156 tests and 28
+subtests in an isolated checkout. Local correction helpers previously passed
+15 focused tests and four subtests. These counts describe different snapshots
+and must not be combined or presented as a new full-suite result.
+
+Scene-generation integration
+The current appearance batch contains eight native views using three registered
+source meshes: carton, sealed bag and open lattice crate. Original 4K UV maps and
+uniform source proportions are retained. Empty crates and pallets remain background;
+visible carton/bag loads are goods. The bag is an authored exploratory packaging
+case, not a verified TorWIC inventory item. Stock occupancy, camera pose, light scale,
+load combination, apparent size and occlusion vary within declared bounds.
+
+All 2,048 independent instance rays agree; per-view p95 depth error is below
+0.00005 m. Sixteen additional aperture rays verify load visibility through the crate.
+All 128 frozen reference artifacts are unchanged. The suite passes 230 tests and
+112 subtests. Appearance and visible labels are accepted for the bounded batch;
+customer-domain fidelity is not established, and one authored layout is reused. Older mesh and surface batches remain preserved.
+
+Scene experiment control
+The new fixed-final real-only arm uses seeds 17/29/43, 15 epochs, 120 optimizer
+updates and 450 presentations per seed on the unchanged 30/12 reference cohort.
+Mean goods IoU: 48.63% | Precision: 51.48% | Recall: 89.76%.
+Thirty-six development predictions independently reproduce the saved confusion counts.
+This is a new experiment control, not a replacement for the retained 50.84% model.
+Do not compare this control with the historical RGB-condition arm: the implementations
+and experiment protocols differ. No annotation changes are indicated by these scores.
+
+Checkpoint configuration
+Active configs explicitly use final_epoch with no selection metric. The exact
+legacy validation-IoU metadata on frozen final-epoch evidence remains readable;
+its effective selection policy is unchanged. The complete control snapshot verifies
+unchanged, and no control retraining is required for this metadata clarification.
+
+Admission and comparison capability
+The scene admission CLI verifies the canonical dataset, independent geometry,
+task/cohort version and explicit per-sample appearance/label decisions before writing
+a separate eligible snapshot. It preserves the original quarantined export and
+copies complete qualification evidence. Pending decisions, altered files, unknown
+versions and conflicting real/synthetic splits are rejected. Known fixtures remain
+separate from customer data.
+
+The scene loader replaces RGB and target together using the rendered visible labels;
+it does not reuse a real target for a generated scene. A 20% deterministic substitution
+schedule preserves source-slot, presentation and optimizer-update budgets. Evaluation
+remains on the fixed real development cohort. The three-seed comparison fixture passes
+training, reload and matched-budget checks. Eight accepted samples have passed
+admission and native paired-loader checks. The customer scene arm is complete.
+
+Qualification and measured utility
+All eight scenes have explicit source-bound appearance/label acceptance. The
+original exports remain quarantined; a separate admitted snapshot is training-
+eligible. The matched three-seed comparison is complete and the candidate is
+rejected: mean IoU 48.63% -> 48.50%, precision 51.48% -> 54.22%, recall
+89.76% -> 82.71%. Recall decreases on all three seeds. Frame-mean IoU falls
+42.00% -> 38.69%; five frames improve, six regress and one is unchanged.
+All 72 native development masks independently reproduce the saved scores.
+
+Each hybrid seed uses 356 real and 94 scene presentations within the fixed
+450-presentation/120-update budget. Goods occupy 12.24% of executed supervised
+pixels versus 14.84% in the control. Reduced real exposure, target coverage and
+visual-domain differences are measured confounds, not a proven causal explanation.
+The retained model is unchanged. See docs/scene_benchmark_results.txt for paired
+seed results, diagnostics and coverage requirements. No existing annotation round
+needs repeating because of these results. Independent held-out evaluation,
+simulated LiDAR and calibrated physical fidelity remain open.
 
 Evidence
-Reference profile SHA256: d4928f47f069b0ae29ce1c7dae9282d54e8bbb3a4b8944e291ce8422a4d39468
-Reference and RGB comparison: local reviewed_reference_verification and qualified_rgb_evaluation evidence.
-Scene generation: reports/warehouse_scenario_coverage.
-Independent scene verification: reports/warehouse_scenario_verification.
-Capabilities and limits: docs/scene_generation.txt.
-Machine-readable aggregate: docs/goods_benchmark_status.json.
+Reference revision SHA256: d4928f47f069b0ae29ce1c7dae9282d54e8bbb3a4b8944e291ce8422a4d39468
+Accepted RGB conditions: admitted_rgb_conditions (local evidence)
+Historical RGB comparison: qualified_rgb_trial / qualified_rgb_evaluation (local evidence)
+Current scene render: reports/warehouse_appearance_coverage
+Independent scene geometry: reports/warehouse_appearance_quality
+Software, sources and tests: reports/warehouse_appearance_delivery
+Current real-only control: reports/goods_scene_control
+Capabilities and limits: docs/scene_generation.txt
+Machine-readable status: docs/goods_benchmark_status.json
+Scene admission: reports/warehouse_scene_admitted
+Scene comparison: reports/goods_scene_comparison
+Independent scene experiment audit: reports/goods_scene_experiment_audit

@@ -13,6 +13,18 @@ import numpy as np
 from PIL import Image
 
 from src.adapters.storage.local import file_hash, reserve_output, source_path
+from src.training.auxiliary_inputs import (
+    balanced_auxiliary_loss,
+    prepare_auxiliary_donors,
+    select_auxiliary_donor,
+    validate_auxiliary_sampling,
+    validate_auxiliary_settings,
+)
+from src.training.scene_inputs import (
+    load_scene_inputs,
+    select_scene_training_sample,
+    validate_scene_mixing,
+)
 from src.training.hybrid_inputs import (
     load_synthetic_inputs,
     select_training_input,
@@ -180,6 +192,23 @@ def segmentation_loss(logits, targets, settings):
     )
 
 
+def checkpoint_selection_metric(config):
+    """Return the effective selection metric, preserving frozen legacy metadata.
+
+    Fixed-final runs do not inspect development scores to select a checkpoint.
+    Earlier frozen configurations named validation IoU despite that policy; accept
+    those exact legacy declarations without rewriting saved experiment evidence.
+    New fixed-final configurations explicitly use null for the selection metric.
+    """
+    policy = config.get("checkpoint_policy", "best_validation_iou")
+    metric = config.get("selection_metric", "validation_goods_iou")
+    if policy == "final_epoch" and metric in (None, "validation_goods_iou"):
+        return None
+    if policy == "best_validation_iou" and metric == "validation_goods_iou":
+        return metric
+    raise ValueError("Unsupported or contradictory checkpoint-selection declaration")
+
+
 def validate_configuration(config, *, fixture=False):
     """Reject silent preprocessing/model changes and unsupported precision modes."""
     models = {"deeplabv3_mobilenet_v3_large"}
@@ -187,7 +216,8 @@ def validate_configuration(config, *, fixture=False):
         models.add("fixture_conv")
     if (
         config.get("model") not in models
-        or config.get("experiment_kind") not in {"real_only", "real_plus_synthetic"}
+        or config.get("experiment_kind")
+        not in {"real_only", "real_plus_synthetic", "real_plus_scene"}
         or config.get("resampling")
         != {
             "rgb": "BOX",
@@ -201,8 +231,37 @@ def validate_configuration(config, *, fixture=False):
     ):
         raise ValueError("Unsupported goods benchmark configuration")
     validate_loss_configuration(config.get("loss"))
-    if config["experiment_kind"] == "real_plus_synthetic":
-        validate_mixing(config.get("synthetic_mixing"))
+    validate_auxiliary_sampling(config)
+    if config.get("checkpoint_policy", "best_validation_iou") not in {
+        "best_validation_iou",
+        "final_epoch",
+    }:
+        raise ValueError("Unsupported checkpoint-selection policy")
+    checkpoint_selection_metric(config)
+    auxiliary = config.get("auxiliary_training")
+    if auxiliary is not None:
+        validate_auxiliary_settings(auxiliary)
+        if (
+            config["experiment_kind"] not in {"real_only", "real_plus_scene"}
+            or type(config.get("generation_seed")) is not int
+            or config["generation_seed"] < 0
+            or (
+                config["experiment_kind"] == "real_plus_scene"
+                and config.get("synthetic_mixing") != {"strategy": "auxiliary_only"}
+            )
+        ):
+            raise ValueError(
+                "Auxiliary runs require preserved real exposure and matched sources"
+            )
+    elif config.get("synthetic_mixing") == {"strategy": "auxiliary_only"}:
+        raise ValueError(
+            "Auxiliary-only scenes require an explicit bounded loss policy"
+        )
+    if config["experiment_kind"] != "real_only":
+        if config["experiment_kind"] == "real_plus_scene":
+            validate_scene_mixing(config.get("synthetic_mixing"))
+        else:
+            validate_mixing(config.get("synthetic_mixing"))
         if (
             type(config.get("generation_seed")) is not int
             or config["generation_seed"] < 0
@@ -440,14 +499,16 @@ def train_run(
                 "The required reviewed annotation revision is not qualified in this cohort"
             )
     alternatives = {}
-    hybrid = config["experiment_kind"] == "real_plus_synthetic"
+    hybrid = config["experiment_kind"] != "real_only"
+    scene_hybrid = config["experiment_kind"] == "real_plus_scene"
     if hybrid != (synthetic is not None and synthetic_sha is not None) or (
         not hybrid and (synthetic is not None or synthetic_sha is not None)
     ):
         raise ValueError("Hybrid runs require both admitted dataset path and checksum")
     if hybrid:
         synthetic = Path(synthetic)
-        alternatives = load_synthetic_inputs(
+        loader = load_scene_inputs if scene_hybrid else load_synthetic_inputs
+        alternatives = loader(
             synthetic,
             synthetic_sha,
             references,
@@ -456,6 +517,12 @@ def train_run(
             config,
             fixture=fixture,
         )
+    auxiliary_settings = config.get("auxiliary_training")
+    auxiliary_donors = (
+        prepare_auxiliary_donors(references, rows, synthetic, alternatives, config)
+        if auxiliary_settings is not None
+        else []
+    )
     if seed not in config["model_seeds"]:
         raise ValueError("Seed is outside the frozen benchmark configuration")
     if any(row["image_size"] != config["native_reference_resolution"] for row in rows):
@@ -502,6 +569,8 @@ def train_run(
         generator = torch.Generator().manual_seed(seed)
         history, sampling = [], Counter()
         input_sampling, synthetic_presentations = Counter(), 0
+        auxiliary_sampling, auxiliary_presentations = Counter(), 0
+        auxiliary_presence_counts = Counter()
         updates, best_score, best_epoch = 0, -1.0, None
         for epoch in range(config["epochs"]):
             model.train()
@@ -512,15 +581,32 @@ def train_run(
                     layer.eval()
             order = torch.randperm(len(training), generator=generator).tolist()
             weighted_loss, supervised = 0.0, 0
+            auxiliary_loss_sum, epoch_auxiliary_count = 0.0, 0
             for offset in range(0, len(order), config["batch_size"]):
                 batch = [
                     training[index]
                     for index in order[offset : offset + config["batch_size"]]
                 ]
-                selected_inputs = [
-                    select_training_input(references, row, alternatives, config, epoch)
-                    for row in batch
-                ]
+                # A scene replaces RGB AND target. RGB-only derivatives retain
+                # their original real target through the existing condition path.
+                if auxiliary_settings is not None:
+                    # Every original real slot remains present. The auxiliary
+                    # stream adds gradients, never replaces RGB or real targets.
+                    selected_inputs = [(references, row, False) for row in batch]
+                elif scene_hybrid:
+                    selected_inputs = [
+                        select_scene_training_sample(
+                            references, row, synthetic, alternatives, config, epoch
+                        )
+                        for row in batch
+                    ]
+                else:
+                    selected_inputs = [
+                        select_training_input(
+                            references, row, alternatives, config, epoch
+                        )
+                        for row in batch
+                    ]
                 inputs = torch.stack(
                     [
                         input_tensor(root, row, config)
@@ -532,7 +618,14 @@ def train_run(
                     changed for _, _, changed in selected_inputs
                 )
                 targets = torch.stack(
-                    [target_tensor(references, row, config) for row in batch]
+                    (
+                        [
+                            target_tensor(root, selected, config)
+                            for root, selected, _ in selected_inputs
+                        ]
+                        if scene_hybrid
+                        else [target_tensor(references, row, config) for row in batch]
+                    )
                 ).to(device)
                 valid_count = int((targets != 255).sum())
                 if not valid_count:
@@ -545,6 +638,42 @@ def train_run(
                 if not torch.isfinite(loss) or not torch.isfinite(logits).all():
                     raise ValueError("Nonfinite training loss/output")
                 loss.backward()
+                if auxiliary_settings is not None:
+                    donor = select_auxiliary_donor(
+                        auxiliary_donors, config, updates + 1
+                    )
+                    if donor is not None:
+                        donor_root, donor_row = donor
+                        auxiliary_input = (
+                            input_tensor(donor_root, donor_row, config)
+                            .unsqueeze(0)
+                            .to(device)
+                        )
+                        auxiliary_target = (
+                            target_tensor(donor_root, donor_row, config)
+                            .unsqueeze(0)
+                            .to(device)
+                        )
+                        auxiliary_logits = model(auxiliary_input)["out"]
+                        auxiliary_loss = balanced_auxiliary_loss(
+                            auxiliary_logits,
+                            auxiliary_target,
+                            auxiliary_settings["foreground_fraction"],
+                            missing_class_policy=auxiliary_settings.get(
+                                "missing_class_policy", "reject"
+                            ),
+                        )
+                        (auxiliary_settings["loss_weight"] * auxiliary_loss).backward()
+                        auxiliary_sampling[donor_row["sample_id"]] += 1
+                        if "auxiliary_target_kind" in donor_row:
+                            auxiliary_presence_counts[
+                                donor_row["auxiliary_target_kind"]
+                            ] += 1
+                        input_sampling[donor_row["sample_id"]] += 1
+                        auxiliary_presentations += 1
+                        synthetic_presentations += int(scene_hybrid)
+                        auxiliary_loss_sum += float(auxiliary_loss.detach())
+                        epoch_auxiliary_count += 1
                 if any(
                     parameter.grad is not None
                     and not torch.isfinite(parameter.grad).all()
@@ -556,21 +685,44 @@ def train_run(
                 sampling.update(row["sample_id"] for row in batch)
                 weighted_loss += float(loss.detach()) * loss_mass
                 supervised += loss_mass
-            metrics = native_metrics(model, references, validation, config, device)
+            # Fixed-final comparisons do not inspect development predictions
+            # during earlier epochs; the legacy best-IoU policy is unchanged.
+            evaluate_now = (
+                config.get("checkpoint_policy", "best_validation_iou")
+                == "best_validation_iou"
+                or epoch + 1 == config["epochs"]
+            )
+            metrics = (
+                native_metrics(model, references, validation, config, device)
+                if evaluate_now
+                else None
+            )
             history.append(
                 {
                     "epoch": epoch + 1,
                     "optimizer_updates": updates,
                     "train_cross_entropy": weighted_loss / supervised,
                     "validation": metrics,
+                    **(
+                        {
+                            "auxiliary_presentations": epoch_auxiliary_count,
+                            "auxiliary_balanced_loss": (
+                                auxiliary_loss_sum / epoch_auxiliary_count
+                                if epoch_auxiliary_count
+                                else None
+                            ),
+                        }
+                        if auxiliary_settings is not None
+                        else {}
+                    ),
                 }
             )
-            score = metrics["goods_iou"]
-            if score is None:
+            score = metrics["goods_iou"] if metrics is not None else None
+            if evaluate_now and score is None:
                 raise ValueError(
                     "Selection metric is undefined for this development cohort"
                 )
-            if score > best_score:
+            if score is not None and score > best_score:
                 best_score, best_epoch = score, epoch + 1
                 torch.save(
                     {
@@ -612,7 +764,7 @@ def train_run(
                 },
             )
             logging.getLogger(__name__).info(
-                "Seed %s: epoch %s/%s, loss %.6f, development IoU %.6f",
+                "Seed %s: epoch %s/%s, loss %.6f, development IoU %s",
                 seed,
                 epoch + 1,
                 config["epochs"],
@@ -644,6 +796,8 @@ def train_run(
         write_json(output / "validation_metrics.json", metrics)
         write_json(output / "sampling.json", dict(sampling))
         write_json(output / "input_sampling.json", dict(input_sampling))
+        if auxiliary_settings is not None:
+            write_json(output / "auxiliary_sampling.json", dict(auxiliary_sampling))
         write_implementation_snapshot(output)
         report = {
             "status": "passed",
@@ -671,11 +825,54 @@ def train_run(
             * math.ceil(len(training) / config["batch_size"]),
             "real_training_frames": len(training),
             "development_frames": len(validation),
-            "synthetic_training_frames": sum(
-                len(values) for values in alternatives.values()
+            "synthetic_training_frames": (
+                len(alternatives)
+                if scene_hybrid
+                else sum(len(values) for values in alternatives.values())
+            ),
+            "real_presentations": sum(sampling.values())
+            + auxiliary_presentations
+            - synthetic_presentations,
+            **(
+                {
+                    "primary_real_presentations": sum(sampling.values()),
+                    "auxiliary_presentations": auxiliary_presentations,
+                    "auxiliary_loss_weight": auxiliary_settings["loss_weight"],
+                    "auxiliary_foreground_fraction": auxiliary_settings[
+                        "foreground_fraction"
+                    ],
+                    **(
+                        {
+                            "auxiliary_target_presentations": dict(
+                                auxiliary_presence_counts
+                            )
+                        }
+                        if auxiliary_settings.get("missing_class_policy")
+                        == "background_only_zero_foreground_mass"
+                        else {}
+                    ),
+                }
+                if auxiliary_settings is not None
+                else {}
+            ),
+            "checkpoint_policy": config.get("checkpoint_policy", "best_validation_iou"),
+            "mixing_unit": (
+                "primary_real_plus_paired_auxiliary"
+                if auxiliary_settings is not None
+                else (
+                    "RGB_and_rendered_target"
+                    if scene_hybrid
+                    else "RGB_only_real_target_unchanged"
+                )
+            ),
+            "sampling_semantics": (
+                "Every real source slot preserved; bounded auxiliary gradients share existing optimizer updates"
+                if auxiliary_settings is not None
+                else "Fixed real source slots; scene replacement reduces actual real presentations without adding updates"
             ),
             "synthetic_presentations": synthetic_presentations,
-            "total_training_presentations": sum(sampling.values()),
+            "total_training_presentations": sum(sampling.values())
+            + auxiliary_presentations,
             "synthetic_profile_sha256": synthetic_sha,
             "experiment_kind": config["experiment_kind"],
             "selected_validation_goods_iou": best_score,
@@ -748,7 +945,7 @@ def evaluate_run(
         if fixture
         else (
             "hybrid_benchmark"
-            if config["experiment_kind"] == "real_plus_synthetic"
+            if config["experiment_kind"] != "real_only"
             else "real_only_benchmark"
         )
     )
@@ -763,10 +960,10 @@ def evaluate_run(
     ):
         if saved[key] != profile[key]:
             raise ValueError("Checkpoint metadata differs from verified run")
-    if config["experiment_kind"] == "real_plus_synthetic" and (
+    if config["experiment_kind"] != "real_only" and (
         saved.get("synthetic_profile_sha256") != profile.get("synthetic_profile_sha256")
         or not saved.get("synthetic_profile_sha256")
-        or saved.get("experiment_kind") != "real_plus_synthetic"
+        or saved.get("experiment_kind") != config["experiment_kind"]
     ):
         raise ValueError("Checkpoint synthetic provenance differs from its run")
     model = build_model(config, fixture=fixture).to(device)

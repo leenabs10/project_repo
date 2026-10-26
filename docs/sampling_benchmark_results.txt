@@ -1,0 +1,108 @@
+Goods donor-sampling benchmark
+=============================
+
+Outcome
+The balanced scene-sampling candidate completes all three seeds and fails the
+predeclared utility rule. Mean IoU improves by 1.15 percentage points over the
+original scene schedule, but remains 0.29 points below matched real replay.
+Recall remains 1.03 points below replay. The retained model is unchanged and
+the candidate is not promoted. The locked test set remains unevaluated.
+
+Native development results (mean of seeds 17, 29, 43)
+Metric                    Real replay   Original scene   Balanced scene
+Goods IoU                 49.6640%    48.2303%    49.3757%
+Precision                 53.0236%    51.5184%    53.0162%
+Recall                    88.8002%    88.5458%    87.7742%
+Frame-mean goods IoU      41.3502%    39.8233%    40.0166%
+Dark-goods miss rate      26.4479%    40.4071%    43.0072%
+
+IoU, precision and recall aggregate native scorable pixels within each seed,
+then average seeds. Frame-mean IoU instead weights frames equally. All original
+arms and unfavourable results are retained. Precision differs from replay by only
+-0.0074 percentage points; two-decimal display rounding hides that difference.
+The unrounded mean metrics are used by the declared rule. No statistical
+significance is implied by this small contrast.
+
+Paired changes against real replay
+17: IoU -2.28 pp; precision +0.12 pp; recall -7.53 pp
+29: IoU -2.71 pp; precision -0.73 pp; recall -6.75 pp
+43: IoU +4.13 pp; precision +0.59 pp; recall +11.21 pp
+Two seeds regress in IoU and one improves. Three development frames improve,
+seven regress and two are unchanged by mean IoU. The strongest frame regression
+remains 000753, containing a dark tyre load: -13.82 points against replay and
+-2.98 points against the original scene schedule. No seed or frame subset is
+selected to claim a synthetic-data benefit.
+
+Intervention and preserved contracts
+The optional balanced_scene_cycle policy permutes admitted scene identities by
+a stable per-cycle hash and visits every donor exactly once in each complete
+cycle. Every prefix has at most one visit of imbalance. In 60 auxiliary inputs,
+each of the eight scenes receives 7 or 8 visits, replacing the original 3-to-13
+spread. The two pure tyre views receive 15 visits instead of 7.
+
+The scene exports, labels, geometry, lighting, reference cohort, model, generic
+initialization, loss, auxiliary weight 0.2 and foreground class mass are unchanged.
+Every primary real input remains in its original stream: 30 frames x 15 epochs,
+450 primary real presentations, plus 60 auxiliary inputs within 120 updates per
+seed. Training is 640x360 float32, batch size 4; evaluation is native 1280x720.
+Final checkpoint epoch is 15, with no earlier development scoring. The sampler
+consumes no Python, NumPy or Torch random state used by primary training.
+
+Baseline reuse is explicit. The preflight compares all model/loss/optimizer/input
+function syntax with the preserved implementation and verifies that disabling
+the optional policy preserves the original sampler branch. Both saved baseline
+schedules reproduce exactly across all three seeds. Configuration validation and
+comparison accept only the declared sampling-policy difference; loss and budget
+matching remain enforced. Model checkpoints pass strict reload.
+
+Exposure and task response
+Rendered auxiliary dark-goods pixel exposure rises from 6.35% to 12.46%; rendered
+tyre surfaces rise from 12.45% to 25.93% of auxiliary goods pixels. These are
+source-instance and display-intensity counts, not gradient contribution or real
+object-family ground truth. Despite this increase, native dark-goods miss rate
+rises from 40.41% to 43.01%, against 26.45% for real replay. Simply adding more
+exposure to these accepted tyre renders did not resolve the real tyre failure.
+
+This result supports retaining appearance/shape/occlusion mismatch and limited
+reference coverage as open explanations. It does not identify a unique cause,
+prove that all synthesis approaches fail or establish a production conclusion.
+The contrast was motivated after inspecting the earlier failed experiment.
+Repeated development use, related frames, thirty training references and one
+authored aisle limit independent generalization evidence.
+
+Verification
+All 244 tests and 143 subtests pass. Fixtures exercise quota balance, cadence,
+input-order independence, unchanged random states, the legacy golden schedule,
+invalid policy/source rejection and three-seed fixed-final fixture execution.
+All 72 masks in the new replay-versus-balanced comparison are independently
+recounted. The original scene arm retains its 36 previously verified masks,
+giving 108 unique native predictions with verified counts across the three arms.
+All 128 frozen reference artifacts remain unchanged. No source annotations,
+accepted scene payloads or previous experiment artifacts are edited.
+
+Implementation
+Policy: src/training/auxiliary_inputs.py.
+Configuration: configs/benchmarks/warehouse_goods_balanced_sampling.json.
+Execution/comparison: python -m src.pipeline.scene_benchmark --help.
+The new policy is opt-in; previous configurations keep their existing behavior.
+Its availability is an engineering capability, not a recommendation to use the
+failed model or a claim of synthetic-data utility.
+
+Decision and next data-quality work
+Retain the replay control and current model. Do not expand this scene batch on
+the strength of sampler balance. Prioritize a small training-source comparison
+of real and rendered tyre silhouette, scale, material, illumination and occlusion,
+then qualify representative appearance changes under a new exact batch binding.
+Additional independent real reference coverage remains necessary for stronger
+claims. Existing reviewed labels need changes only if a specific error is found.
+The next experiment must declare its changed factor and complete reference/scene
+bindings before training. No further training or new scene generation is included
+in this completed contrast.
+
+Evidence
+reports/goods_sampling_protocol: frozen rules, fixtures and legacy-equivalence proof.
+reports/goods_sampling_scene_arm: three trained/reloaded seeds and native predictions.
+reports/goods_sampling_comparison: declared replay-versus-balanced result.
+reports/goods_sampling_error_audit: native error strata and executed exposure.
+reports/goods_sampling_audit: complete three-arm, per-seed and per-frame verification.
+Earlier evidence and reference versions remain intact.

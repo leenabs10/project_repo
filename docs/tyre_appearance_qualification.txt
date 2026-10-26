@@ -1,0 +1,77 @@
+Tyre appearance qualification
+=============================
+
+Purpose and result
+The completed sampling contrast did not demonstrate synthetic training benefit.
+A bounded material pilot now isolates tyre diffuse reflectance in two existing
+training-supported views. Four captures use coefficients 0.35 and 0.60 against
+unchanged original controls. No new model has been trained or selected.
+
+The material change modestly increases dark tyre coverage but does not establish
+representative warehouse appearance. The repeated asset, foreground load scale,
+placement, occlusion and authored aisle remain limitations. The pilot stays
+outside training; explicit qualification must bind any admitted exports.
+
+Controlled intervention
+The existing shader mixes a black base colour with the original diffuse texture.
+The coefficient scales linear diffuse base colour, not output RGB or calibrated
+sensor exposure. Original 4K diffuse/roughness maps, UVs, mesh aspect ratios,
+object transforms, lights, cameras, class/instance IDs, exposure, seed and 128
+render samples are preserved. No renderer or shared pipeline code was changed.
+Coefficients are authored material hypotheses, not measured rubber reflectance.
+
+Geometry and integrity
+All four native semantic, instance and depth-valid arrays exactly match their
+source views. Axial depth arrays are also exactly equal, with maximum paired
+change zero metres. All 1,024 independent NumPy ray checks agree on instance IDs;
+the worst per-capture depth p95 is 0.0340 mm. This measures static opaque geometry
+correspondence, not physical stability, sensor calibration or photographic fidelity.
+All 128 qualified-reference artifacts remain unchanged. Source assets, accepted
+scene exports and model checkpoints are preserved. The locked test is unevaluated.
+
+Appearance diagnostics
+Intensity uses 8-bit Pillow display luma below 50 at the actual 640x360 training
+resolution: BOX RGB and nearest categorical masks. Original versus coefficient
+0.60 versus coefficient 0.35 dark tyre pixel fractions are:
+
+Stack view:  46.56% -> 51.89% -> 56.24%.
+Offset view: 45.09% -> 51.04% -> 55.85%.
+
+One fixed tyre region in training frame Aisle_CCW_Run_1/000227 is 88.19% dark,
+with unresolved target pixels excluded. This selected real region and all visible
+rendered tyre surfaces differ in viewpoint, exposure and object population.
+Their fractions are descriptive diagnostics, not a calibrated matching target.
+The smaller material response does not identify the sole source of model errors.
+
+Next qualification work
+Use training-only reference views to address load scale, multiple adjacent stacks,
+shelf placement and partial occlusion. Preserve normalized source geometry and
+separate material from acquisition/lighting changes. Validate visible labels,
+metric geometry and equipment/background roles for each revised export before
+appearance qualification. Freeze a new matched experiment only for a qualified
+candidate. Preserve all previous controls, seeds and unsuccessful results.
+Existing annotations require changes only when a specific label error is found.
+
+Evidence
+reports/tyre_material_protocol: frozen source bindings, four-capture job and
+reproducible preparation helper. Its isolation guard rejects lighting drift.
+reports/tyre_material_pilot: exact worker implementation, native RGB/depth/labels,
+asset hashes and execution result.
+reports/tyre_material_quality: paired native checks, training-resolution diagnostics,
+independent geometry, unchanged-reference verification and audit implementation.
+
+Bindings
+Dataset profile SHA256:
+a572a456f4a46817da7e1c7e3292ead3102c1c6b3e7a283c4c75c00952cf0374
+Generation job SHA256:
+fe4ed99fe135953c5d090fd037f9cb127392410b09068ae58421554afddbd91e
+Quality profile SHA256:
+ac749c65af38932d25ae7d3e4d4e14540ca03d475dcdf7646f24326229fae415
+
+Verification scope
+Existing scene/task contracts validate the exact new job; an isolation check
+confirms that only tyre material references and comparison identities change.
+The existing renderer fixture and all native payload validators pass on the four
+captures. This configuration-only pilot does not rerun the unchanged training
+suite. The preceding sampling implementation passed 244 tests and 143 subtests;
+those are historical implementation checks, not new appearance measurements.

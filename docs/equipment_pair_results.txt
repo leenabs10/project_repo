@@ -1,0 +1,117 @@
+Empty/loaded equipment benchmark results
+=======================================
+
+Outcome
+The accepted six-capture batch passed admission and the paired training loader.
+Both new arms completed seeds 17, 29 and 43. Mean recall reaches 90.40% with
+synthetic examples, but precision and goods IoU regress against the matched
+real-only control. The candidate fails the declared utility rule and is not
+promoted. Earlier models, references and unsuccessful experiments are preserved.
+
+Native development metrics (mean across three seeds)
+Metric                            Matched real-only       Real + synthetic
+Goods IoU                                  51.63%                 51.42%
+Precision                                  55.86%                 54.40%
+Recall                                     87.42%                 90.40%
+Frame-mean goods IoU                       41.43%                 41.64%
+Scorable-background false-positive rate      7.62%                  8.36%
+Dark-goods miss rate                        37.34%                 18.54%
+Goods miss rate                            12.58%                  9.60%
+Incorrect goods prediction fraction         44.14%                 45.60%
+Overall scorable-pixel error                  8.11%                  8.48%
+Overall scorable-pixel accuracy              91.89%                 91.52%
+
+IoU, precision and recall aggregate native scorable pixels within each seed,
+then average seeds. Frame-mean IoU weights frames equally and answers a different
+question. Background error divides FP by scorable background pixels; incorrect
+goods prediction fraction divides FP by predicted goods pixels. Accuracy is
+dominated by background and does not establish useful goods segmentation.
+Ignored pixels are excluded throughout. Dark uses Pillow display luma below 50;
+this is not calibrated radiance or an object-family ground-truth metric.
+
+Paired changes and seed variation
+Mean IoU: -0.2180 percentage points; precision: -1.4560; recall: +2.9816.
+17: IoU -2.27 pp; precision -4.16 pp; recall +4.33 pp.
+29: IoU +1.57 pp; precision +2.22 pp; recall -1.25 pp.
+43: IoU +0.04 pp; precision -2.43 pp; recall +5.86 pp.
+Candidate recall ranges from 89.80% to 91.03%. The 90.40% result is a seed mean,
+not a guarantee that every seed or frame achieves 90%. No statistical significance
+or independent generalization is established by these three seeds.
+
+Frame-level findings
+Four development frames gain in mean IoU, seven regress and one is unchanged.
+The largest gain is 000753, containing the dark tyre load: 29.61% to 48.53% IoU
+(+18.92 pp). The largest regression is 000188: 52.94% to 46.11% (-6.83 pp).
+Frame 000282 regresses by 3.97 pp; 000565 improves by 1.68 pp. The two largest
+gains and regressions were visually inspected across all three seeds; the gallery
+retains every development frame and seed, including all remaining regressions.
+
+The background-only development frame 000470 improves from 22.52% to 19.80%
+false-positive pixels. Its foreground recall remains undefined. This local gain
+does not offset higher aggregate background false positives elsewhere. Binary
+targets and intensity strata do not provide equipment-specific accuracy or prove
+that one scene component caused the changes.
+
+Controlled execution
+Both arms use the same pretrained initialization, optimizer, resolution, seeds,
+fixed final checkpoint and background-only loss policy. Each preserves 450
+primary real presentations and adds 60 auxiliary presentations: 30 negative and
+30 mixed, within 120 optimizer updates. Each synthetic capture receives ten
+auxiliary presentations per seed. The real-only arm replays only training
+references, including the two existing negative references. Previous controls
+were not reused because their missing-class policy and exposure differ.
+
+Training uses 640x360 float32, batch size four, on the RTX 5070 Laptop GPU.
+Evaluation/prediction targets are native 1280x720. CUDA checkpoint reloads are
+strict. No intermediate development score selected an earlier checkpoint.
+
+Integrity and verification
+Explicit operator acceptance binds all six exports to dataset profile
+fb20220815bd4b617a8266250b38f21c751736f06cc30070048310ebe3d3b13f.
+All 128 required reference artifacts match, with 30 training and 12 development
+references. The dataset was admitted with the exact source-bound geometry proof;
+all six rows passed the real hybrid loader. Pair cameras, equipment, lighting and
+materials remain fixed within each empty/loaded pair; only cargo is added.
+
+The current implementation/config hashes match the frozen preparation that
+passed 256 tests and 168 subtests, including known-fixture training/reload for
+both arms and three seeds. Those fixture tests were reused, not reported as a new
+test run. The completed comparison independently recounts all 72 native
+development prediction masks. The separate error audit partitions the same
+72 predictions and reproduces every saved confusion total. Actual primary,
+auxiliary, class-presence and update counts match the protocol for every seed.
+The locked test remains unevaluated. Git publication state remains unchanged.
+
+Interpretation and next decision
+The batch supplies a useful targeted signal: fewer dark-goods misses and fewer
+false positives in one negative frame. It does not achieve the broader precision
+goal or improve mean IoU against its matched control. Do not expand these six
+scenes solely on the strength of recall or overall pixel accuracy.
+
+Prioritize distinct, accurately reviewed real training coverage of empty handling
+equipment, loaded equipment and surrounding warehouse clutter. Assess the eight
+quarantined training previews for redundancy before annotation; none has been
+admitted as a new target. Preserve valid existing masks. Any additional synthetic
+experiment should derive its coverage and appearance from training sources,
+declare its changed factor and retain the matched control. Independent real
+recordings remain necessary for stronger generalization evidence.
+
+Evidence
+reports/equipment_pair_acceptance: actual exact-batch decision and provenance.
+reports/equipment_pair_execution_preflight: verified cohort/runtime and geometry.
+reports/warehouse_equipment_admitted: accepted immutable export and loader inputs.
+reports/goods_equipment_execution_protocol: frozen execution bindings.
+reports/goods_equipment_replay_control and goods_equipment_scene_arm: all runs,
+strictly reloaded checkpoints, executed schedules and native predictions.
+reports/goods_equipment_comparison: declared rule, seed deltas and 72 recounts.
+reports/goods_equipment_error_audit: training exposure and native error strata.
+reports/goods_equipment_results_audit: all-frame/seed outcomes and integrity checks.
+
+Reference profile SHA256:
+d4928f47f069b0ae29ce1c7dae9282d54e8bbb3a4b8944e291ce8422a4d39468
+Control profile SHA256:
+210f2383b4572c87e061d7461b50c39a180cfd43b7603a5e5f8d9bc9e680b0fb
+Scene profile SHA256:
+71c1e55cd344b1ba59c0e09de002b85d75072bbeb7f981d7e221f7a9932b2fd0
+Results-audit profile SHA256:
+5e62cc74c1015e28475ae66f4482b03fede02f3a8b4840496d283a1615d9afed

@@ -1,0 +1,110 @@
+Empty/loaded equipment contrast: completed
+=========================================
+
+
+Purpose
+Test whether paired equipment examples reduce false goods detections without
+regressing recall. This is a new matched protocol, not an improvement claim or
+a continuation of the previous rejected runs. Existing results remain preserved.
+
+Training-only diagnosis and real-data coverage
+The retained real-replay predictions were recounted on all 30 training frames
+for seeds 17, 29 and 43, with exact RGB/target/prediction checksum agreement.
+Both existing background-only references, 000482 and 000880, have zero false
+positive pixels in all three seeds. This measures fitting to known references;
+it does not demonstrate generalization to other empty equipment.
+Largest mean training FP counts are 000624 (6688), 000426 (6070), 000538 (4659)
+and 000397 (4269). Binary target errors are not equipment-specific rates.
+Diagnostic overlays retain ignored pixels and do not alter any annotation.
+
+Seventy-two training-only RGB previews were inspected. Eight varied views are
+quarantined as possible annotation candidates. They span shelving, tyre loads,
+access structures, pallets, handling equipment, robots and close cartons. They
+are still dependent views from the same trajectory, not eight independent new
+scenes. Their usefulness beyond the existing references needs adjudication;
+additional distinct real recordings remain necessary. No new real target was
+invented or admitted, and no development/test image selected these candidates.
+
+Prepared synthetic batch
+Three pairs, six native 1280x720 captures:
+- close pallet: empty versus four visible tyres;
+- four stacked pallets: empty versus two cartons, partly cropped by the camera;
+- rack-side pallet: empty versus tyres partly occluded by the rack upright.
+Equipment, structure, camera, lights and materials are identical within a pair.
+Only the cargo is added. Cargo shadows can legitimately change other RGB pixels.
+All old shelf stock is removed in both members so that empty masks contain only
+background. Loaded masks mark visible cargo only; supports and occluders stay
+background. The four earlier rack-composition candidates remain separate.
+
+The close tyre load occupies 13.13% of the training image and its display-dark
+fraction is 44.02%; the occluded load occupies 2.87% and is 56.35% dark. Dark means
+Pillow luminance below 50 after BOX resampling to 640x360. These observations
+are not calibrated appearance matching, sensor realism or evidence of recall gain.
+One authored aisle, repeated assets and simple pallet geometry remain limits.
+There is no new stacked-container geometry or physical stability qualification.
+
+Explicit background-only contracts
+Scene jobs may declare required_visible_class_ids=[0]. Omission preserves the
+original requirement for both visible classes. Taxonomy, depth/validity, native
+categorical labels, instance consistency and lossless export checks still apply.
+Geometry sampling reallocates absent-goods rays to structure only under this
+explicit policy; it preserves the ray budget and retains equipment coverage.
+
+Auxiliary supervision opts into missing_class_policy=
+background_only_zero_foreground_mass. Mixed targets retain the original loss.
+Background-only targets use (1-f)*mean(background cross-entropy), where
+f=0.14835623268065162 is fixed by real training masks. Missing foreground mass
+is zero, not redistributed. Ignored targets have zero gradient. Foreground-only,
+all-ignored, illegal-class and nonfinite cases are rejected. This changes the
+overall auxiliary foreground exposure, so previous controls cannot be reused.
+
+Matched comparison prepared
+Both new arms retain every primary real input 15 times: 450 presentations.
+Each adds 60 auxiliary inputs with 30 background-only and 30 mixed donors.
+The real-replay arm uses the 30 real training references; the scene arm uses the
+six admitted paired renders. Deterministic cycles balance visits within each
+presence group without consuming the primary shuffle/model RNG. The executed
+presence counts are recorded and checked by the comparison, not merely declared.
+Both arms use seeds 17/29/43, the same initialization, 120 optimizer updates,
+auxiliary weight 0.2, fixed final checkpoint, resolution and optimizer settings.
+Mean IoU must increase with no mean precision or recall regression. Report native
+frame-weighted scores, background false positives and dark-goods misses separately.
+Background-only frame recall remains undefined. No automatic model promotion.
+
+Verification and current gates
+The full suite passed 256 tests and 168 subtests. A known-plane fixture exercises
+negative export, admission, actual training and strict checkpoint reload for all
+three seeds in both arms. These are fixture runs, not customer-model results.
+Automated visual assessment covers all six native RGB/overlay pairs; assessor
+provenance remains recorded in the source metadata.
+All categorical pixels agree with declared instance roles. Independent checking
+of 1920 rays, including 384 targeted pallet rays, gives exact instance agreement;
+maximum per-view p95 axial residual is below 0.000055 m. This is geometric
+correspondence, not physical accuracy. Raw, unqualified exports remain blocked.
+
+All six exact exports now have explicit appearance/label acceptance and passed
+source-bound admission against the required 128-artifact reference cohort.
+Both new three-seed arms completed with the frozen negative/mixed schedules.
+Mean real-only versus real+synthetic IoU is 51.63% versus 51.42%; precision is
+55.86% versus 54.40%; recall is 87.42% versus 90.40%. The candidate fails the
+declared utility rule and is not promoted. All 72 native masks were recounted.
+No held-out test evaluation occurred. See docs/equipment_pair_results.txt.
+
+Source bindings
+Paired dataset: fb20220815bd4b617a8266250b38f21c751736f06cc30070048310ebe3d3b13f
+Paired job: ea009319593203c8034bd13943399f9e3f369631206019c74498c96a2cc5302c
+Source rack dataset: 6b0e2043bd8db621b9689d332a0e21852746ef4ec23a692298914661dcb59fb4
+Evidence and operator procedures remain in ignored reports/equipment_pair_*.
+Configs: configs/benchmarks/warehouse_goods_negative_replay.json and
+configs/benchmarks/warehouse_goods_equipment_pairs.json.
+
+Execution readiness
+reports/equipment_pair_execution_preflight binds the verified reference/runtime,
+pair-isolation checks, matched schedule and source-bound geometry.
+reports/equipment_pair_execution_ready contains the guarded runner and corrected
+operator procedure. Earlier preparation profiles remain immutable historical evidence.
+
+Completed execution
+The execution preflight/readiness reports preserve their pre-acceptance state.
+Actual acceptance, admission and completed measurements are stored separately in
+reports/equipment_pair_acceptance, warehouse_equipment_admitted and goods_equipment_*.
