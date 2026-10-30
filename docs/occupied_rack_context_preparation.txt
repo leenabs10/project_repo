@@ -1,0 +1,84 @@
+Occupied-rack cargo placement preparation
+========================================
+
+This is the preserved preparation snapshot. Exact-batch approval, admission and
+the completed comparison are documented in docs/occupied_rack_context_results.txt.
+
+Eight captures form four empty/loaded pairs. This batch tests whether occupied
+rack context, smaller visible goods and partial rack occlusion address the prior
+recall regression. At this preparation snapshot it was technically qualified and
+awaiting explicit appearance and label acceptance. Admission, training and utility
+evaluation subsequently completed; use the results document for the final decision.
+
+Only the centre coordinates of eight existing cargo instances changed. Assets,
+dimensions, orientation, materials, camera, lights, equipment and capture counts
+are preserved. Placement support comes only from reviewed training frames
+Aisle_CCW_Run_1/000207, 000383 and 000283. An initial fully hidden placement was
+rejected before rendering; its configuration and reason remain preserved.
+
+Qualification
+All 3,040 independent nearest-surface rays agree with exported instance labels.
+The largest per-capture depth p95 residual is 0.00003837 m. Each moved object has
+174-1,544 visible native pixels (44-390 at training resolution), with independent
+visible and rack-occluded ray evidence. Shelf contact, cargo separation, empty
+equipment labels and container openings pass the sampled geometry checks.
+
+Empty semantic, instance and depth payloads are byte exact. Repeated empty RGB
+renders differ by at most 1/255 in approximately 0.004% of channels; the scene and
+render settings are unchanged. Loaded RGB and labels change together with cargo
+placement. Static support checks do not establish physical stability.
+
+Exposure tradeoff
+Across one visit to each capture, visible goods pixels at 640x360 fall from
+54,698 to 23,425 (57.2% less); dark-goods pixels fall from 15,777 to 5,058 (67.9%
+less). Darkness here means Pillow BOX-resampled display luminance below 50 on
+NEAREST-resampled goods labels. It is not a calibrated sensor measurement.
+The full ordered schedule is measured separately. Equal capture/visit counts do
+not imply equal goods-pixel exposure or equal gradients under class-normalized
+loss. This tradeoff must remain visible when assessing recall.
+
+Per seed, the 60 scheduled synthetic visits reduce auxiliary goods pixels from
+400,549 to 173,773, and dark-goods pixels from 110,459 to 35,420. Including the
+unchanged 480 primary real inputs, total dark-goods pixels are 1,298,849 before,
+1,223,810 after, and 1,267,616 in the real-only control. The revision therefore
+has fewer dark-goods pixel presentations than the control. Foreground class-mean
+loss coefficients stay fixed; these counts do not predict recall or gradients.
+
+Frozen comparison preparation
+Both arms use the corrected 32-training/12-development reference cohort. An
+explicit auxiliary update sequence preserves the previous semantic donor order
+despite changed job IDs. Per seed: 480 primary real presentations, 60 auxiliary
+inputs and 120 optimizer updates. The candidate retains 14 tyre-loaded, 16
+carton-loaded and 30 empty presentations. The control uses 60 real replays.
+Thus the candidate has 60 fewer real replays than the control; total input and
+update counts match. The sampler change is validated before fitting.
+
+Seeds 17/29/43, model, initialization, optimizer, loss, auxiliary weight 0.2,
+normalization, final epoch 15 and native prediction policy remain fixed. Required
+gates remain at least +3 percentage points mean goods IoU, increased precision,
+nondecreasing recall and lower background false-positive rate. Dark-goods miss
+rate must not exceed the fresh control or the reference-corrected historical
+ceiling of 18.67171826%. No automatic model promotion is allowed.
+
+Limits and next decision
+The sparse authored aisle and repeated materials do not reproduce the density,
+blur or clutter of the real training recordings. This is a bounded spatial
+coverage experiment, not a photographic-realism claim. Exact-batch appearance
+and label acceptance, then source-bound admission, are required before both
+fresh three-seed arms run. Original references, retained weights, historical
+batches and unrelated model trials are preserved. The locked test is untouched.
+
+Source bindings
+Preparation contract: 4d4cffc116852d2ac825b3850629dc19d6eef87936d11167a24c9ae2449a1ff9
+Reference cohort: 2ba84460fa9991befdcdbfbba88bda8225eae91d88ec0a943b39d13fd858cda9
+Dataset: c1ddda6fb8dfd684cf8ff86bea0da539133b247219a0584406a7c3979d15ba19
+Job: 36ce7882137f45f2fec0c30fb8a12b83d459ccbf129bcc5261572239f603cacd
+Geometry: 88d41be47cac63eee1c06327f53b54b35094af022455379f955bc924356c59e9
+Review: 76a47138cfa7bb64f7954a17ea08c5c95414b8bec0195bbc314fa67bda7a4b17
+Once-per-capture exposure: 7a6f3ee359d39ce129bf49911fb3e1dce49a501ab95add795ef97946bbb1e0c3
+Benchmark protocol: f9f6573584a869e7ca959447a521edf13cfc0ab9c828368eca132bd2c67d552d
+Scheduled exposure: e46a3038cd8d712e56af7b5391380637c3a6cc32767dadbd3299bc359310eaca
+
+Local evidence roots: occupied_rack_context_geometry_20261029,
+occupied_rack_context_review_20261029, rack_cargo_revision_preparation_20261029.
+These are separate preparation/qualification records, not new model results.

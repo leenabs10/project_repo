@@ -1,0 +1,42 @@
+{
+  "schema_version": "dubaidata.cargo-placement-revision/1.0",
+  "job_id": "warehouse_occupied_rack_context_20261029",
+  "source_job_sha256": "d3e2a78cb28c3092f682cf049a80d0c1d155dd9f321df1dbf9452b8ba631a669",
+  "reference_profile_sha256": "2ba84460fa9991befdcdbfbba88bda8225eae91d88ec0a943b39d13fd858cda9",
+  "training_support_sample_ids": [
+    "Aisle_CCW_Run_1/000207",
+    "Aisle_CCW_Run_1/000383",
+    "Aisle_CCW_Run_1/000283"
+  ],
+  "support_clearance_metres": 0.0002,
+  "cases": [
+    {
+      "sample_id": "tyres_pallet_clutter_loaded",
+      "moves": [
+        {"instance_id": 928, "support_instance_id": 530, "occluder_instance_id": 526, "center_x_metres": 3.1},
+        {"instance_id": 929, "support_instance_id": 103, "occluder_instance_id": 101, "center_x_metres": -3.1},
+        {"instance_id": 930, "support_instance_id": 615, "occluder_instance_id": 527, "center_x_metres": 3.1}
+      ]
+    },
+    {
+      "sample_id": "tyres_crate_contact_loaded",
+      "moves": [
+        {"instance_id": 929, "support_instance_id": 103, "occluder_instance_id": 101, "center_x_metres": -3.1},
+        {"instance_id": 930, "support_instance_id": 615, "occluder_instance_id": 527, "center_x_metres": 3.1},
+        {"instance_id": 931, "support_instance_id": 282, "occluder_instance_id": 187, "center_x_metres": -3.1}
+      ]
+    },
+    {
+      "sample_id": "cartons_stacked_support_loaded",
+      "moves": [
+        {"instance_id": 944, "support_instance_id": 530, "occluder_instance_id": 526, "center_x_metres": 3.1}
+      ]
+    },
+    {
+      "sample_id": "cartons_low_support_loaded",
+      "moves": [
+        {"instance_id": 928, "support_instance_id": 124, "occluder_instance_id": 101, "center_x_metres": -2.8}
+      ]
+    }
+  ]
+}

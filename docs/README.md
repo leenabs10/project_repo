@@ -21,6 +21,15 @@ flags do not supersede later source-bound execution results.
 | [Goods status](goods_benchmark_status.txt) / [JSON](goods_benchmark_status.json) | Reference cohort, retained benchmark state, and limitations |
 | [Scene generation](scene_generation.txt) | Backend interface and qualification evidence |
 | [Equipment protocol](equipment_pair_protocol.txt) / [results](equipment_pair_results.txt) | Completed empty/loaded comparison; candidate rejected |
+| [Equipment precision experiment](equipment_precision_experiment.txt) | Frozen equipment precision protocol, source bindings and utility/recall gates |
+| [Equipment precision results](equipment_precision_results.txt) | Completed fresh matched comparison; IoU/precision gains with recall regressions, candidate rejected |
+| [Equipment precision failure analysis](equipment_precision_failure_analysis.txt) | Native regression evidence, measured exposure, localized reference issue and one cargo-context revision plan |
+| [Reference reassessment](goods_reference_reassessment.txt) | Validated person correction and rescored unchanged predictions |
+| [Occupied-rack preparation](occupied_rack_context_preparation.txt) | Historical preparation snapshot: cargo placement, geometry checks and exposure tradeoff |
+| [Occupied-rack results](occupied_rack_context_results.txt) | Completed matched comparison, every seed/frame change and complete utility decision |
+| [Reviewed training coverage](reviewed_training_coverage_results.txt) | Expanded real cohort comparison and its reference-version limitations |
+| [ResNet backbone results](resnet_backbone_results.txt) | Matched three-seed backbone experiment; retained model unchanged |
+| [Additional model trial](additional_model_trial_results.txt) | Exploratory VGG-U-Net and YOLO semantic comparison, setup and limitations |
 | [Threshold diagnostic](goods_threshold_diagnostic_results.txt) | Later exploratory inference tradeoffs; no model promotion |
 | [Failure analysis](goods_failure_analysis.txt) | Saved errors and actual training exposure |
 | [Scene benchmark results](scene_benchmark_results.txt) | Earlier matched scene comparisons |

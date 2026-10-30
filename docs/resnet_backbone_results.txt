@@ -1,0 +1,133 @@
+Pretrained segmentation backbone experiment
+==========================================
+
+Outcome
+DeepLabV3 with ResNet-50 fits the available GPU at the existing batch size, but
+does not improve segmentation under the frozen training recipe. Mean precision
+increases while goods IoU and recall fall sharply. The experimental candidate
+fails the declared rule and is not promoted. The retained model, references,
+historical experiments and synthetic-data qualification decisions are unchanged.
+
+Native development metrics (mean across seeds 17, 29 and 43)
+Metric                          Fresh MobileNetV3   Fresh ResNet-50   Change
+Goods IoU                                  47.67%            31.51%   -16.16 pp
+Precision                                  52.36%            60.46%    +8.10 pp
+Recall                                     84.97%            46.75%   -38.22 pp
+Frame-mean goods IoU                        40.84%            24.97%   -15.87 pp
+Overall valid-pixel accuracy                90.67%            90.32%    -0.35 pp
+Background false-positive rate              8.71%             4.90%    -3.81 pp
+Dark-goods miss rate                        40.52%            62.03%   +21.52 pp
+
+IoU, precision and recall aggregate native valid pixels per seed, then average
+seeds. Frame-mean IoU weights frames equally. Ignored target ID 255 is excluded.
+Background false positives divide FP by FP+TN. Dark means Pillow display luma
+below 50; this is not a calibrated radiance measure or object-family annotation.
+Overall pixel accuracy is background-dominated and is not the acceptance target.
+Both mean accuracies exceed 90%, despite substantial goods-segmentation errors.
+
+The frozen acceptance rule required improved mean goods IoU and precision with
+no mean recall reduction against a fresh matched MobileNet control. It failed.
+This evaluates pretrained model choices, not synthetic-data usefulness.
+
+Per-seed changes, ResNet minus MobileNet (percentage points)
+Seed      Goods IoU     Precision      Recall
+17           -21.46        +37.03      -63.36
+29            -7.30         +5.42      -29.42
+43           -19.72        -18.16      -21.88
+
+Every seed loses IoU and recall; precision also regresses on seed 43. One frame
+gains mean IoU, ten regress and one is unchanged. The small gain in 000941 is
+0.018 pp and does not compensate for the broad losses. Largest regressions:
+000094, 86.21% to 39.44% (-46.77 pp); 000565, 89.11% to 46.52% (-42.58 pp).
+Dark-load frame 000753 loses 6.52 pp in mean IoU, although seed 43 improves on
+that frame. These two largest regressions and the dark-load frame were visually
+inspected across all seeds. The gallery preserves all frames and seeds.
+
+GPU checks before customer training
+Hardware: NVIDIA GeForce RTX 5070 Laptop GPU, 8 GB VRAM, driver 582.05. Initial
+CUDA free memory was 7,245,660,160 bytes out of 8,546,484,224 bytes. Available
+project disk space was approximately 756 GB. Existing Python 3.12.15, PyTorch
+2.9.1+cu128 and torchvision 0.24.1 were reused without package upgrades.
+
+Three generated known-label fixture steps exercised forward, backward, finite
+gradients and AdamW at batch four, RGB 640x360, float32. Both models passed:
+- MobileNet: 1,348,658,688 bytes peak allocated; 1,606,418,432 bytes peak reserved.
+- ResNet-50: 4,725,575,680 bytes peak allocated; 5,091,885,056 bytes peak reserved.
+This is approximately 1.26 versus 4.40 GiB allocated. The same batch size and
+precision were therefore retained. These fixture timings are not customer-task
+throughput, sensor fidelity or production stability evidence.
+
+Measured completed-run costs
+MobileNet training/reload/report scope: 43.34-45.64 seconds per seed; mean 44.57 s.
+ResNet-50: 142.81-144.24 seconds per seed; mean 143.69 s, approximately 3.22x slower.
+Separate evaluation and prediction export are outside those timing scopes.
+Actual peak allocated GPU memory:
+- MobileNet: 1,346,888,192-1,348,508,160 bytes, approximately 1.25-1.26 GiB.
+- ResNet-50: 4,728,639,488-4,728,836,096 bytes, approximately 4.40 GiB.
+These are PyTorch allocation measurements, not total device memory usage. Both
+completed without changing batch size. Both used four CPU threads, cuDNN disabled
+and synchronous CUDA launches, following the prior execution-stability finding.
+
+Frozen training comparison
+Same qualified 32-training/12-development cohort and native reference masks.
+RGB only; 640x360 BOX resizing, nearest-neighbour categorical targets, fixed
+ImageNet RGB normalization. Evaluation upsamples logits bilinearly to 1280x720
+with align_corners=False, then argmax (threshold 0.5). Unweighted cross-entropy
+ignores 255. AdamW learning rate 0.0003, weight decay 0.0001. Frozen BatchNorm
+running statistics. Fifteen epochs, batch four, 120 updates and 480 real sample
+presentations per seed. Fixed final checkpoint; no intermediate development
+checkpoint search, threshold tuning, auxiliary replay or synthetic inputs.
+
+The declared intervention includes backbone and architecture-specific pretrained
+initialization. Both use official COCO/VOC segmentation weights with only the
+main and auxiliary class-output heads replaced. The numerical weights and
+pretraining recipes differ, so results cannot be attributed to architecture
+alone. Actual two-class model parameter counts are 11,024,236 and 41,994,308,
+including the auxiliary classifier retained by the existing training contract.
+This experiment does not optimize each model's learning rate or training budget.
+
+Interpretation
+ResNet reduces mean false positives but misses far more goods, including dark
+goods. Higher precision alone therefore does not justify switching models.
+Its final training cross-entropy also remains higher: 0.179-0.248 versus
+MobileNet's 0.019-0.022. That is evidence that this fixed recipe fits differently;
+it does not establish a unique cause or prove that more epochs would fix it.
+Do not claim that ResNet is universally inferior, or tune annotations to rescue
+its scores. Any future optimization is a separate declared experiment.
+
+Keep MobileNet as the evaluation reference for the current recipe. Preserve the
+ResNet candidate and report as an unsuccessful bounded model-choice experiment.
+Return synthetic-generation recommendations to direct quality evidence and
+controlled real-only versus hybrid comparisons. This model experiment alone
+does not establish appearance realism or synthetic-data value.
+
+Verification and source bindings
+Explicit backbone selection now supports MobileNetV3-Large and ResNet-50; unknown
+models cannot silently fall back to MobileNet. Local pretrained checkpoints are
+checksum-bound and incompatible non-output tensors are rejected. Constructors
+perform no downloads. Focused backbone, train/reload and runner tests passed:
+11 tests and 6 subtests. Changed Python modules compile.
+
+All six completed checkpoints reload strictly. All 72 native development masks
+are independently recounted and agree with saved evaluations. Model-assisted
+reference provenance and prior masks remain unchanged. No locked-test evaluation,
+model promotion, package upgrade or Git publication occurred. Dependent video
+frames and repeated development use limit generalization claims.
+
+Reference profile SHA256:
+df43b6eae5204100ccdeccebcf504761367d4ce1790769fd4e78ed14d4bcbe4d
+Protocol SHA256:
+fe1642c27486f594372399a14a8900eeea6bb7415793a49b1d19193d2e536d21
+Comparison profile SHA256:
+d205c4cf177b90c7f8f1ac19d87f701cd9bd948cda664a4112f18c1ca707335c
+MobileNet configuration SHA256:
+4e4c72af6397d592b5156da0556d10a5b823a00021f82f87f6ee992354212989
+ResNet-50 configuration SHA256:
+619d51b7f6b1bf6f374ef2235cd69ced6c50be256eef3610a8fe62b48739c341
+MobileNet initialization SHA256:
+fc3c493d68e89cc31ef488c803d5d7dd2f3190fb570598faa49fef69be8e5e70
+ResNet-50 initialization SHA256:
+cd0a25694c4a0f7106b38f4938bf90a874f2f241cc410b8f63c7024399538f06
+ResNet weights source:
+https://download.pytorch.org/models/deeplabv3_resnet50_coco-cd0a2569.pth
+The published checksum prefix and full local digest were verified before use.

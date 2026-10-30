@@ -1,0 +1,129 @@
+Occupied-rack cargo placement results
+====================================
+
+Question: does training-supported rack placement, smaller visible cargo and
+partial rack occlusion improve real-image goods segmentation under the fixed
+equipment/background protocol?
+
+Fails the complete frozen utility rule. Candidate is not promoted; retained model remains the reporting baseline.
+
+Retained reporting baseline on these corrected references: goods IoU 50.63%,
+precision 54.26%, recall 88.68%. Its unchanged weights and historical selection
+policy are preserved; it is not the fresh matched control in this trial.
+
+Eight exact captures received explicit appearance/label approval from Leena
+Bhise and passed source-bound admission. Appearance/label acceptance is
+separate from downstream usefulness and does not certify photographic realism.
+
+Metric (mean of seeds 17/29/43) | Fresh real-only | Real + synthetic | Change
+--------------------------------|-----------------|------------------|-------
+Goods IoU | 45.06% | 49.17% | +4.11 pp
+Precision | 47.45% | 53.10% | +5.65 pp
+Recall | 90.19% | 87.04% | -3.15 pp
+Pixel accuracy | 89.01% | 91.11% | +2.11 pp
+Frame-mean goods IoU | 40.85% | 40.94% | +0.09 pp
+Background false-positive rate | 11.12% | 8.44% | -2.68 pp
+Dark-goods miss rate | 32.45% | 35.03% | +2.57 pp
+
+Seed | Real IoU | Hybrid IoU | IoU change | Precision change | Recall change
+17 | 43.86% | 46.85% | +2.98 pp | +3.90 pp | -1.92 pp
+29 | 50.30% | 51.87% | +1.57 pp | +1.46 pp | +0.86 pp
+43 | 41.02% | 48.81% | +7.79 pp | +11.58 pp | -8.38 pp
+
+Frame (three-seed mean change) | Goods IoU | Precision | Recall
+Aisle_CW_Run_1/000000 | +1.52 pp | +1.52 pp | +1.12 pp
+Aisle_CW_Run_1/000094 | +2.21 pp | +3.73 pp | -1.37 pp
+Aisle_CW_Run_1/000188 | +1.12 pp | +5.15 pp | -5.85 pp
+Aisle_CW_Run_1/000282 | -5.18 pp | +1.90 pp | -8.31 pp
+Aisle_CW_Run_1/000376 | -2.24 pp | +2.26 pp | -6.24 pp
+Aisle_CW_Run_1/000470 | +0.00 pp | +0.00 pp | undefined
+Aisle_CW_Run_1/000565 | +0.41 pp | +1.10 pp | -0.79 pp
+Aisle_CW_Run_1/000659 | +3.30 pp | +3.16 pp | +0.34 pp
+Aisle_CW_Run_1/000753 | -0.19 pp | +2.82 pp | -5.00 pp
+Aisle_CW_Run_1/000847 | -1.88 pp | -2.08 pp | -37.95 pp
+Aisle_CW_Run_1/000941 | +0.13 pp | +0.13 pp | +13.77 pp
+Aisle_CW_Run_1/001036 | +1.88 pp | +1.88 pp | +0.00 pp
+
+Frozen acceptance checks
+iou_positive: PASS
+iou_at_least_three_percentage_points: PASS
+precision_increases: PASS
+mean_recall_nonregression: FAIL
+background_false_positive_rate_decreases: PASS
+dark_miss_no_worse_than_fresh_control: FAIL
+dark_miss_no_worse_than_historical_equipment_candidate: FAIL
+
+Acceptance requires at least +3 percentage points mean goods IoU, increased
+precision, nondecreasing recall and lower background false-positive rate.
+Dark-goods miss rate must not exceed the fresh control or the same-reference
+historical ceiling of 18.67171826%. The historical guard is not a matched
+causal control. No threshold, loss or acceptance rule was changed after fitting.
+
+Each seed uses 480 primary real and 60 auxiliary presentations, 120 updates,
+the same initialization/optimizer/loss and fixed final epoch 15. Both arms
+use 30 mixed and 30 background-only auxiliary inputs. The candidate retains
+the exact ordered 14 tyre-loaded/16 carton-loaded/30 empty sequence. Its
+60 synthetic inputs replace 60 real replays, while primary real exposure
+remains fixed. This changes auxiliary content, not optimizer-update count.
+
+Moving existing cargo reduced scheduled synthetic goods pixels from 400,549
+to 173,773 and dark-goods pixels from 110,459 to 35,420. Full-schedule dark
+goods pixels including primary real inputs are 1,223,810 versus 1,267,616
+in the fresh control. Class-normalized loss coefficients remain fixed; pixel
+counts do not establish gradient influence or a unique causal explanation.
+
+Evaluation darkness is native display luminance below 50. Training-exposure
+darkness uses BOX-resampled 640x360 RGB; target resizing is NEAREST. Small
+connected-reference regions are diagnostics, not annotated instances or
+distance estimates. Their full counts and recall/miss metrics are preserved.
+
+Verification: all 72 native development predictions independently reproduce
+per-frame and aggregate confusion counts. Checkpoint strict-reload provenance,
+all input counts, source/configuration hashes and all 517 protected artifacts
+pass. Both fresh arms use the corrected 32-training/12-development cohort.
+Original targets, retained weights and earlier experiments are preserved.
+
+Paired native-pixel transitions pooled across the three seeds show 635,021 fewer
+false goods pixels but 81,465 additional missed goods pixels. About 79.6% of net
+additional misses lie in connected reference-goods regions larger than 4,096
+native pixels; these regions are not object instances. Largest mean net added
+misses occur in 000282, 000753, 000376 and 000188. The remaining failure therefore
+extends beyond tiny/distant goods. This diagnoses effects, not their unique cause.
+
+Next decision: retain the baseline and close this placement trial as unsuccessful.
+Before another generation revision, compare representative large/wrapped loads
+and stored-goods groups with the existing synthetic cargo in a focused appearance
+and context review. Derive any new scene parameters only from training sources.
+Preserve the accepted batch and reviewed references; no further generation or
+annotation changes are part of this completed comparison.
+
+Fresh control scores differ from the historical saved control. A separate
+read-only audit found identical training row order, native RGB/target hashes,
+input counts, initialization and common recorded runtime settings. The cause
+of checkpoint differences remains unresolved. Historical scores are context;
+the new candidate is judged against its fresh matched control. This check
+does not prove full-run determinism or isolate a numerical cause.
+
+Runtime: NVIDIA GeForce RTX 5070 Laptop GPU, float32, 640x360 training,
+native 1280x720 scoring, batch size 4, four CPU threads and cuDNN disabled.
+CUDA launch blocking is enabled. Per-run training/verification time and peak
+allocated CUDA memory are recorded in each seed profile; no throughput or
+scalability claim is inferred from this small trial.
+
+Limitations: one training and one repeatedly used development trajectory,
+dependent video frames, three seeds, model-assisted reviewed references and
+a sparse authored aisle with repeated assets/materials. These results do not
+establish statistical significance, independent-recording generalization,
+physical sensor fidelity or production suitability. Locked test untouched.
+
+Evidence bindings
+Reference profile: 2ba84460fa9991befdcdbfbba88bda8225eae91d88ec0a943b39d13fd858cda9
+Preparation protocol: f9f6573584a869e7ca959447a521edf13cfc0ab9c828368eca132bd2c67d552d
+Execution: c0aa63ce4b59f0f9e57b25b7b532a807066c7c0c1c46b721ccd040e58f1aeed2
+Admission: 9bdf2db5695f32f408a0c71cb0f3ce2c205913a562308ad19e0b4cd4de098002
+Independent comparison: a1fb48f67ba757475fe99eb01f4fae2c632c362c27e3c0662f0259a67744e1b5
+Control arm: c8751bff1a818b2825a0c262396deaf5527b5e2682b47d5cbe9ba46d21e89a3e
+Candidate arm: b9792e9428e175ff64a6e43cc5e13e0d6f5e38dfe868391851022f1ddf8d2fc2
+Control reproducibility audit: f1c5fece5add2bb441a6180587d7ada0b758e5326e9a227f28ed6ec35ecc58ee
+Independent delivery check: d081fe05682d33043f4dd2e2ba0c64e768e06f35bf4c8fccc5f5d1fcd4008876
+Evidence root: reports/occupied_rack_experiment_20261030

@@ -35,12 +35,19 @@ def validate_auxiliary_settings(settings):
 
 
 def validate_auxiliary_sampling(config):
-    """Validate legacy scene cycles or matched real/scene class-presence cycles.
+    """Validate legacy cycles or an explicitly frozen auxiliary update sequence.
 
     Omission preserves the original independent-hash sampler. Cadence, loss
     settings and primary real exposure belong to separate unchanged contracts.
     """
     if "auxiliary_sampling" not in config:
+        return
+    sampling = config["auxiliary_sampling"]
+    if (
+        isinstance(sampling, dict)
+        and sampling.get("strategy") == "explicit_update_sequence"
+    ):
+        _validate_explicit_sampling(config)
         return
     presence_cycle = config["auxiliary_sampling"] == {
         "strategy": "balanced_presence_cycle"
@@ -75,15 +82,121 @@ def validate_auxiliary_sampling(config):
         )
 
 
+def _validate_explicit_sampling(config):
+    """Check sequence syntax without reading data or consuming random state."""
+    sampling = config["auxiliary_sampling"]
+    if (
+        set(sampling) != {"strategy", "events"}
+        or not isinstance(sampling["events"], list)
+        or config.get("experiment_kind") not in ("real_only", "real_plus_scene")
+        or config.get("auxiliary_training") is None
+        or (
+            config.get("experiment_kind") == "real_plus_scene"
+            and config.get("synthetic_mixing") != {"strategy": "auxiliary_only"}
+        )
+        or type(config.get("generation_seed")) is not int
+        or config["generation_seed"] < 0
+    ):
+        raise ValueError(
+            "Explicit auxiliary sequences require bounded auxiliary inputs"
+        )
+    validate_auxiliary_settings(config["auxiliary_training"])
+    interval = config["auxiliary_training"]["interval_updates"]
+    previous_update = 0
+    for event in sampling["events"]:
+        if (
+            not isinstance(event, dict)
+            or set(event) != {"update", "sample_id", "target_kind"}
+            or type(event["update"]) is not int
+            or event["update"] <= previous_update
+            or event["update"] % interval
+            or not isinstance(event["sample_id"], str)
+            or not event["sample_id"]
+            or event["target_kind"] not in ("mixed", "background_only")
+        ):
+            raise ValueError(
+                "Explicit auxiliary events must be ordered, unique and on cadence"
+            )
+        previous_update = event["update"]
+
+
+def _validate_explicit_target(image):
+    """Reject invalid native categorical masks before nearest-neighbour resizing."""
+    values = np.asarray(image)
+    if (
+        values.ndim != 2
+        or values.dtype != np.uint8
+        or not values.size
+        or not np.isin(values, (0, 1, 255)).all()
+    ):
+        raise ValueError("Explicit auxiliary donors require uint8 categorical masks")
+
+
+def _explicit_donors_by_id(donors, events):
+    """Bind every declared event to a unique training donor and verified mask kind."""
+    by_id = {}
+    for donor in donors:
+        row = donor[1]
+        identifier = row.get("sample_id")
+        if (
+            not isinstance(identifier, str)
+            or not identifier
+            or identifier in by_id
+            or row.get("split") != "train"
+            or row.get("auxiliary_target_kind") not in ("mixed", "background_only")
+        ):
+            raise ValueError(
+                "Explicit sequences require unique training-only donors and verified kinds"
+            )
+        by_id[identifier] = donor
+    for event in events:
+        donor = by_id.get(event["sample_id"])
+        if donor is None or donor[1]["auxiliary_target_kind"] != event["target_kind"]:
+            raise ValueError(
+                "Explicit auxiliary event has an unknown donor or wrong target kind"
+            )
+    return by_id
+
+
+def _validate_explicit_budget(donors, config, training_count):
+    """Require one event for every auxiliary update in the entire real-data budget."""
+    if training_count < 1 or any(
+        type(config.get(field)) is not int or config[field] < 1
+        for field in ("epochs", "batch_size")
+    ):
+        raise ValueError(
+            "Explicit sequences require a positive real-training update budget"
+        )
+    total_updates = config["epochs"] * math.ceil(training_count / config["batch_size"])
+    interval = config["auxiliary_training"]["interval_updates"]
+    events = config["auxiliary_sampling"]["events"]
+    if [event["update"] for event in events] != list(
+        range(interval, total_updates + 1, interval)
+    ):
+        raise ValueError(
+            "Explicit auxiliary sequence does not cover the complete update budget"
+        )
+    _explicit_donors_by_id(donors, events)
+
+
 def prepare_auxiliary_donors(references, real_rows, scene_root, scenes, config):
     """Validate the loss target against real training pixels and qualify donors.
 
     Count masks at the exact nearest-neighbour training resolution.
     Background-only donors require the explicit missing-class policy. All original
     real frames still participate in the unchanged primary training stream.
+    Explicit sequences additionally verify native uint8 IDs (0, 1, 255), donor
+    identity and kind, and complete epoch/batch coverage before any model is fit.
     """
     settings = config["auxiliary_training"]
     validate_auxiliary_settings(settings)
+    sampling = config.get("auxiliary_sampling")
+    explicit = (
+        isinstance(sampling, dict)
+        and sampling.get("strategy") == "explicit_update_sequence"
+    )
+    if explicit:
+        validate_auxiliary_sampling(config)
     allow_negative = (
         settings.get("missing_class_policy") == "background_only_zero_foreground_mass"
     )
@@ -93,6 +206,8 @@ def prepare_auxiliary_donors(references, real_rows, scene_root, scenes, config):
         if row["split"] != "train":
             continue
         with Image.open(source_path(Path(references), row["target_path"])) as image:
+            if explicit:
+                _validate_explicit_target(image)
             target = np.array(
                 image.resize(
                     tuple(config["training_resolution"]), Image.Resampling.NEAREST
@@ -103,7 +218,7 @@ def prepare_auxiliary_donors(references, real_rows, scene_root, scenes, config):
         background += bg
         if bg and (fg or allow_negative):
             donor_row = dict(row)
-            if allow_negative:
+            if allow_negative or explicit:
                 donor_row["auxiliary_target_kind"] = (
                     "mixed" if fg else "background_only"
                 )
@@ -125,6 +240,8 @@ def prepare_auxiliary_donors(references, real_rows, scene_root, scenes, config):
             if row["split"] != "train":
                 raise ValueError("Auxiliary scenes must be training-only")
             with Image.open(source_path(Path(scene_root), row["target_path"])) as image:
+                if explicit:
+                    _validate_explicit_target(image)
                 target = np.array(
                     image.resize(
                         tuple(config["training_resolution"]), Image.Resampling.NEAREST
@@ -132,7 +249,7 @@ def prepare_auxiliary_donors(references, real_rows, scene_root, scenes, config):
                 )
             if np.any(target == 0) and (np.any(target == 1) or allow_negative):
                 donor_row = dict(row)
-                if allow_negative:
+                if allow_negative or explicit:
                     donor_row["auxiliary_target_kind"] = (
                         "mixed" if np.any(target == 1) else "background_only"
                     )
@@ -147,6 +264,10 @@ def prepare_auxiliary_donors(references, real_rows, scene_root, scenes, config):
         row.get("auxiliary_target_kind") for _, row in donors
     } != {"mixed", "background_only"}:
         raise ValueError("Presence-balanced cycles need both negative and mixed donors")
+    if explicit:
+        _validate_explicit_budget(
+            donors, config, sum(row["split"] == "train" for row in real_rows)
+        )
     return sorted(donors, key=lambda value: value[1]["sample_id"])
 
 
@@ -159,6 +280,8 @@ def select_auxiliary_donor(donors, config, update):
     permutation changes order between cycles, so every prefix differs by at most
     one visit across donors. The legacy policy remains byte-for-byte equivalent
     in its hash inputs and indexing when no sampling policy is declared.
+    Explicit sequences use the supplied update/identity/kind binding directly;
+    changing a job-derived sample ID therefore cannot silently reshuffle exposure.
     """
     if type(update) is not int or update < 1 or not donors:
         raise ValueError(
@@ -168,6 +291,16 @@ def select_auxiliary_donor(donors, config, update):
     interval = config["auxiliary_training"]["interval_updates"]
     if update % interval:
         return None
+    if (
+        config.get("auxiliary_sampling", {}).get("strategy")
+        == "explicit_update_sequence"
+    ):
+        events = config["auxiliary_sampling"]["events"]
+        by_id = _explicit_donors_by_id(donors, events)
+        ordinal = update // interval - 1
+        if ordinal >= len(events) or events[ordinal]["update"] != update:
+            raise ValueError("No explicit auxiliary event for the requested update")
+        return by_id[events[ordinal]["sample_id"]]
     if "auxiliary_sampling" in config:
         identifiers = [row.get("sample_id") for _, row in donors]
         if (

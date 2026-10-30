@@ -1,16 +1,16 @@
 {
-  "status": "equipment_pair_comparison_complete_candidate_rejected",
+  "status": "retained_model_unchanged_occupied_rack_comparison_complete",
   "reference_counts": {
-    "train": 30,
+    "train": 32,
     "validation": 12
   },
-  "reference_profile_sha256": "d4928f47f069b0ae29ce1c7dae9282d54e8bbb3a4b8944e291ce8422a4d39468",
+  "reference_profile_sha256": "2ba84460fa9991befdcdbfbba88bda8225eae91d88ec0a943b39d13fd858cda9",
   "annotation_packet_sha256": "3018c4cd897af5bb9e3f0425eb667bc74d0083ff693172e117d28c81087b4967",
-  "validated_reference_versions": 42,
+  "validated_reference_versions": 44,
   "control_metrics": {
-    "goods_iou": 0.5083870376142806,
-    "precision": 0.5447802166207054,
-    "recall": 0.8873720831422119
+    "goods_iou": 0.5062686778328443,
+    "precision": 0.5425633611476463,
+    "recall": 0.886810758763299
   },
   "candidate_metrics": null,
   "candidate_accepted": false,
@@ -23,7 +23,7 @@
     43
   ],
   "optimizer_updates_per_seed": 120,
-  "native_prediction_masks_recomputed": 72,
+  "native_prediction_masks_recomputed": 180,
   "tests": {
     "passed": 174,
     "subtests_passed": 47,
@@ -870,5 +870,664 @@
     "candidate_promoted": false,
     "held_out_test_evaluated": false,
     "report": "docs/equipment_pair_results.txt"
-  }
+  },
+  "reporting_baseline": {
+    "status": "retained_model_no_replacement",
+    "model_profile_sha256": "9260610429cd1196b9b8767efe6792b18d621cc2509df54528dfb9202fa6cf13",
+    "evaluation_reference_profile_sha256": "2ba84460fa9991befdcdbfbba88bda8225eae91d88ec0a943b39d13fd858cda9",
+    "recount_profile_sha256": "feb941e37a0c40f550b851ca49bb576ea73905e85a9ee886d99067f92c4d0397",
+    "metrics": {
+      "goods_iou": 0.5062686778328443,
+      "precision": 0.5425633611476463,
+      "recall": 0.886810758763299
+    },
+    "model_seeds": [
+      17,
+      29,
+      43
+    ],
+    "development_frames": 12,
+    "historical_model_and_reference_pointers_preserved": true,
+    "weights_retrained_or_replaced": false,
+    "reference_rescoring_is_model_improvement": false
+  },
+  "next_equipment_precision_experiment": {
+    "status": "comparison_complete_candidate_rejected_for_recall_and_dark_goods_regressions",
+    "reference_profile_sha256": "df43b6eae5204100ccdeccebcf504761367d4ce1790769fd4e78ed14d4bcbe4d",
+    "reference_counts": {
+      "train": 32,
+      "validation": 12
+    },
+    "reviewed_annotations_preserved": true,
+    "both_additions_preserved": true,
+    "fresh_matched_control_required": true,
+    "positive_gain_and_mvp_target_distinguished": true,
+    "mvp_minimum_goods_iou_gain_percentage_points": 3,
+    "precision_must_increase": true,
+    "recall_must_not_decrease": true,
+    "background_false_positive_rate_must_decrease": true,
+    "dark_goods_miss_rate_must_not_exceed_fresh_control": true,
+    "historical_dark_goods_miss_rate_ceiling": 0.1853674019996826,
+    "exact_batch_appearance_label_acceptance_recorded": true,
+    "training_eligible": true,
+    "new_customer_training_executed": true,
+    "candidate_promoted": false,
+    "held_out_test_evaluated": false,
+    "report": "docs/equipment_precision_results.txt",
+    "dataset_profile_sha256": "805cde4d447e2bc72b808825e5da094df68704c6a630cb6517170d944de35158",
+    "job_sha256": "d3e2a78cb28c3092f682cf049a80d0c1d155dd9f321df1dbf9452b8ba631a669",
+    "review_profile_sha256": "e8a3d194a4ddf08afeaf60ab329327db1da1f3b88ae25f18931ab772abb4c5ca",
+    "geometry_profile_sha256": "185bd975b5f3f67b550c01687f6c7b3342f28ee906d51a4b5edc56cd3223ba58",
+    "preparation_protocol_sha256": "e41573636e8e116615db1b85ec7b192ab2cb6105dfafb8dcc48c52e3aeed72b6",
+    "pairs": 4,
+    "captures": 8,
+    "background_only_captures": 4,
+    "independent_geometry_rays": 2624,
+    "sampled_instance_agreement": 1.0,
+    "reference_artifacts_verified": 134,
+    "reference_artifacts_changed": 0,
+    "protected_files_verified": 147,
+    "protected_files_changed": 0,
+    "primary_real_presentations_per_arm_seed": 480,
+    "auxiliary_presentations_per_arm_seed": 60,
+    "auxiliary_presence_per_arm_seed": {
+      "background_only": 30,
+      "mixed": 30
+    },
+    "synthetic_tyre_loaded_presentations": 14,
+    "historical_synthetic_tyre_loaded_presentations": 20,
+    "training_exposure_is_not_recall_guarantee": true,
+    "pending_decisions_rejected": true,
+    "missing_admission_rejected": true,
+    "comparison_complete": true,
+    "admission_profile_sha256": "82271a9413d3018d14761da2a2b3e5f4dab4ed9f9fc8c95f6a0259577fb450f9",
+    "execution_sha256": "394d5ba0046f4670f815290d8d3177df0dd6bb3686ccee7e0c3ded5ed5f531c6",
+    "control_metrics": {
+      "goods_iou": 0.4705228631274873,
+      "precision": 0.49704314737464195,
+      "recall": 0.9007290655836329,
+      "background_false_positive_rate": 0.10106273315829672,
+      "dark_goods_miss_rate": 0.32589007035920226,
+      "frame_mean_goods_iou": 0.4149584633122357
+    },
+    "candidate_metrics": {
+      "goods_iou": 0.5192397245043705,
+      "precision": 0.5840211428765093,
+      "recall": 0.8329856653213259,
+      "background_false_positive_rate": 0.0679675861934204,
+      "dark_goods_miss_rate": 0.36780669734962707,
+      "frame_mean_goods_iou": 0.4037334170170357
+    },
+    "mean_deltas_percentage_points": {
+      "goods_iou": 4.871686137688319,
+      "precision": 8.697799550186735,
+      "recall": -6.774340026230696,
+      "frame_mean_goods_iou": -1.1225046295199992,
+      "background_false_positive_rate": -3.3095146964876325,
+      "dark_goods_miss_rate": 4.191662699042481
+    },
+    "frame_iou_outcomes": {
+      "gain": 5,
+      "regression": 6,
+      "unchanged": 1,
+      "undefined": 0
+    },
+    "checks": {
+      "iou_positive": true,
+      "iou_at_least_three_percentage_points": true,
+      "precision_increases": true,
+      "mean_recall_nonregression": false,
+      "background_false_positive_rate_decreases": true,
+      "dark_miss_no_worse_than_fresh_control": false,
+      "dark_miss_no_worse_than_historical_equipment_candidate": false
+    },
+    "positive_experimental_result": false,
+    "mvp_utility_milestone_passed": false,
+    "native_predictions_recounted": 72,
+    "independent_audit_profile_sha256": "1498d44d89f0540d17442ff39c8bd10eabc469d2ace69d2aff14fc11010fe163",
+    "strict_comparison_profile_sha256": "f360dc0b7509b0c8af8dc9ec67661e8761c712c8c21809d6d775c48f4efe0fff",
+    "gallery_profile_sha256": "9f8fb31cbcbceb53cf0e7264dbf411ba8201eb993d8a425eaadd6e8a8befb0d7",
+    "source_arm_profiles": {
+      "control": "2648a4ea859b594c261d24c79852e05a007777ce1db93ffef44361149ff587a8",
+      "candidate": "934e01a54ae210656ffd2bf4b1acf0e753397e94a61a4f140043d530803d7983"
+    },
+    "retained_reporting_baseline_unchanged": true,
+    "visual_review_profile_sha256": "6a50836e1f8abd902ef95d54b84f9d9c28bed16f8368f75b9abd66a5946005b3"
+  },
+  "equipment_precision_failure_analysis": {
+    "status": "completed_local_reference_adjudication_and_cargo_context_revision_planned",
+    "profile_sha256": "be2f6116f8044fd548f50e511b3b5fd2f407a8cf8367d6e920776f810359b399",
+    "reference_profile_sha256": "df43b6eae5204100ccdeccebcf504761367d4ce1790769fd4e78ed14d4bcbe4d",
+    "strict_comparison_profile_sha256": "f360dc0b7509b0c8af8dc9ec67661e8761c712c8c21809d6d775c48f4efe0fff",
+    "native_prediction_masks_recounted": 72,
+    "requested_frames": [
+      "000188",
+      "000376",
+      "000282",
+      "000847"
+    ],
+    "reference_issue": {
+      "sample_id": "Aisle_CW_Run_1/000376",
+      "issue": "Visible person pixels labelled goods",
+      "adjudication_required": true,
+      "correction_performed": false,
+      "diagnostic_rectangle_is_not_correction_mask": true
+    },
+    "unique_causal_explanation_established": false,
+    "recommended_generation_factor": "Cargo spatial placement and occupied rack/bay context using training-source support",
+    "automatic_tyre_sampling_revision_recommended": false,
+    "preserved_auxiliary_counts": {
+      "tyre_loaded": 14,
+      "carton_loaded": 16,
+      "empty": 30
+    },
+    "reference_dependent_historical_guard_requires_recount_after_qualified_correction": true,
+    "annotations_changed": false,
+    "model_changed": false,
+    "reported_comparison_not_rescored": true,
+    "new_generation_run": false,
+    "new_training_run": false,
+    "locked_test_opened": false,
+    "report": "docs/equipment_precision_failure_analysis.txt"
+  },
+  "historical_status_header": {
+    "status": "retained_model_unchanged_equipment_precision_candidate_rejected",
+    "reference_counts": {
+      "train": 30,
+      "validation": 12
+    },
+    "reference_profile_sha256": "d4928f47f069b0ae29ce1c7dae9282d54e8bbb3a4b8944e291ce8422a4d39468",
+    "annotation_packet_sha256": "3018c4cd897af5bb9e3f0425eb667bc74d0083ff693172e117d28c81087b4967",
+    "validated_reference_versions": 42,
+    "control_metrics": {
+      "goods_iou": 0.5083870376142806,
+      "precision": 0.5447802166207054,
+      "recall": 0.8873720831422119
+    },
+    "native_prediction_masks_recomputed": 72,
+    "reporting_baseline": {
+      "status": "retained_model_no_replacement",
+      "model_profile_sha256": "9260610429cd1196b9b8767efe6792b18d621cc2509df54528dfb9202fa6cf13",
+      "evaluation_reference_profile_sha256": "d4928f47f069b0ae29ce1c7dae9282d54e8bbb3a4b8944e291ce8422a4d39468",
+      "recount_profile_sha256": "abc5bff289b7b00af99c44da57aedd95bdb62a2c46908d8a81f0f63eb55ba4bf",
+      "metrics": {
+        "goods_iou": 0.5083870376142806,
+        "precision": 0.5447802166207054,
+        "recall": 0.8873720831422119
+      },
+      "model_seeds": [
+        17,
+        29,
+        43
+      ],
+      "development_frames": 12,
+      "historical_model_and_reference_pointers_preserved": true
+    }
+  },
+  "annotation_packet_scope": "Historical 42-reference packet; current 44-reference cohort is separately source-bound",
+  "current_reference_reassessment": {
+    "status": "validated_local_correction_and_saved_prediction_rescoring_complete",
+    "profile_sha256": "feb941e37a0c40f550b851ca49bb576ea73905e85a9ee886d99067f92c4d0397",
+    "reference_profile_sha256": "2ba84460fa9991befdcdbfbba88bda8225eae91d88ec0a943b39d13fd858cda9",
+    "changed_pixels": 4380,
+    "other_references_unchanged": 43,
+    "all_32_training_targets_unchanged": true,
+    "prediction_masks_rescored_without_retraining": 180,
+    "control_metrics": {
+      "pixel_accuracy": 0.8988470767272215,
+      "pixel_error_rate": 0.10115292327277838,
+      "goods_iou": 0.4685457482215692,
+      "precision": 0.4949919484118553,
+      "recall": 0.9002343108446658,
+      "background_false_positive_rate": 0.1013045272729927,
+      "dark_goods_miss_rate": 0.3282630879206665,
+      "frame_mean_goods_iou": 0.41261423207179604
+    },
+    "candidate_metrics": {
+      "pixel_accuracy": 0.9219664755936395,
+      "pixel_error_rate": 0.07803352440636042,
+      "goods_iou": 0.5169518151593715,
+      "precision": 0.5815649732916669,
+      "recall": 0.8321532853901455,
+      "background_false_positive_rate": 0.0682182821659615,
+      "dark_goods_miss_rate": 0.37048493713481845,
+      "frame_mean_goods_iou": 0.4009006472694628
+    },
+    "candidate_passes_complete_utility_rule": false,
+    "historical_dark_goods_miss_ceiling": 0.18671718261675818,
+    "report": "docs/goods_reference_reassessment.txt"
+  },
+  "occupied_rack_context_preparation": {
+    "status": "accepted_admitted_comparison_complete",
+    "single_generation_factor": "Existing cargo centers only: occupied-rack/bay placement and consequent visible size/occlusion",
+    "preparation_contract_sha256": "4d4cffc116852d2ac825b3850629dc19d6eef87936d11167a24c9ae2449a1ff9",
+    "source_job_sha256": "d3e2a78cb28c3092f682cf049a80d0c1d155dd9f321df1dbf9452b8ba631a669",
+    "revised_job_sha256": "36ce7882137f45f2fec0c30fb8a12b83d459ccbf129bcc5261572239f603cacd",
+    "dataset_profile_sha256": "c1ddda6fb8dfd684cf8ff86bea0da539133b247219a0584406a7c3979d15ba19",
+    "geometry_profile_sha256": "88d41be47cac63eee1c06327f53b54b35094af022455379f955bc924356c59e9",
+    "review_profile_sha256": "76a47138cfa7bb64f7954a17ea08c5c95414b8bec0195bbc314fa67bda7a4b17",
+    "reference_profile_sha256": "2ba84460fa9991befdcdbfbba88bda8225eae91d88ec0a943b39d13fd858cda9",
+    "reference_counts": {
+      "train": 32,
+      "validation": 12
+    },
+    "task_sha256": "4c5dad11f99656cf1478f0ddc01b060aad7ef46ef131a4362c03c89668dd3a79",
+    "configurations": {
+      "control": {
+        "path": "configs/benchmarks/warehouse_goods_occupied_rack_control.json",
+        "sha256": "c4615765360f91ffba1825a490d75c1c320d302f0e2ba1d79c56324a12c29a3a"
+      },
+      "candidate": {
+        "path": "configs/benchmarks/warehouse_goods_occupied_rack_candidate.json",
+        "sha256": "e2fa1e790e3d7d19f20126cc2764dd8fbe39710773c0c8f03b9d1bcd41b9ab78"
+      }
+    },
+    "exact_order_preserved_by_capture_correspondence": true,
+    "ordered_capture_correspondence_sha256": "f7d53fe55e5c4a40a3244e9d41a104c5528ae45432b91b48ab996fc148a34f56",
+    "schedule_preview_sha256": "859f8481537bb74b8706b132486bdecba379ae5e071c26c215777d1f61c97085",
+    "original_auxiliary_implementation_sha256": "2b59189155af01f0187079eea7157324a335492b91b1b0eca00b3939cde9fcbc",
+    "explicit_auxiliary_implementation_sha256": "5ceed25e69792f367bdccc1a668512e2fb475d129cfb663f9776503c7c0d74a4",
+    "model_seeds": [
+      17,
+      29,
+      43
+    ],
+    "primary_real_presentations": 480,
+    "auxiliary_presentations": 60,
+    "optimizer_updates": 120,
+    "negative_visits": 30,
+    "tyre_loaded_visits": 14,
+    "carton_loaded_visits": 16,
+    "auxiliary_loss_weight": 0.2,
+    "checkpoint_selection": "fixed final epoch15",
+    "threshold": "native bilinear logits then argmax; no tuning",
+    "input_disclosure": "Control 480 primary+60 real replays; candidate480 primary+60 synthetic; same total540/120updates but candidate60fewer real replays. Pixel/dark exposure changes from placement are reported separately, not equated with gradient mass.",
+    "mvp_goods_iou_gain_minimum": 0.03,
+    "precision_must_increase": true,
+    "recall_must_not_decrease": true,
+    "background_false_positive_rate_must_decrease": true,
+    "dark_goods_miss_must_not_exceed_fresh_control": true,
+    "historical_dark_goods_miss_ceiling": 0.18671718261675818,
+    "historical_guard_is_matched_causal_control": false,
+    "runtime_policy": {
+      "precision": "float32",
+      "cpu_threads": 4,
+      "cudnn_enabled": false,
+      "cuda_launch_blocking": true
+    },
+    "human_acceptance_recorded": true,
+    "training_eligible": true,
+    "customer_training_started": true,
+    "model_promoted": false,
+    "held_out_test_evaluated": false,
+    "execution_requirement": "Exact new dataset/job appearance+label approval, independent geometry qualification and source-bound admission; freeze current code/runtime before both fresh matched arms. Preparation alone cannot start fitting.",
+    "benchmark_protocol_sha256": "f9f6573584a869e7ca959447a521edf13cfc0ab9c828368eca132bd2c67d552d",
+    "captures": 8,
+    "empty_loaded_pairs": 4,
+    "independent_geometry_rays": 3040,
+    "scheduled_exposure_sha256": "e46a3038cd8d712e56af7b5391380637c3a6cc32767dadbd3299bc359310eaca",
+    "auxiliary_goods_pixels_previous_revised": [
+      400549,
+      173773
+    ],
+    "auxiliary_dark_goods_pixels_previous_revised": [
+      110459,
+      35420
+    ],
+    "total_dark_goods_pixels_previous_revised_control": [
+      1298849,
+      1223810,
+      1267616
+    ],
+    "pixel_counts_are_measured_gradient_influence": false,
+    "protected_artifacts_unchanged": 517,
+    "report": "docs/occupied_rack_context_preparation.txt",
+    "customer_training_complete": true
+  },
+  "historical_sections_scope": "Earlier experiment objects retain original targets and execution status. Current reference reassessment and cargo-placement preparation supersede only their next-step statements.",
+  "occupied_rack_context_comparison": {
+    "status": "completed",
+    "purpose": "independent_occupied_rack_utility_qualification",
+    "independent_implementation": "np.histogram2d, independent explicit ratios and acceptance logic; no production scoring/model imports",
+    "execution_sha256": "c0aa63ce4b59f0f9e57b25b7b532a807066c7c0c1c46b721ccd040e58f1aeed2",
+    "preparation_protocol_sha256": "f9f6573584a869e7ca959447a521edf13cfc0ab9c828368eca132bd2c67d552d",
+    "runtime_policy_sha256": "62c7d58185d0592cea34da49950eeb1daa8ae58e18334f22066ef0c8cde0548e",
+    "runtime_policy": {
+      "execution_sha256": "c0aa63ce4b59f0f9e57b25b7b532a807066c7c0c1c46b721ccd040e58f1aeed2",
+      "precision": "float32",
+      "cpu_threads": 4,
+      "cudnn_enabled": false,
+      "cuda_launch_blocking": "1",
+      "torch": "2.9.1+cu128",
+      "device": "NVIDIA GeForce RTX 5070 Laptop GPU",
+      "cuda_runtime": "12.8",
+      "tf32_matmul": false
+    },
+    "reference_profile_sha256": "2ba84460fa9991befdcdbfbba88bda8225eae91d88ec0a943b39d13fd858cda9",
+    "arm_profile_sha256": {
+      "control": "c8751bff1a818b2825a0c262396deaf5527b5e2682b47d5cbe9ba46d21e89a3e",
+      "candidate": "b9792e9428e175ff64a6e43cc5e13e0d6f5e38dfe868391851022f1ddf8d2fc2"
+    },
+    "generic_comparison_profile_sha256": "89a4f0a5180e5319fa195adb9718137bb8a93845488c15c95b1b8e16c8bc0339",
+    "arms": {
+      "control": {
+        "seed_scores": [
+          {
+            "seed": 17,
+            "goods_iou": 0.4386221691900157,
+            "goods_dice": 0.6097809120194111,
+            "precision": 0.46063342687239345,
+            "recall": 0.9017597057157716,
+            "accuracy": 0.8862966578480579,
+            "pixel_error_rate": 0.11370334215194214,
+            "valid_pixels": 8763665,
+            "background_false_positive_rate": 0.1153932226723046,
+            "frame_mean_goods_iou": 0.3970350035092359,
+            "dark_goods_miss_rate": 0.2976924122165472,
+            "component_region_metrics": {
+              "tiny_1_to_256_native_pixels": {
+                "fn": 1586,
+                "tp": 3262,
+                "recall": 0.6728547854785478,
+                "miss_rate": 0.3271452145214521
+              },
+              "small_257_to_4096_native_pixels": {
+                "fn": 11131,
+                "tp": 67310,
+                "recall": 0.8580971685725577,
+                "miss_rate": 0.14190283142744228
+              },
+              "large_over_4096_native_pixels": {
+                "fn": 72102,
+                "tp": 707992,
+                "recall": 0.9075726771389089,
+                "miss_rate": 0.0924273228610911
+              }
+            }
+          },
+          {
+            "seed": 29,
+            "goods_iou": 0.5029640102676531,
+            "goods_dice": 0.669296146589809,
+            "precision": 0.5358620992234306,
+            "recall": 0.8912162968230786,
+            "accuracy": 0.9132335615293373,
+            "pixel_error_rate": 0.08676643847066268,
+            "valid_pixels": 8763665,
+            "background_false_positive_rate": 0.08436027979760723,
+            "frame_mean_goods_iou": 0.4429514855794417,
+            "dark_goods_miss_rate": 0.4688311792117274,
+            "component_region_metrics": {
+              "tiny_1_to_256_native_pixels": {
+                "fn": 1503,
+                "tp": 3345,
+                "recall": 0.6899752475247525,
+                "miss_rate": 0.3100247524752475
+              },
+              "small_257_to_4096_native_pixels": {
+                "fn": 8907,
+                "tp": 69534,
+                "recall": 0.8864496883007611,
+                "miss_rate": 0.11355031169923892
+              },
+              "large_over_4096_native_pixels": {
+                "fn": 83512,
+                "tp": 696582,
+                "recall": 0.892946234684538,
+                "miss_rate": 0.10705376531546199
+              }
+            }
+          },
+          {
+            "seed": 43,
+            "goods_iou": 0.4102139716210883,
+            "goods_dice": 0.5817755034004288,
+            "precision": 0.4269929321076973,
+            "recall": 0.9125810908947709,
+            "accuracy": 0.870737299976665,
+            "pixel_error_rate": 0.12926270002333498,
+            "valid_pixels": 8763665,
+            "background_false_positive_rate": 0.13383560232406894,
+            "frame_mean_goods_iou": 0.38560036121388414,
+            "dark_goods_miss_rate": 0.20704345810453284,
+            "component_region_metrics": {
+              "tiny_1_to_256_native_pixels": {
+                "fn": 1040,
+                "tp": 3808,
+                "recall": 0.7854785478547854,
+                "miss_rate": 0.2145214521452145
+              },
+              "small_257_to_4096_native_pixels": {
+                "fn": 6526,
+                "tp": 71915,
+                "recall": 0.9168037123443097,
+                "miss_rate": 0.08319628765569026
+              },
+              "large_over_4096_native_pixels": {
+                "fn": 67910,
+                "tp": 712184,
+                "recall": 0.9129463885121537,
+                "miss_rate": 0.08705361148784634
+              }
+            }
+          }
+        ],
+        "means": {
+          "goods_iou": 0.45060005035958567,
+          "precision": 0.4744961527345071,
+          "recall": 0.9018523644778736,
+          "accuracy": 0.89008917311802,
+          "pixel_error_rate": 0.10991082688197994,
+          "background_false_positive_rate": 0.11119636826466024,
+          "dark_goods_miss_rate": 0.32452234984426914,
+          "frame_mean_goods_iou": 0.40852895010085394
+        }
+      },
+      "candidate": {
+        "seed_scores": [
+          {
+            "seed": 17,
+            "goods_iou": 0.4684513051282997,
+            "goods_dice": 0.6380208911147663,
+            "precision": 0.49958499640723586,
+            "recall": 0.8825874496023202,
+            "accuracy": 0.901337054759624,
+            "pixel_error_rate": 0.09866294524037603,
+            "valid_pixels": 8763665,
+            "background_false_positive_rate": 0.09661389302305917,
+            "frame_mean_goods_iou": 0.39276818262896923,
+            "dark_goods_miss_rate": 0.4054144785746829,
+            "component_region_metrics": {
+              "tiny_1_to_256_native_pixels": {
+                "fn": 1849,
+                "tp": 2999,
+                "recall": 0.6186056105610561,
+                "miss_rate": 0.3813943894389439
+              },
+              "small_257_to_4096_native_pixels": {
+                "fn": 12926,
+                "tp": 65515,
+                "recall": 0.8352137275149475,
+                "miss_rate": 0.16478627248505245
+              },
+              "large_over_4096_native_pixels": {
+                "fn": 86597,
+                "tp": 693497,
+                "recall": 0.8889915830656305,
+                "miss_rate": 0.11100841693436944
+              }
+            }
+          },
+          {
+            "seed": 29,
+            "goods_iou": 0.5186603286087206,
+            "goods_dice": 0.6830498154697663,
+            "precision": 0.5504558878547055,
+            "recall": 0.8997918652556282,
+            "accuracy": 0.9177324783637896,
+            "pixel_error_rate": 0.08226752163621043,
+            "valid_pixels": 8763665,
+            "background_false_positive_rate": 0.08030688018478328,
+            "frame_mean_goods_iou": 0.4276095639508024,
+            "dark_goods_miss_rate": 0.2722505974789983,
+            "component_region_metrics": {
+              "tiny_1_to_256_native_pixels": {
+                "fn": 1695,
+                "tp": 3153,
+                "recall": 0.6503712871287128,
+                "miss_rate": 0.3496287128712871
+              },
+              "small_257_to_4096_native_pixels": {
+                "fn": 11642,
+                "tp": 66799,
+                "recall": 0.8515827182213384,
+                "miss_rate": 0.14841728177866167
+              },
+              "large_over_4096_native_pixels": {
+                "fn": 73181,
+                "tp": 706913,
+                "recall": 0.906189510494889,
+                "miss_rate": 0.09381048950511092
+              }
+            }
+          },
+          {
+            "seed": 43,
+            "goods_iou": 0.48809619626679474,
+            "goods_dice": 0.6560008653893312,
+            "precision": 0.5428159424225553,
+            "recall": 0.8288222028925749,
+            "accuracy": 0.9143628835652664,
+            "pixel_error_rate": 0.08563711643473364,
+            "valid_pixels": 8763665,
+            "background_false_positive_rate": 0.07628879576703718,
+            "frame_mean_goods_iou": 0.4079004106272199,
+            "dark_goods_miss_rate": 0.3731386231206388,
+            "component_region_metrics": {
+              "tiny_1_to_256_native_pixels": {
+                "fn": 2005,
+                "tp": 2843,
+                "recall": 0.5864273927392739,
+                "miss_rate": 0.4135726072607261
+              },
+              "small_257_to_4096_native_pixels": {
+                "fn": 17235,
+                "tp": 61206,
+                "recall": 0.7802807205415535,
+                "miss_rate": 0.21971927945844646
+              },
+              "large_over_4096_native_pixels": {
+                "fn": 128552,
+                "tp": 651542,
+                "recall": 0.8352096029452861,
+                "miss_rate": 0.16479039705471393
+              }
+            }
+          }
+        ],
+        "means": {
+          "goods_iou": 0.49173594333460496,
+          "precision": 0.5309522755614989,
+          "recall": 0.870400505916841,
+          "accuracy": 0.9111441388962267,
+          "pixel_error_rate": 0.08885586110377336,
+          "background_false_positive_rate": 0.0844031896582932,
+          "dark_goods_miss_rate": 0.3502678997247733,
+          "frame_mean_goods_iou": 0.40942605240233054
+        }
+      }
+    },
+    "mean_deltas": {
+      "goods_iou": 0.041135892975019295,
+      "precision": 0.056456122826991806,
+      "recall": -0.03145185856103261,
+      "accuracy": 0.021054965778206647,
+      "pixel_error_rate": -0.021054965778206577,
+      "background_false_positive_rate": -0.02679317860636704,
+      "dark_goods_miss_rate": 0.02574554988050415,
+      "frame_mean_goods_iou": 0.0008971023014766044
+    },
+    "checks": {
+      "iou_positive": true,
+      "iou_at_least_three_percentage_points": true,
+      "precision_increases": true,
+      "mean_recall_nonregression": false,
+      "background_false_positive_rate_decreases": true,
+      "dark_miss_no_worse_than_fresh_control": false,
+      "dark_miss_no_worse_than_historical_equipment_candidate": false
+    },
+    "positive_experimental_result": false,
+    "mvp_utility_milestone_passed": false,
+    "frame_iou_outcomes": {
+      "gain": 7,
+      "regression": 4,
+      "unchanged": 1
+    },
+    "native_predictions_recounted": 72,
+    "all_seed_frame_confusion_and_metrics_match": true,
+    "all_luma_strata_partition_valid_pixels": true,
+    "known_pixel_and_empty_subset_fixture": "passed",
+    "component_rule": "Four-connected native goods regions: <=256,257..4096,>4096 pixels. Diagnostic regions, not objects or distances; not acceptance gates.",
+    "historical_dark_floor_is_matched_control": false,
+    "historical_dark_goods_miss_ceiling": 0.18671718261675818,
+    "protected_existing_files_unchanged": 517,
+    "protected_files_changed": 0,
+    "checkpoint_strict_reload_provenance_verified": true,
+    "fresh_model_inference_performed": false,
+    "candidate_promoted": false,
+    "held_out_test_evaluated": false,
+    "raw_or_test_payloads_opened": 0,
+    "helper_sha256": "7834423f98f52ea002a8082e3e96d02f996a6488e75144ac21fe88c62aa01e1d",
+    "limitations": "One train/development trajectory, dependent video frames and repeated development use; three seeds do not establish statistical significance or independent generalization. Pixel exposure is disclosed separately from loss influence.",
+    "artifact_sha256": {
+      "all_seed_frame_errors.json": "a5acac964e34ce07078ca246dcf037edde07a8e0a5520759e75d8fe805be0946",
+      "all_seed_frame_deltas.json": "e11ffc01bc1a8be6b09f1995faee7173a6e9d3510aa3f9990c551073df614636",
+      "all_seed_deltas.json": "41b63389fced2c3b2bb4dfb746c175ddfbef282586bf5cdebd2ecdf0b3e5bc19",
+      "all_frame_mean_deltas.json": "3ac6f3d74ee67ede571102eb91634c29767bf6a5008a261fe74f3781241baaf4",
+      "reference_component_diagnostics.json": "98868127bd7eb8856b11bf1b2e2fbcccbcb8afa5dde40df6020f0cb267bfd1d7"
+    },
+    "profile_sha256": "a1fb48f67ba757475fe99eb01f4fae2c632c362c27e3c0662f0259a67744e1b5",
+    "admission_profile_sha256": "9bdf2db5695f32f408a0c71cb0f3ce2c205913a562308ad19e0b4cd4de098002",
+    "all_seed_deltas": [
+      {
+        "seed": 17,
+        "goods_iou": 0.029829135938284013,
+        "precision": 0.03895156953484241,
+        "recall": -0.019172256113451414,
+        "accuracy": 0.015040396911566112,
+        "pixel_error_rate": -0.015040396911566112,
+        "background_false_positive_rate": -0.018779329649245433,
+        "dark_goods_miss_rate": 0.10772206635813569,
+        "frame_mean_goods_iou": -0.004266820880266642
+      },
+      {
+        "seed": 29,
+        "goods_iou": 0.01569631834106744,
+        "precision": 0.014593788631274807,
+        "recall": 0.008575568432549585,
+        "accuracy": 0.004498916834452249,
+        "pixel_error_rate": -0.004498916834452249,
+        "background_false_positive_rate": -0.0040533996128239436,
+        "dark_goods_miss_rate": -0.19658058173272908,
+        "frame_mean_goods_iou": -0.015341921628639288
+      },
+      {
+        "seed": 43,
+        "goods_iou": 0.07788222464570643,
+        "precision": 0.11582301031485798,
+        "recall": -0.083758888002196,
+        "accuracy": 0.04362558358860136,
+        "pixel_error_rate": -0.043625583588601344,
+        "background_false_positive_rate": -0.05754680655703176,
+        "dark_goods_miss_rate": 0.16609516501610594,
+        "frame_mean_goods_iou": 0.022300049413335743
+      }
+    ],
+    "report": "docs/occupied_rack_context_results.txt",
+    "report_sha256": "48e65c968ae58a9bc6e9639039167c542e690a06e92ac106aeb50c8ff23c4c19",
+    "gallery_profile_sha256": "bddff0e7fffb0b3281f8554765c6f82206725821d06cb9a1e353b7964371ffc0",
+    "independent_delivery_check_sha256": "d081fe05682d33043f4dd2e2ba0c64e768e06f35bf4c8fccc5f5d1fcd4008876"
+  },
+  "authoritative_latest_experiment": "occupied_rack_context_comparison",
+  "candidate_acceptance_scope": "Model utility/promotion; separate exact-batch appearance and label acceptance is recorded under occupied_rack_context_preparation"
 }

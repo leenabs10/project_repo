@@ -1,0 +1,74 @@
+{
+  "schema_version": "dubaidata/1.0",
+  "task_id": "warehouse_visible_goods",
+  "status": "frozen_for_qualified_reference_execution",
+  "model": "deeplabv3_resnet50",
+  "initialization": "Declared architecture-specific official COCO/VOC segmentation pretrained checkpoint; replace only two class-output heads; pretraining recipes are not identical",
+  "initial_checkpoint_sha256": "cd0a25694c4a0f7106b38f4938bf90a874f2f241cc410b8f63c7024399538f06",
+  "input_channels": [
+    "rgb"
+  ],
+  "training_resolution": [
+    640,
+    360
+  ],
+  "native_reference_resolution": [
+    1280,
+    720
+  ],
+  "resampling": {
+    "rgb": "BOX",
+    "target": "NEAREST",
+    "evaluation_logits_to_native": "BILINEAR"
+  },
+  "normalization": {
+    "scale": 255,
+    "mean": [
+      0.485,
+      0.456,
+      0.406
+    ],
+    "std": [
+      0.229,
+      0.224,
+      0.225
+    ]
+  },
+  "loss": {
+    "name": "cross_entropy",
+    "ignore_index": 255
+  },
+  "optimizer": {
+    "name": "AdamW",
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001
+  },
+  "epochs": 15,
+  "batch_size": 4,
+  "model_seeds": [
+    17,
+    29,
+    43
+  ],
+  "generation_seed": 7331,
+  "selection_metric": null,
+  "metrics": [
+    "goods_iou",
+    "goods_dice",
+    "precision",
+    "recall",
+    "valid_pixels",
+    "reference_coverage"
+  ],
+  "comparison": "segmentation_backbone_and_its_pretrained_initialization",
+  "budget_matching": "Both use 32 train references, 15 epochs, batch four, 120 updates, 480 presentations per seed; no auxiliary or synthetic inputs",
+  "independence_limitations": "Whole trajectories define splits. Nearby frames are dependent and repeated development selection is disclosed. Report undefined foreground metrics explicitly.",
+  "test_access": "disabled_until_candidate_and_protocol_are_frozen",
+  "improvement_claim": "Requires completed matched multi-seed experiments and qualified real references; configuration or smoke checks do not demonstrate improvement",
+  "experiment_kind": "real_only",
+  "batch_norm": "frozen_running_statistics",
+  "experiment_name": "Frozen MobileNetV3 versus ResNet-50 real-only comparison",
+  "hypothesis": "A larger segmentation backbone may improve real-image goods/equipment discrimination",
+  "checkpoint_policy": "final_epoch",
+  "acceptance_rule": "Mean goods IoU and precision improve with no mean recall regression against fresh MobileNet control; no automatic promotion"
+}

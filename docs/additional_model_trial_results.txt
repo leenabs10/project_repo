@@ -1,0 +1,146 @@
+Exploratory segmentation model comparison
+========================================
+
+Qualification: single-seed demonstration, not a model promotion or an improvement
+claim. The retained reference model remains unchanged. This real-only experiment
+does not measure synthetic-data utility or independent customer generalization.
+
+All models used the same frozen 32-training/12-development reference cohort,
+seed 17, 15 epochs, batch four, 120 updates and 480 real-image presentations.
+Final-epoch selection and threshold 0.5 were declared before execution. Ignored
+targets (255) were excluded from supervision and scoring. No locked test was used.
+
+Model                         Goods IoU   Precision   Recall   Frame-mean IoU
+DeepLabV3 MobileNetV3-Large       43.70%      47.16%    85.65%          38.22%
+Experimental VGG16 U-Net         30.60%      43.41%    50.92%          24.38%
+YOLO26n semantic                 45.99%      53.75%    76.11%          34.14%
+
+IoU, precision and recall above are pixel-weighted native-development metrics.
+YOLO increased aggregate IoU by 2.29 percentage points and precision by 6.60
+points against this fresh MobileNet run, but recall fell by 9.54 points and
+frame-mean IoU fell by 4.08 points. This does not satisfy the recall safeguard.
+VGG-U-Net performed worse under this short, fixed training recipe; this does not
+establish its best attainable performance. No candidate is accepted.
+
+Overall pixel accuracy was 89.08%, 88.57% and 91.15%, respectively. Background
+dominates this measure, so a value above 90% does not demonstrate good goods
+segmentation. All 12 frame results and regressions are retained in the local
+comparison evidence. Missed tyres and equipment false positives remain visible.
+
+Implementation and controlled differences
+-----------------------------------------
+The VGG model is a local experimental U-Net with an ImageNet-pretrained VGG16
+convolutional encoder and newly initialized decoder widths 256/128/64/32. It is
+not an external segmentation-models-pytorch implementation. MobileNet uses the
+existing COCO/VOC segmentation initializer. YOLO uses the official Cityscapes
+semantic initializer from isolated ultralytics 8.4.192, with two-class output
+layers reinitialized; dense semantic logits are used, not instance masks.
+
+Shared inputs are 640x360 RGB with BOX image resampling and nearest-neighbour
+targets. VGG preserves skip geometry. YOLO explicitly undoes ImageNet
+normalization to RGB [0,1], pads bottom/right to 640x384, upsamples logits to
+the padded grid and crops them back. Shared evaluation upsamples logits to
+native 1280x720. Native class IDs and ignored regions remain unchanged.
+
+All models use main-output unweighted cross-entropy, ignore 255, AdamW learning
+rate 0.0003 and weight decay 0.0001; BatchNorm running statistics are frozen
+where present. There is no augmentation, threshold search or synthetic stream.
+Pretraining tasks, decoder initialization and model-specific input conventions
+differ. This compares model choices under one budget, not architecture alone.
+The recipe is not the vendor-default YOLO training procedure.
+
+Resources and verification
+--------------------------
+Hardware: NVIDIA RTX 5070 Laptop GPU, 8 GB. Four CPU threads, float32, cuDNN
+disabled and synchronous CUDA launches were used for this compatibility trial.
+Every model passed a full-batch finite-output/loss/gradient GPU preflight.
+
+Model                        Measured scope time   Peak allocated GPU memory
+MobileNet                              40.19 s                       1.25 GiB
+VGG-U-Net                             115.30 s                       4.05 GiB
+YOLO semantic                          28.68 s                       0.49 GiB
+
+Timing includes training, strict checkpoint reload and run-report creation;
+separate evaluation/export is excluded. These are not inference-throughput or
+production benchmarks. Peak allocated memory excludes other processes and
+unused allocator reservations.
+
+The focused verification suite passed 14 tests and 6 subtests. Changed Python
+modules compiled. All final checkpoints strictly reloaded. All 36 exported
+native development predictions were independently recounted and matched saved
+evaluation confusion totals. Annotation and historical checkpoint bindings were
+checked separately after execution. Critical pinned runtime packages were
+preserved; optional YOLO code lives in a project-local isolated directory.
+Vendor trainer/export and optional platform integrations remain unqualified.
+
+One seed, dependent video frames, repeated development use and model-assisted
+reference provenance limit conclusions. Further model selection would require
+a frozen multi-seed comparison. Separate recordings are needed for evidence
+beyond this development cohort. The synthetic-data MVP objective is unchanged.
+
+Source/version bindings
+-----------------------
+Expanded real cohort profile SHA256:
+df43b6eae5204100ccdeccebcf504761367d4ce1790769fd4e78ed14d4bcbe4d
+Frozen experiment protocol SHA256:
+17a0170a00135202eb4f5796afaf1e81a4b6d39db48dbec03b389009abc1bf00
+Source implementation snapshot SHA256:
+390ceabd68e89770fed8fabece6b5bc7e1fae4ffa34cb3bff97c5946ded1e693
+Isolated YOLO source/configuration snapshot SHA256:
+9f0137c14f7aede8379fbf2027e709671164b21858c23af65aa3b1f4bd5be4c9
+Comparison summary SHA256:
+ce310e16f238cd8579ac3c51116d42815acfae2b1e0865bcd982db1b1ba4daed
+
+MobileNet initialization SHA256:
+fc3c493d68e89cc31ef488c803d5d7dd2f3190fb570598faa49fef69be8e5e70
+VGG16 initialization SHA256:
+397923af8e79cdbb6a7127f12361acd7a2f83e06b05044ddf496e83de57a5bf0
+Official YOLO26n semantic release SHA256 (matched release digest):
+f3f293cca764de1f93044030d8d5612de9c5ffbf37c9c8ea1b69418b73038999
+Converted tensor-only YOLO initialization SHA256:
+7843faa0ae1da05cfa6635e80f85f31a2af190bc1a84224647a3added09d6213
+
+Raw official YOLO weights were converted only after verifying their release
+digest. Training and model loading use the SHA-bound tensor-only initializer.
+The frozen protocol, run profiles, all-frame gallery, native recounts, package
+snapshot and logs are preserved in the ignored local experiment artifacts.
+
+Optional adapter setup
+----------------------
+Keep the core environment unchanged. In a separately prepared Python 3.12 training
+environment, use requirements/torch_cu128.txt and the applicable existing research
+dependencies. The optional raw-network trial additionally used ultralytics==8.4.192,
+polars==1.35.2, polars-runtime-32==1.35.2 and ultralytics-thop==2.2.3. These are
+experimental additions, not required pipeline-core dependencies. The trial loaded
+them from an isolated project-local directory installed with pip --no-deps --target;
+explicitly prepend that directory to PYTHONPATH when selecting this adapter. Set
+YOLO_AUTOINSTALL=false and YOLO_CONFIG_DIR to an ignored writable runtime directory.
+Do not install or upgrade dependencies in a retained runtime to run the optional
+experiment. The pins above describe the raw-network adapter, not a complete vendor
+trainer/platform environment. Check missing dependencies and runtime compatibility
+before execution; the adapter rejects versions other than 8.4.192.
+
+Model selectors are deeplabv3_mobilenet_v3_large, deeplabv3_resnet50, unet_vgg16
+and yolo26n_semantic. All share build_model(config, checkpoint) and return an
+"out" tensor of two-class logits for the canonical RGB input. Model construction
+never downloads weights. Supply a local initializer and its exact SHA256 in the
+configuration. Full trained checkpoint reload remains strict.
+
+VGG uses the official torchvision vgg16-397923af.pth state dictionary from
+https://download.pytorch.org/models/vgg16-397923af.pth. YOLO's official source is
+https://github.com/ultralytics/assets/releases/download/v8.4.0/yolo26n-sem.pt.
+Verify the published release digest against the source hash above before any
+trusted one-time object deserialization. The portable adapter accepts only a
+tensor-only dictionary with package_version "8.4.192" and state_dict containing
+the complete official 19-class SemanticSegmentationModel float32 tensor state.
+The trial conversion extracted the official checkpoint's model.float().state_dict()
+and cloned tensors to CPU; the adapter reinitializes only the four final main/aux
+class-output tensors. It uses torch.load(weights_only=True). A newly serialized
+conversion can have a different file hash: bind that exact file in a new protocol,
+and never overwrite a historical configuration/hash to make it appear identical.
+
+The model adapters and tests are portable; the local one-seed execution/gallery
+orchestration and converted weights are not distributed. Reconstructing an
+experiment requires a separately qualified cohort, explicit initialization,
+configuration and protocol. This publication does not package a turnkey YOLO
+vendor training workflow or imply reproducibility beyond the recorded evidence.

@@ -1,0 +1,24 @@
+{
+  "schema_version": "dubaidata.equipment-context-batch/1.0",
+  "pair_configuration": {
+    "schema_version": "dubaidata.equipment-pairs/1.0",
+    "job_id": "warehouse_equipment_precision_context_20261027",
+    "source_job_sha256": "0c2227db8260ec3d602794b9d7d0f0768439272408d7de17f2b326fe015dd0b3",
+    "source_sample_id": "rack_tyres_offset",
+    "training_evidence_sha256": "9342179cc067dde8f574df6ef02fd7dae8a1f187831a541353f06f1c3e68b1b1",
+    "pallet_template_ids": [880, 881, 882, 883, 884, 885, 886, 887],
+    "remove_equipment_ids": [875, 880, 881, 882, 883, 884, 885, 886, 887, 893, 894, 895, 896, 897, 898, 899, 900, 906, 907, 908, 909, 910, 911, 912, 913],
+    "pairs": [
+      {"pair_id": "tyres_pallet_clutter", "camera": [-0.25, -3.6, 0.7, 2], "xy": [-0.95, -1.4], "pallet_layers": 1, "cargo": "old_tyre", "cargo_scale": 1.5, "cargo_count": 4},
+      {"pair_id": "tyres_crate_contact", "camera": [0.15, -3.8, 0.7, -2], "xy": [-0.9, -1.25], "pallet_layers": 1, "cargo": "old_tyre", "cargo_scale": 1.35, "cargo_count": 5},
+      {"pair_id": "cartons_stacked_support", "camera": [-0.3, -3.9, 0.85, 1], "xy": [0.0, -1.35], "pallet_layers": 3, "cargo": "cardboard_box_01", "cargo_scale": 1.2, "cargo_count": 2},
+      {"pair_id": "cartons_low_support", "camera": [0.3, -3.65, 0.7, -3], "xy": [-0.85, -1.2], "pallet_layers": 1, "cargo": "cardboard_box_01", "cargo_scale": 1.25, "cargo_count": 2}
+    ]
+  },
+  "context": [
+    {"pair_id": "tyres_pallet_clutter", "empty_pallets": [{"xy": [0.9, -1.4], "layers": 3}], "empty_containers": [{"xy": [0.9, 0.1], "source_instance_id": 875}]},
+    {"pair_id": "tyres_crate_contact", "empty_pallets": [{"xy": [1.4, -1.2], "layers": 2}], "empty_containers": [{"xy": [0.05, -1.25], "source_instance_id": 875}]},
+    {"pair_id": "cartons_stacked_support", "empty_pallets": [{"xy": [2.4, -1.1], "layers": 3}], "empty_containers": [{"xy": [-1.1, -1.35], "source_instance_id": 875}, {"xy": [1.15, -0.3], "source_instance_id": 875}]},
+    {"pair_id": "cartons_low_support", "empty_pallets": [{"xy": [1.6, -1.1], "layers": 4}], "empty_containers": [{"xy": [0.25, -1.3], "source_instance_id": 875}]}
+  ]
+}

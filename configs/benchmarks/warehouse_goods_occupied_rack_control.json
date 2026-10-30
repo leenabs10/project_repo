@@ -1,0 +1,386 @@
+{
+  "schema_version": "dubaidata/1.0",
+  "task_id": "warehouse_visible_goods",
+  "status": "prepared_pending_exact_revised_batch_acceptance",
+  "model": "deeplabv3_mobilenet_v3_large",
+  "initialization": "Same locally verified generic pretrained checkpoint; replace the final class head identically per seed; no automatic download",
+  "initial_checkpoint_sha256": "fc3c493d68e89cc31ef488c803d5d7dd2f3190fb570598faa49fef69be8e5e70",
+  "input_channels": [
+    "rgb"
+  ],
+  "training_resolution": [
+    640,
+    360
+  ],
+  "native_reference_resolution": [
+    1280,
+    720
+  ],
+  "resampling": {
+    "rgb": "BOX",
+    "target": "NEAREST",
+    "evaluation_logits_to_native": "BILINEAR"
+  },
+  "normalization": {
+    "scale": 255,
+    "mean": [
+      0.485,
+      0.456,
+      0.406
+    ],
+    "std": [
+      0.229,
+      0.224,
+      0.225
+    ]
+  },
+  "loss": {
+    "name": "cross_entropy",
+    "ignore_index": 255
+  },
+  "optimizer": {
+    "name": "AdamW",
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001
+  },
+  "epochs": 15,
+  "batch_size": 4,
+  "model_seeds": [
+    17,
+    29,
+    43
+  ],
+  "generation_seed": 7331,
+  "selection_metric": null,
+  "metrics": [
+    "goods_iou",
+    "goods_dice",
+    "precision",
+    "recall",
+    "valid_pixels",
+    "reference_coverage"
+  ],
+  "comparison": "occupied_rack_cargo_placement_only",
+  "budget_matching": "480 primary real + 60 auxiliary inputs; 30 background-only and 30 mixed auxiliary presentations in both arms; 120 optimizer updates and fixed final checkpoint",
+  "independence_limitations": "Whole trajectories define splits. Nearby frames are dependent and repeated development selection is disclosed. Report undefined foreground metrics explicitly.",
+  "test_access": "disabled_until_candidate_and_protocol_are_frozen",
+  "improvement_claim": "Requires completed matched multi-seed experiments and qualified real references; configuration or smoke checks do not demonstrate improvement",
+  "experiment_kind": "real_only",
+  "batch_norm": "frozen_running_statistics",
+  "experiment_name": "Occupied rack cargo placement: control",
+  "hypothesis": "Training-supported cargo placement/occlusion improves useful positive context with exact original input order and other settings fixed",
+  "checkpoint_policy": "final_epoch",
+  "acceptance_rule": "Protocol-level +3 pp IoU, precision gain, recall nonregression, background FPR decrease and dark-goods preservation; no automatic promotion",
+  "auxiliary_training": {
+    "strategy": "preserve_real_exposure",
+    "interval_updates": 2,
+    "loss_weight": 0.2,
+    "foreground_fraction": 0.1502146386149473,
+    "missing_class_policy": "background_only_zero_foreground_mass"
+  },
+  "auxiliary_sampling": {
+    "strategy": "explicit_update_sequence",
+    "events": [
+      {
+        "update": 2,
+        "sample_id": "Aisle_CCW_Run_1/000482",
+        "target_kind": "background_only"
+      },
+      {
+        "update": 4,
+        "sample_id": "Aisle_CCW_Run_1/000084",
+        "target_kind": "mixed"
+      },
+      {
+        "update": 6,
+        "sample_id": "Aisle_CCW_Run_1/000880",
+        "target_kind": "background_only"
+      },
+      {
+        "update": 8,
+        "sample_id": "Aisle_CCW_Run_1/000283",
+        "target_kind": "mixed"
+      },
+      {
+        "update": 10,
+        "sample_id": "Aisle_CCW_Run_1/000880",
+        "target_kind": "background_only"
+      },
+      {
+        "update": 12,
+        "sample_id": "Aisle_CCW_Run_1/000851",
+        "target_kind": "mixed"
+      },
+      {
+        "update": 14,
+        "sample_id": "Aisle_CCW_Run_1/000482",
+        "target_kind": "background_only"
+      },
+      {
+        "update": 16,
+        "sample_id": "Aisle_CCW_Run_1/000397",
+        "target_kind": "mixed"
+      },
+      {
+        "update": 18,
+        "sample_id": "Aisle_CCW_Run_1/000482",
+        "target_kind": "background_only"
+      },
+      {
+        "update": 20,
+        "sample_id": "Aisle_CCW_Run_1/000794",
+        "target_kind": "mixed"
+      },
+      {
+        "update": 22,
+        "sample_id": "Aisle_CCW_Run_1/000880",
+        "target_kind": "background_only"
+      },
+      {
+        "update": 24,
+        "sample_id": "Aisle_CCW_Run_1/000207",
+        "target_kind": "mixed"
+      },
+      {
+        "update": 26,
+        "sample_id": "Aisle_CCW_Run_1/000482",
+        "target_kind": "background_only"
+      },
+      {
+        "update": 28,
+        "sample_id": "Aisle_CCW_Run_1/000113",
+        "target_kind": "mixed"
+      },
+      {
+        "update": 30,
+        "sample_id": "Aisle_CCW_Run_1/000880",
+        "target_kind": "background_only"
+      },
+      {
+        "update": 32,
+        "sample_id": "Aisle_CCW_Run_1/000383",
+        "target_kind": "mixed"
+      },
+      {
+        "update": 34,
+        "sample_id": "Aisle_CCW_Run_1/000880",
+        "target_kind": "background_only"
+      },
+      {
+        "update": 36,
+        "sample_id": "Aisle_CCW_Run_1/000000",
+        "target_kind": "mixed"
+      },
+      {
+        "update": 38,
+        "sample_id": "Aisle_CCW_Run_1/000482",
+        "target_kind": "background_only"
+      },
+      {
+        "update": 40,
+        "sample_id": "Aisle_CCW_Run_1/000567",
+        "target_kind": "mixed"
+      },
+      {
+        "update": 42,
+        "sample_id": "Aisle_CCW_Run_1/000880",
+        "target_kind": "background_only"
+      },
+      {
+        "update": 44,
+        "sample_id": "Aisle_CCW_Run_1/000908",
+        "target_kind": "mixed"
+      },
+      {
+        "update": 46,
+        "sample_id": "Aisle_CCW_Run_1/000482",
+        "target_kind": "background_only"
+      },
+      {
+        "update": 48,
+        "sample_id": "Aisle_CCW_Run_1/001078",
+        "target_kind": "mixed"
+      },
+      {
+        "update": 50,
+        "sample_id": "Aisle_CCW_Run_1/000482",
+        "target_kind": "background_only"
+      },
+      {
+        "update": 52,
+        "sample_id": "Aisle_CCW_Run_1/000028",
+        "target_kind": "mixed"
+      },
+      {
+        "update": 54,
+        "sample_id": "Aisle_CCW_Run_1/000880",
+        "target_kind": "background_only"
+      },
+      {
+        "update": 56,
+        "sample_id": "Aisle_CCW_Run_1/000454",
+        "target_kind": "mixed"
+      },
+      {
+        "update": 58,
+        "sample_id": "Aisle_CCW_Run_1/000482",
+        "target_kind": "background_only"
+      },
+      {
+        "update": 60,
+        "sample_id": "Aisle_CCW_Run_1/000737",
+        "target_kind": "mixed"
+      },
+      {
+        "update": 62,
+        "sample_id": "Aisle_CCW_Run_1/000880",
+        "target_kind": "background_only"
+      },
+      {
+        "update": 64,
+        "sample_id": "Aisle_CCW_Run_1/000964",
+        "target_kind": "mixed"
+      },
+      {
+        "update": 66,
+        "sample_id": "Aisle_CCW_Run_1/000880",
+        "target_kind": "background_only"
+      },
+      {
+        "update": 68,
+        "sample_id": "Aisle_CCW_Run_1/000340",
+        "target_kind": "mixed"
+      },
+      {
+        "update": 70,
+        "sample_id": "Aisle_CCW_Run_1/000482",
+        "target_kind": "background_only"
+      },
+      {
+        "update": 72,
+        "sample_id": "Aisle_CCW_Run_1/001135",
+        "target_kind": "mixed"
+      },
+      {
+        "update": 74,
+        "sample_id": "Aisle_CCW_Run_1/000482",
+        "target_kind": "background_only"
+      },
+      {
+        "update": 76,
+        "sample_id": "Aisle_CCW_Run_1/000822",
+        "target_kind": "mixed"
+      },
+      {
+        "update": 78,
+        "sample_id": "Aisle_CCW_Run_1/000880",
+        "target_kind": "background_only"
+      },
+      {
+        "update": 80,
+        "sample_id": "Aisle_CCW_Run_1/000992",
+        "target_kind": "mixed"
+      },
+      {
+        "update": 82,
+        "sample_id": "Aisle_CCW_Run_1/000880",
+        "target_kind": "background_only"
+      },
+      {
+        "update": 84,
+        "sample_id": "Aisle_CCW_Run_1/000426",
+        "target_kind": "mixed"
+      },
+      {
+        "update": 86,
+        "sample_id": "Aisle_CCW_Run_1/000482",
+        "target_kind": "background_only"
+      },
+      {
+        "update": 88,
+        "sample_id": "Aisle_CCW_Run_1/000141",
+        "target_kind": "mixed"
+      },
+      {
+        "update": 90,
+        "sample_id": "Aisle_CCW_Run_1/000880",
+        "target_kind": "background_only"
+      },
+      {
+        "update": 92,
+        "sample_id": "Aisle_CCW_Run_1/000227",
+        "target_kind": "mixed"
+      },
+      {
+        "update": 94,
+        "sample_id": "Aisle_CCW_Run_1/000482",
+        "target_kind": "background_only"
+      },
+      {
+        "update": 96,
+        "sample_id": "Aisle_CCW_Run_1/000510",
+        "target_kind": "mixed"
+      },
+      {
+        "update": 98,
+        "sample_id": "Aisle_CCW_Run_1/000880",
+        "target_kind": "background_only"
+      },
+      {
+        "update": 100,
+        "sample_id": "Aisle_CCW_Run_1/000681",
+        "target_kind": "mixed"
+      },
+      {
+        "update": 102,
+        "sample_id": "Aisle_CCW_Run_1/000482",
+        "target_kind": "background_only"
+      },
+      {
+        "update": 104,
+        "sample_id": "Aisle_CCW_Run_1/000624",
+        "target_kind": "mixed"
+      },
+      {
+        "update": 106,
+        "sample_id": "Aisle_CCW_Run_1/000880",
+        "target_kind": "background_only"
+      },
+      {
+        "update": 108,
+        "sample_id": "Aisle_CCW_Run_1/001021",
+        "target_kind": "mixed"
+      },
+      {
+        "update": 110,
+        "sample_id": "Aisle_CCW_Run_1/000482",
+        "target_kind": "background_only"
+      },
+      {
+        "update": 112,
+        "sample_id": "Aisle_CCW_Run_1/000056",
+        "target_kind": "mixed"
+      },
+      {
+        "update": 114,
+        "sample_id": "Aisle_CCW_Run_1/000482",
+        "target_kind": "background_only"
+      },
+      {
+        "update": 116,
+        "sample_id": "Aisle_CCW_Run_1/000170",
+        "target_kind": "mixed"
+      },
+      {
+        "update": 118,
+        "sample_id": "Aisle_CCW_Run_1/000880",
+        "target_kind": "background_only"
+      },
+      {
+        "update": 120,
+        "sample_id": "Aisle_CCW_Run_1/000538",
+        "target_kind": "mixed"
+      }
+    ]
+  }
+}

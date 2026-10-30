@@ -1,7 +1,94 @@
 Goods benchmark status
 ======================
 
-Latest equipment-pair comparison
+Current reference and cargo-placement revision
+The localized 000376 person correction passed validation: 4,380 pixels changed;
+the other 43 references and all 32 training targets remain unchanged. The current
+explicit cohort is 32 training/12 development, bound to profile
+2ba84460fa9991befdcdbfbba88bda8225eae91d88ec0a943b39d13fd858cda9.
+Previous equipment-precision experiment, rescored without retraining:
+IoU 46.85% -> 51.70%, precision 49.50% -> 58.16%, recall 90.02% -> 83.22%.
+The candidate still fails the complete utility rule. The retained weights remain
+the reporting baseline; their corrected-reference recount is IoU 50.63%,
+precision 54.26%, recall 88.68%. These changes are rescoring, not new training.
+Historical 50.84% / 54.48% / 88.74% values below remain bound to earlier targets.
+See docs/goods_reference_reassessment.txt.
+
+Occupied-rack cargo placement comparison is complete. All eight captures were
+explicitly approved and admitted; both fresh three-seed arms passed validation.
+Real-only -> hybrid: goods IoU 45.06% -> 49.17%, precision 47.45% -> 53.10%,
+recall 90.19% -> 87.04%.
+Fails the complete frozen utility rule. Candidate is not promoted; retained model remains the reporting baseline.
+All 72 native development predictions were independently recounted; all 517
+protected artifacts remain unchanged. Source/version bindings, every seed/frame
+gain and regression, and complete gates are in docs/occupied_rack_context_results.txt.
+
+Historical snapshots below retain their original reference and execution scope.
+They do not supersede the current reference or preparation status above.
+
+Reporting baseline and next experiment
+The retained model remains the established reporting baseline: mean goods IoU
+50.84%, precision 54.48% and recall 88.74% on the revised 12-frame development
+references, across seeds 17/29/43. Later experimental arms have not replaced it.
+Historical scores on different reference targets are not interchangeable.
+
+All reviewed annotations are preserved, including the two training additions.
+The next comparison explicitly uses the separate 32-training/12-development
+cohort df43b6eae5204100ccdeccebcf504761367d4ce1790769fd4e78ed14d4bcbe4d
+in both arms. It requires a fresh matched real-only control; historical retained
+model scores and the earlier 30-view equipment control are context, not that
+experiment's matched control. Existing machine-local legacy pointers are not
+silently rebound to a different cohort.
+
+The next empty/loaded candidate targets background falsely predicted as goods
+while retaining dark-goods coverage. Its batch requires exact appearance/label
+acceptance and admission before fitting. No new model is promoted automatically.
+Four pairs/eight captures passed 2,624 independent geometry rays and native
+categorical-label checks. Exact appearance/label approval is recorded, all eight
+captures passed admission, and the fresh matched comparison is complete. The schedule
+discloses 14 tyre-loaded auxiliary presentations versus 20 historically; preservation
+of the earlier dark-goods result must be measured rather than inferred.
+See docs/equipment_precision_experiment.txt for the frozen acceptance criteria
+and preparation status. The locked test remains untouched.
+
+Latest equipment precision comparison
+Fresh matched real-only versus real plus the eight accepted captures, three seeds:
+goods IoU 47.05% -> 51.92% (+4.87 pp), precision 49.70% -> 58.40% (+8.70 pp),
+recall 90.07% -> 83.30% (-6.77 pp). Background false-positive rate improves
+10.11% -> 6.80%, but dark-goods miss rate regresses 32.59% -> 36.78% and exceeds
+the historical 18.54% ceiling. Recall decreases in every seed. Frame-mean IoU
+falls 41.50% -> 40.37%; five frames improve, six regress, and one is unchanged.
+The +3 pp IoU component is met, but the complete MVP rule fails. The candidate
+is rejected; retained reporting model and all reviewed annotations remain unchanged.
+All six checkpoints reload strictly. A separate histogram implementation reproduces
+all 72 native predictions' confusion counts, strata, deltas and decisions; all
+147 protected artifacts are unchanged. See docs/equipment_precision_results.txt.
+
+Equipment precision failure analysis
+The saved four-frame/native review and all-12-frame recount show broad non-dark
+and large-region goods losses alongside removed background false positives.
+About 91% of net additional misses are outside the dark-pixel stratum (native
+display luminance below 50), and about 74% occur in large connected goods regions
+(diagnostics, not objects).
+The candidate has more total dark-goods pixel exposure than its matched control;
+14 versus 20 tyre visits is not an established causal explanation. Direct comparison
+with training sources shows missing occupied-rack/multi-scale/occluded cargo context.
+
+A specific policy error was found: person pixels in development frame 000376 are marked
+goods. It requires localized adjudication, but the diagnostic rectangle contributes
+only 0 / 6 / 0 net added misses across seeds and does not explain the goods regression.
+No reference was changed and original scores remain bound to their saved targets.
+Before a new benchmark, qualify the targeted correction and rebind/recount all
+comparison references, including the historical numeric dark-miss ceiling.
+
+One generation-factor revision is proposed: training-supported cargo placement
+in occupied rack/bay contexts, with assets/materials/camera/lighting/model/loss and
+the current 14 tyre / 16 carton / 30 empty auxiliary allocation held fixed. Exact donor
+ordering needs validated support because new job IDs affect hash ordering. No
+generation, training, reannotation, model promotion or test evaluation ran in this
+audit. Existing model trials are preserved. See docs/equipment_precision_failure_analysis.txt.
+
+Earlier equipment-pair comparison
 The six accepted empty/loaded captures passed admission and the hybrid loader.
 Both new three-seed arms completed. Matched real-only versus real + synthetic:
 IoU 51.63% -> 51.42%; precision 55.86% -> 54.40%; recall 87.42% -> 90.40%.

@@ -1,0 +1,33 @@
+Goods reference reassessment
+============================
+
+A localized reviewed correction in Aisle_CW_Run_1/000376 reclassifies the visible person as background and preserves uncertain boundaries. The correction changes 4,380 native pixels, all inside the localized scope. The wrapped load and the other 43 references are unchanged. All 32 training references remain byte-preserved.
+
+A separate source-bound cohort retains 32 training and 12 development references. Historical cohorts, scores, predictions and checkpoints are preserved. Revised reference scores are not model improvements.
+
+Latest matched experiment, rescored on the corrected references:
+Metric | Matched real-only | Real plus synthetic | Change (percentage points)
+Pixel accuracy | 89.88% | 92.20% | +2.31
+Pixel error rate | 10.12% | 7.80% | -2.31
+Goods IoU | 46.85% | 51.70% | +4.84
+Precision | 49.50% | 58.16% | +8.66
+Recall | 90.02% | 83.22% | -6.81
+Background false-positive rate | 10.13% | 6.82% | -3.31
+Dark-goods miss rate | 32.83% | 37.05% | +4.22
+Frame-mean goods IoU | 41.26% | 40.09% | -1.17
+
+The comparison still fails recall nonregression and both dark-goods guards. No model is promoted.
+
+Historical equipment-candidate dark-goods miss ceiling, recomputed on this same reference revision: 18.67171826%.
+The full acceptance formula is unchanged. This value is reference-dependent; it is not a newly relaxed target.
+
+Verification: 180 unchanged native prediction masks from five arms and three seeds were scored on both reference revisions. Boolean confusion counts agree exactly with independent 2D histograms. Contemporary saved metrics on the previous references were reproduced before rescoring. The retained historical model was separately recounted; it is not the fresh experiment control.
+
+Next preparation: test occupied-rack cargo placement, smaller visible groups and partial rack occlusion using training-only context evidence. Keep registered assets and dimensions, camera, lighting, empty equipment, model/loss and the ordered sampling schedule fixed. Revised renders require geometry/label qualification and exact-batch acceptance before admission and fitting. No revised scene export has been generated or accepted in this reassessment.
+
+No new training, model inference, scene generation, locked-test evaluation or Git publication occurred. Source cohorts and saved predictions were checked unchanged. Review attestations preserve the actual annotation lineage; structural validation is separate from independent semantic accuracy.
+
+Evidence: reports/goods_reference_reassessment
+Reference cohort profile SHA256: 2ba84460fa9991befdcdbfbba88bda8225eae91d88ec0a943b39d13fd858cda9
+Reviewed submission SHA256: cf6dcc3d0d00a30da67b3ca87b3682117c7987d578e81eeee5033a1779df1975
+Reassessment profile SHA256: feb941e37a0c40f550b851ca49bb576ea73905e85a9ee886d99067f92c4d0397

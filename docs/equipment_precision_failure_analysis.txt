@@ -1,0 +1,135 @@
+Equipment precision failure analysis and revision plan
+====================================================
+
+Scope and conclusion
+This audit inspects the saved synthetic-data comparison and training coverage.
+It does not train, generate, change annotations or select a replacement model.
+The candidate removes many background false goods while losing real goods.
+The demonstrated generation gap is positive cargo placement/occupied-rack context,
+not a measured shortage of total dark-goods pixel exposure. A unique causal
+mechanism is not established by this observational analysis.
+
+The completed experiment remains47.05% ->51.92% IoU,49.70% ->58.40% precision,
+90.07% ->83.30% recall against its fresh matched control on frozen targets.
+The complete utility rule fails. The retained reporting model and original
+source-bound results are preserved. Its reported50.84/54.48/88.74 scores remain
+bound to the original revised references, not a newly corrected target cohort.
+
+Requested native regression checks (three seeds)
+Frame | Reviewed goods pixels | Mean IoU change | Mean recall change | Net added FN, seeds17/29/43
+000188 | 57,531 | -8.36pp | -5.94pp | 576 /5,764 /3,911
+000376 | 80,481 | -7.35pp | -17.76pp | 917 /35,270 /6,704
+000282 |130,682 | -4.12pp | -11.04pp | 120 /27,522 /15,640
+000847 |  2,346 | -0.38pp | -60.43pp |1,338 /1,916 /999
+
+000188 loses upper-shelf/central goods; seed29 also adds25,365 net false-positive
+pixels, so aggregate precision improvement is not universal across frames.
+000376 seed29 removes16,689 false-positive pixels while losing35,270 goods pixels;
+33,659 of the net extra misses are outside native display luminance below 50.
+Near wrapped material and shelf goods account for32,151 added misses in that seed.
+000282 loses the bright near horizontal wrapped load and rack-contact stock;
+99.19% of its net additional misses are outside the dark-pixel stratum.
+000847 contains only2,346 goods pixels (0.2546% of the image). Its large frame
+recall change contributes only0.1634pp to aggregate recall loss; lift-body false
+positives are removed at the same time. Tiny denominators must remain visible.
+
+Whole-cohort diagnostic counts
+Across all 12development frames, each seed scores867,686 goods pixels.
+Mean additional false negatives per seed: 58,780.
+91.01% of net added misses are outside native Pillow luma < 50;
+74.39% occur in four-connected goods regions larger than4,096 native pixels.
+These are diagnostic regions, not object instances, calibrated radiance, physical
+distance or occlusion labels. Small/distant failures exist but do not explain all
+of the recall loss. Frame000565 also contributes1.2170pp aggregate recall loss
+despite a slight mean IoU gain; all 12frame contributions are retained locally.
+
+Specific reference error requiring localized adjudication
+In000376, visible person pixels are labelled goods, conflicting with the task's
+people-as-background rule. Native RGB/reference crops and five source-bound pixel
+checks demonstrate the issue. No corrected mask or human approval is invented.
+Diagnostic rectangle[15,260,70,345] contains3,900 existing goods and775 ignored
+pixels. It is NOT a person mask. It contributes0/6/0 net added misses across seeds.
+Excluding its positive pixels from both denominators in memory leaves a mean
+frame recall regression of18.67pp versus17.76pp originally. This sensitivity is
+not an official rescore and does not explain away the genuine goods losses.
+Original masks and official scores are unchanged. This four-frame review is not
+an exhaustive independent semantic certification of all 44model-assisted references.
+
+Measured coverage and input exposure
+All six saved schedules match:480 primary real inputs per arm/seed, plus60 auxiliary
+inputs. Control has540 real inputs; candidate has480 real+60 synthetic inputs.
+Both schedules contain30 negative+30 mixed auxiliaries. Candidate loaded visits:
+14 tyre and16 carton, with each primary real reference appearing15 times.
+
+640 x 360 pixel presentations per seed | Control | Candidate | Historical candidate
+Auxiliary goods                     |792,999 |400,549 |567,620
+Auxiliary dark goods                | 79,226 |110,459 |171,050
+Total dark goods                    |1,267,616|1,298,849|1,267,100
+
+The candidate has2.46% MORE total dark-goods pixel exposure than its matched
+control and2.51% more than the historical candidate. Its auxiliary dark exposure
+alone is35.42% lower historically, but primary exposure/cohort and scene changes
+confound that comparison. Therefore14versus20 tyre visits is not an established
+cause. The auxiliary loss class-normalizes foreground/background with weight0.2;
+pixel exposure is not measured gradient contribution or a guarantee of recall.
+
+Direct comparison with reviewed TRAINING sources
+Training examples contain occupied racks, mixed apparent goods sizes and complex
+stock/support contacts;000383 includes the blue stairs partly occluding cartons.
+All four current synthetic positives contain one large near cargo group against
+mostly empty shelving. The old right-bay tyre view with upright/crop interruption
+has disappeared; both current tyre positives are clear, near-left silhouettes.
+That historical contrast is confounded, not an isolated causal experiment.
+Real training masks contain293 tiny (<=256pixels) and220 small (257..4096pixels)
+connected regions, accounting for10.20%ofgoods pixels; synthetic masks have zero
+tiny/small foreground regions and four large groups. Components are not objects.
+Nearest target resizing removes67 entire tiny regions containing268 native goods
+pixels (~0.0084%of training goods). This does not measure boundary/thin-structure
+or RGB-detail loss inside surviving regions and cannot explain broad misses alone.
+
+One justified revision, with preconditions
+1. Adjudicate only the specific person conflict in000376. Save a new source-bound
+   correction after review, preserving other valid regions and all prior versions.
+   Recount unchanged retained/control/candidate and historical-equipment predictions
+   on the same intended reference revision before setting the next benchmark.
+   Changed targets are not a model gain. Recompute the reference-dependent numeric
+   historical dark-miss ceiling on that revision before freezing it; preserve the
+   acceptance formula rather than blindly applying the old18.54% number.
+2. Change ONE generation factor: cargo placement/occupied rack/bay composition.
+   Use verified training-source shelf contexts and apparent-size/occlusion bounds.
+   Keep registered meshes, dimensions, UV/materials, camera/intrinsics, lighting,
+   negative equipment, eight captures and paired empty/loaded semantics fixed.
+   Include visible smaller shelf groups and partial rack occlusion alongside near
+   cargo. This tests context coverage; it does not claim to solve wrapped-material
+   appearance. Unsupported assets/materials remain blocked pending qualification.
+3. Keep the existing model/initialization/optimizer/loss/threshold/checkpoint policy
+   and sampling influence fixed. Preserve480 primary+60 auxiliary/120 updates and
+   14 tyre+16 carton+30 empty visits, with the same ordered capture correspondence.
+   New job IDs alter hash ordering, so explicit validated schedule support or an
+   equivalent verified mechanism is required before execution. Measure/freeze actual
+   per-capture and dark-pixel exposure. Do not simultaneously restore20 tyre visits.
+4. Validate support/contact/collisions, visible size, metric depth, RGB/label/instance
+   correspondence and independent occluder rays. Review exact revised appearance
+   and labels, record new dataset/job acceptance and admit a separate snapshot.
+5. Run ONE frozen three-seed comparison against a fresh matched real-only control
+   on the same qualified cohort. Require the complete +3ppIoU/precision gain/recall
+   nonregression/background-FP reduction/dark-preservation rule. Report every seed,
+   frame gain/regression and both pixel-weighted/frame-weighted metrics.
+6. If all gates pass, freeze candidate/protocol before separate-recording evaluation;
+   keep the locked test reserved for final selection. If the revision fails, stop
+   expansion and reconsider synthesis before generating more similar scenes.
+
+Current stage
+Failure analysis and revision plan complete. No reference correction, generation,
+training, threshold tuning, model promotion or held-out evaluation ran in this
+audit. Existing model/backbone experiments and unrelated working edits are preserved.
+Retained models/reviewed reference integrity checks pass; geometry/label validity,
+appearance qualification and downstream utility remain separate evidence.
+
+Source bindings
+Reference cohort:df43b6eae5204100ccdeccebcf504761367d4ce1790769fd4e78ed14d4bcbe4d
+Strict comparison:f360dc0b7509b0c8af8dc9ec67661e8761c712c8c21809d6d775c48f4efe0fff
+Metrics audit:ac78c5e9eb7fd9b2972296559ac8d92ba9141f82285e10e5c9010d92a1f21e55
+188/376 native review:682afb5f62c32a612fc09edcd29f4bcb464c7ae033624ea3fca6e6e2f97302aa
+282/847 native review:3e9df95168332a47558917f5a0645cbb6d12bb9160e536ef9979a10cd73a76d0
+Exposure audit:8d11552b19a0a7f751e20f403ca2756334f30ca115aea05dd16e0801edd49d83

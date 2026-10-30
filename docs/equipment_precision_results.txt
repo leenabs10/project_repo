@@ -1,0 +1,121 @@
+Equipment/background precision experiment
+========================================
+
+The accepted batch improves mean pixel-weighted IoU and precision, but reduces
+recall on every seed and fails both dark-goods preservation guards. The candidate
+does not pass the frozen qualification rule and is not promoted.
+Retained model/reporting baseline remains unchanged; no automatic promotion.
+
+Metrics aggregate native scorable pixels within each seed, then average the
+three seeds. Ignored target ID 255 is excluded. Frame-mean IoU weights frames
+equally. Background false-positive rate divides by background pixels; precision
+divides correct goods predictions by all predicted goods pixels.
+
+Metric | Fresh matched real-only | Real + synthetic | Change
+Goods IoU | 47.05% | 51.92% | +4.87 pp
+Precision | 49.70% | 58.40% | +8.70 pp
+Recall | 90.07% | 83.30% | -6.77 pp
+Frame-mean goods IoU | 41.50% | 40.37% | -1.12 pp
+Background false-positive rate | 10.11% | 6.80% | -3.31 pp
+Dark-goods miss rate | 32.59% | 36.78% | +4.19 pp
+
+Frozen checks
+iou_positive: True
+iou_at_least_three_percentage_points: True
+precision_increases: True
+mean_recall_nonregression: False
+background_false_positive_rate_decreases: True
+dark_miss_no_worse_than_fresh_control: False
+dark_miss_no_worse_than_historical_equipment_candidate: False
+
+Per-seed changes (percentage points)
+17: goods_iou +2.98 pp; precision +3.90 pp; recall -2.25 pp; frame_mean_goods_iou +0.03 pp; background_false_positive_rate -1.96 pp; dark_goods_miss_rate +12.40 pp
+29: goods_iou +3.50 pp; precision +9.80 pp; recall -13.11 pp; frame_mean_goods_iou -4.91 pp; background_false_positive_rate -4.29 pp; dark_goods_miss_rate +4.48 pp
+43: goods_iou +8.14 pp; precision +12.39 pp; recall -4.96 pp; frame_mean_goods_iou +1.51 pp; background_false_positive_rate -3.68 pp; dark_goods_miss_rate -4.31 pp
+
+All frame-mean IoU changes
+Aisle_CW_Run_1/000000: goods_iou +2.75 pp; precision +2.75 pp; recall +1.77 pp
+Aisle_CW_Run_1/000094: goods_iou -4.32 pp; precision +3.85 pp; recall -8.30 pp
+Aisle_CW_Run_1/000188: goods_iou -8.36 pp; precision -6.50 pp; recall -5.94 pp
+Aisle_CW_Run_1/000282: goods_iou -4.12 pp; precision +7.32 pp; recall -11.04 pp
+Aisle_CW_Run_1/000376: goods_iou -7.35 pp; precision +10.39 pp; recall -17.76 pp
+Aisle_CW_Run_1/000470: goods_iou +0.00 pp; precision +0.00 pp; recall undefined
+Aisle_CW_Run_1/000565: goods_iou +0.05 pp; precision +4.23 pp; recall -4.23 pp
+Aisle_CW_Run_1/000659: goods_iou +2.95 pp; precision +4.46 pp; recall -2.17 pp
+Aisle_CW_Run_1/000753: goods_iou +2.31 pp; precision +9.93 pp; recall -4.64 pp
+Aisle_CW_Run_1/000847: goods_iou -0.38 pp; precision -0.32 pp; recall -60.43 pp
+Aisle_CW_Run_1/000941: goods_iou -0.10 pp; precision -0.10 pp; recall -10.80 pp
+Aisle_CW_Run_1/001036: goods_iou +3.09 pp; precision +3.09 pp; recall +0.00 pp
+
+Frame IoU outcomes: {"gain": 5, "regression": 6, "unchanged": 1, "undefined": 0}
+
+All 72 native categorical predictions independently recounted via encoded histograms.
+All 36 seed/frame comparisons, including undefined foreground scores, are retained in CSV/JSON.
+Training uses the same frozen 32-training/12-development cohort, initialization,
+optimizer and update budget across seeds 17, 29 and 43. Final epoch 15 is selected
+without intermediate checkpoint selection. Float32 RGB inputs are 640x360; native
+evaluation is 1280x720. Bilinear logits then argmax; no threshold tuning.
+Both arms have 480 primary real and 60 auxiliary presentations within 120 updates.
+Control adds real replays; candidate adds synthetic inputs. The candidate therefore
+has 60 fewer real replays. Both auxiliary schedules contain 30 negative and 30
+mixed inputs. The candidate has 14 tyre-loaded presentations versus 20 historically.
+This exposure change is disclosed and does not establish a unique cause of failure.
+Precision/background false positives and dark-goods misses are reported separately from aggregate recall.
+Dark means native Pillow display luma below 50; this does not measure tyre-object accuracy or calibrated radiance.
+Related video frames, repeated development use and model-assisted annotations limit generalisation evidence.
+No statistical-significance, independent-recording or locked-test result is claimed.
+
+Strict comparison SHA256: f360dc0b7509b0c8af8dc9ec67661e8761c712c8c21809d6d775c48f4efe0fff
+Execution SHA256: 394d5ba0046f4670f815290d8d3177df0dd6bb3686ccee7e0c3ded5ed5f531c6
+Reference profile SHA256: df43b6eae5204100ccdeccebcf504761367d4ce1790769fd4e78ed14d4bcbe4d
+
+Established reporting baseline
+The retained model remains 50.84% goods IoU, 54.48% precision and 88.74% recall
+on the same revised development targets. It used a different historical checkpoint
+selection policy; it is reporting context, not this experiment's matched control.
+All 32 reviewed training and 12 development masks, including both additions, are
+preserved. Unsuccessful training does not establish that annotations are wrong.
+
+Interpretation
+The +3 percentage-point IoU component is met (+4.87 pp), but the complete MVP
+utility milestone is not: mean recall falls by 6.77 pp and dark-goods miss rate
+increases by 4.19 pp against the fresh control. It also exceeds the historical
+18.54% dark-miss ceiling. Frame-mean IoU decreases, with five improving frames,
+six regressing frames and one unchanged frame. The candidate reduces false goods
+predictions while also missing more goods. Do not expand or promote it based only
+on the aggregate IoU or precision gains. Retain the approved batch, rejected
+checkpoints and every regression; no reannotation or threshold tuning follows
+from this result. Any revision needs a separate frozen comparison.
+
+Acceptance and independent verification
+Explicit exact-batch appearance/label approval is recorded; all eight captures
+passed source-bound admission. The raw source export remains unchanged. All six
+completed checkpoints passed strict reload. A separate 2D-histogram implementation
+reproduces all 72 native confusion matrices, all five luminance strata, every
+seed/frame delta and all acceptance decisions. All 147 protected artifacts remain
+unchanged, including original pointers, reviewed submissions and retained weights.
+No locked-test evaluation, model replacement or Git publication occurred.
+
+Version bindings
+Dataset profile SHA256: 805cde4d447e2bc72b808825e5da094df68704c6a630cb6517170d944de35158
+Admitted batch profile SHA256: 82271a9413d3018d14761da2a2b3e5f4dab4ed9f9fc8c95f6a0259577fb450f9
+Independent audit profile SHA256: 1498d44d89f0540d17442ff39c8bd10eabc469d2ace69d2aff14fc11010fe163
+Gallery profile SHA256: 9f8fb31cbcbceb53cf0e7264dbf411ba8201eb993d8a425eaadd6e8a8befb0d7
+
+Runtime evidence
+GPU: NVIDIA GeForce RTX 5070 Laptop GPU; float32, batch four, four CPU threads.
+Existing Python/PyTorch packages are unchanged. Both new arms use cuDNN disabled
+and CUDA_LAUNCH_BLOCKING=1, as declared before execution. The per-seed measured
+training/reload/report scope is 50.53-56.86 seconds, excluding subsequent separate
+evaluation, prediction exports and display-gallery generation. Peak PyTorch
+allocated GPU memory ranges from 1,355,715,584 to 1,356,138,496 bytes; this is
+not total device memory. No accepted-sample throughput or scalability is claimed.
+
+Native visual triage
+The largest mean-IoU gain (001036), largest regression (000188), and tyre-load
+frame (000753) were inspected across all seeds. The candidate reduces some broad
+equipment/workbench false foreground but misses more upper/distant goods in
+000188. Tyre-frame IoU improves by 2.31 pp while its recall falls by 4.64 pp.
+Visual review is AI triage, not independent reference annotation or proof of a
+unique causal scene component. All gains and regressions remain available.
+Visual triage profile SHA256: 6a50836e1f8abd902ef95d54b84f9d9c28bed16f8368f75b9abd66a5946005b3

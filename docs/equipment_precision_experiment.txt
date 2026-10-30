@@ -1,0 +1,127 @@
+Equipment precision experiment
+==============================
+
+Purpose
+Reduce background incorrectly predicted as goods while protecting the dark-goods
+benefit observed in the completed empty/loaded comparison. The change under
+investigation is a source-bound synthetic equipment/load batch, not altered
+real annotations, model architecture, loss, threshold or checkpoint selection.
+
+Established reporting baseline
+Retain the existing model and its revised-reference development scores:
+goods IoU 50.84%, precision 54.48%, recall 88.74%, mean across seeds 17/29/43.
+The scores apply to the revised native 12-frame development targets, not to the
+historical targets used when its original report was created. Retained weights,
+old pointers and experiment history remain preserved.
+
+Reference cohort for the new experiment
+Use the explicit expanded cohort with 32 reviewed training and 12 development
+references, profile SHA256
+df43b6eae5204100ccdeccebcf504761367d4ce1790769fd4e78ed14d4bcbe4d.
+Both added training annotations remain qualified. The unsuccessful 32-view
+experiment is not evidence that their labels are wrong. Preserve all targets.
+Development membership and RGB/target payloads must agree with the historical
+equipment comparison before its dark-goods diagnostic is used as a guardrail.
+
+Candidate and execution gates
+Prepare empty/loaded equipment pairs with additional visible background equipment
+and both dark tyres and cartons. Camera, equipment, materials and lighting match
+within each pair; only explicit cargo is added. Empty equipment is background;
+only visible identifiable cargo is goods. Derived geometry, native labels, depth,
+source assets and training-only support are independently checked.
+
+Appearance/label approval binds to the exact rendered dataset and job hashes.
+Passing technical checks or a general instruction to prepare an experiment does
+not supply that batch-specific decision. Pending or changed outputs cannot enter
+training. Exact approval and admission are recorded. The frozen comparison is
+complete and rejected for recall and dark-goods regressions; see the results in
+docs/equipment_precision_results.txt. Preparation snapshots retain their original
+pending state and the original protocol is not rewritten after observing scores.
+
+Prepared batch
+Four matched pairs/eight native 1280x720 captures are prepared: two tyre-load
+pairs and two carton-load pairs, with additional empty pallet stacks and empty
+lattice containers. All empty captures have only background labels. Native goods
+labels match the declared visible cargo instances exactly; added equipment is
+background. Geometry checks passed 2,048 role-balanced rays plus 576 rays focused
+on the added equipment. All sampled instance hits agree; native per-view geometry
+p95 depth residuals are below 0.00005 metres. These are renderer-correspondence
+checks, not measured sensor accuracy or physical load stability.
+
+Explicit human appearance/label acceptance is recorded for all eight captures;
+they passed admission into a separate eligible snapshot. The original export stays
+unchanged and ineligible. AI visual triage inspected the eight empty RGB/loaded overlay
+views; this is not independent reference annotation or a measured accuracy score.
+The repeated aisle/materials and simple pallet geometry remain appearance limits.
+
+Exposure disclosure
+Both arms use 480 primary real presentations and 60 auxiliary presentations within
+120 updates per seed. Control adds 60 real replays; candidate adds 60 synthetic
+inputs, so the candidate has 60 fewer real replays. Each arm schedules 30 negative
+and 30 mixed auxiliary inputs. The synthetic schedule gives the two tyre-loaded
+captures 14 presentations combined, compared with 20 in the prior experiment.
+This decrease is disclosed rather than described as preserved dark-goods exposure.
+The measured dark-goods guard remains mandatory. Pixel exposure is not gradient
+contribution. Primary exposure also differs from the older 30-view experiment's
+450 presentations; only the new matched control isolates this candidate.
+
+Fresh matched comparison
+Use new real-only replay and real-plus-synthetic arms on the same frozen 32/12
+cohort, seeds 17/29/43, exact checksum-bound pretrained initialization, matched
+optimizer updates, loss and auxiliary schedule, threshold and final checkpoint
+selection. Disclose primary/auxiliary presentations and class-presence exposure.
+The replay arm fills auxiliary slots with real training references; it does not
+receive synthetic images. Do not reuse an earlier control from another protocol.
+
+Acceptance criteria fixed before fitting
+- Positive experimental result: mean goods IoU and precision increase, mean recall
+  does not decrease, and mean scorable-background false-positive rate decreases
+  against the fresh matched control.
+- MVP utility milestone: all of the above plus at least +3 percentage points
+  mean goods IoU against that control. A smaller gain is progress, not completion.
+- Dark-goods preservation: mean dark-goods miss rate does not exceed either the
+  fresh control or the exact historical empty/loaded candidate diagnostic.
+  Historical miss rate: 0.1853674019996826. The stratum is visible target goods
+  with Pillow RGB-to-L display luminance below 50, ignored targets excluded.
+  This is an intensity diagnostic, not a tyre-specific annotation or calibrated
+  radiance. The historical floor is a strict preservation guard, not a matched
+  causal comparison. No absolute 90.40% aggregate recall guarantee is asserted.
+
+Report all seeds and development frames, including gains and regressions,
+pixel-weighted and frame-weighted IoU, background false positives and dark-goods
+misses. Preserve rejected models. A generic comparison pass does not override
+these stricter gates and does not authorize automatic model promotion.
+
+Limits
+The candidate remains based on authored layouts and a small training-supported
+asset library. Correct geometry/labels do not establish photorealism, calibrated
+sensor fidelity or downstream usefulness. Three seeds and reused dependent
+development frames do not establish independent generalization. Freeze candidate
+and evaluation protocol before separate-recording assessment. Keep the locked test
+reserved for final selection. No new annotation round or broader scan is required
+by this experiment preparation.
+
+Version bindings
+Dataset profile SHA256:
+805cde4d447e2bc72b808825e5da094df68704c6a630cb6517170d944de35158
+Resolved job SHA256:
+d3e2a78cb28c3092f682cf049a80d0c1d155dd9f321df1dbf9452b8ba631a669
+Independent geometry profile SHA256:
+185bd975b5f3f67b550c01687f6c7b3342f28ee906d51a4b5edc56cd3223ba58
+Batch review profile SHA256:
+e8a3d194a4ddf08afeaf60ab329327db1da1f3b88ae25f18931ab772abb4c5ca
+Pre-execution proposal SHA256:
+e41573636e8e116615db1b85ec7b192ab2cb6105dfafb8dcc48c52e3aeed72b6
+
+Verification
+All 147 protected model/reference/pointer artifacts remain unchanged. The expanded
+cohort's 134 reference artifacts pass source-bound geometry verification. All 16
+served native RGB/overlay images reproduce the review snapshot's hashes. Pending
+decisions and absent admission are rejected before execution output is created.
+The new protocol/context fixture collection passed 21 tests and 27 subtests;
+protocol fixtures passed again after adding the exact exposure preview (10 tests,
+two subtests). These are overlapping fixture scopes, not a combined full-suite
+count. The existing equipment/training checks separately passed 12 tests and
+14 subtests. Those checks preceded customer training. The matched run is complete;
+an independent histogram recount verifies all 72 native predictions and the frozen
+decision. No model promotion or locked-test evaluation has occurred.

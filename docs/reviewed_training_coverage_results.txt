@@ -1,0 +1,110 @@
+Reviewed real training coverage comparison
+==========================================
+
+Outcome
+Adding the two qualified training views did not improve aggregate goods IoU,
+precision or recall in the matched three-seed experiment. The new model is not
+promoted. Both reviewed annotations remain qualified and preserved; unsuccessful
+training is not evidence that their labels should be changed.
+
+Native development metrics (mean across seeds 17, 29 and 43)
+Metric                         30 training views   32 training views   Change
+Goods IoU                                49.44%              48.48%   -0.96 pp
+Precision                                53.75%              52.51%   -1.24 pp
+Recall                                   87.08%              86.72%   -0.36 pp
+Frame-mean goods IoU                      41.16%              41.80%   +0.65 pp
+
+The quality rule was frozen before training: mean goods IoU and precision
+increase with no mean recall regression. It failed. Pixel-weighted metrics are
+computed within each seed and then averaged; frame-mean IoU weights frames
+equally. Ignored target ID 255 is excluded throughout. No significance claim is
+made from these three seeds and dependent development images.
+
+Per-seed changes, expanded minus control (percentage points)
+Seed       Goods IoU       Precision       Recall
+17             -2.10           -2.28        -0.21
+29             +1.96           +5.32        -8.08
+43             -2.74           -6.77        +7.23
+
+Five development frames improve in mean IoU, six regress and one is unchanged.
+Frame 000188 has the largest gain: 48.57% to 63.43% (+14.86 pp). Frame 000094
+gains 2.13 pp and dark-goods frame 000753 gains 1.22 pp. The largest regression
+is 000376: 66.53% to 59.99% (-6.54 pp), followed by 001036 (-2.54 pp).
+The two largest gains and regressions were visually inspected across all seeds.
+The gallery retains every development frame and seed, including regressions.
+
+Visible improvement in 000188 includes less false foreground around the yellow
+support. Remaining errors include false goods on background equipment in 000376
+and broad distant background confusion in 001036. Binary masks and these visual
+comparisons do not establish a unique causal explanation for the model changes.
+
+Qualified reference addition
+The new cohort adds Aisle_CCW_Run_1/000207 and Aisle_CCW_Run_1/000383, saved with
+explicit human review by Leena. Actual model-assisted annotation provenance,
+source hashes, saved-submission hashes and review history are retained. This is
+a separate 32-training/12-development cohort. The prior 30-training/12-development
+cohort and default retained model are preserved. All original reference rows,
+RGB and targets are unchanged; development membership and payloads match exactly.
+Native and 640x360 training-target statistics were recalculated using training
+rows only. These statistics did not change the unweighted training loss.
+
+Matched protocol
+Both new arms use plain real-only training with no auxiliary or synthetic stream.
+This differs from the earlier equipment replay-control protocol. The historical
+51.63% control is not used to isolate the effect of these two added references.
+
+Model: DeepLabV3 MobileNetV3 Large, RGB, same checksum-bound pretrained weights.
+Seeds: 17, 29, 43; all class heads initialized identically within each paired seed.
+Loss: unweighted cross-entropy, ignore 255. AdamW: learning rate 0.0003,
+weight decay 0.0001. Frozen BatchNorm running statistics. Float32, batch four,
+15 epochs, 120 optimizer updates per seed, fixed final checkpoint selection.
+Each real training sample appears exactly 15 times: 450 control presentations
+versus 480 expanded presentations. The 6.67% exposure increase and final-batch
+size difference are consequences of the added data within matched updates.
+
+Training RGB: 640x360 BOX; categorical targets: nearest-neighbour. Evaluation:
+1280x720, bilinear logits with align_corners=False, then argmax (threshold 0.5).
+No threshold tuning, intermediate checkpoint selection or model promotion occurs.
+
+Runtime and verification
+The first control attempt failed at epoch six with a CUDA illegal-memory-access
+error. Its artifacts and log are preserved and excluded from scores. Both arms
+then restarted from the same initialization with cuDNN disabled and synchronous
+CUDA launches. The completed comparison uses that execution policy in both arms;
+the underlying cause of the initial CUDA failure has not been established.
+Python 3.12.15, PyTorch 2.9.1+cu128 and existing packages were reused unchanged.
+No training source code or package versions were changed for this experiment.
+
+Hardware: RTX 5070 Laptop GPU, 8 GB VRAM; four CPU threads. Measured per-seed
+training/reload/report scope was 33.88-36.34 seconds, excluding the subsequent
+separate evaluation and prediction gallery exports. PyTorch peak allocated GPU
+memory was 1,347,813,888-1,348,508,160 bytes; this is not total device memory use.
+The exact benchmark runner fixture passed before execution. All six completed
+checkpoints reload strictly; fixed-final evaluations match. All 72 native
+development prediction masks were independently recounted. The original cohort
+and retained historical checkpoints were preserved. No locked-test evaluation,
+Git publication or model promotion occurred.
+
+Interpretation
+The experiment measures the effect of adding two reviewed, dependent views under
+this fixed training protocol. Better annotation coverage alone did not establish
+better aggregate development performance. It also does not establish that the
+annotations are wrong. Preserve the reviewed data and rejected candidate.
+Further work should address broader, distinct real equipment and clutter
+coverage; any change to data, loss, model, resolution or training budget needs a
+separate declared comparison. Independent recordings remain necessary for stronger
+generalization evidence. These results do not measure synthetic-data utility.
+
+Version bindings
+Original reference profile SHA256:
+d4928f47f069b0ae29ce1c7dae9282d54e8bbb3a4b8944e291ce8422a4d39468
+Expanded reference profile SHA256:
+df43b6eae5204100ccdeccebcf504761367d4ce1790769fd4e78ed14d4bcbe4d
+Protocol SHA256:
+1176e377912c47b284887edc489f85f5ffc502dc2d49deec6d7e47316aa1c539
+Matched control profile SHA256:
+a3a0fa2bf5e460a42c465a7f8761260c4d618025e82224da94f9caa1778de75f
+Expanded arm profile SHA256:
+170794036e65a717099bcb71da96d903c271b54ade4d70d7834b90ac719066e9
+Comparison profile SHA256:
+fc7a0982634178fe4f69344dc9bb31e1c2b3979d5960aa949503e9017ef77fd0

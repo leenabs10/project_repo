@@ -98,7 +98,10 @@ def checkpoint_selection_metric(config):
 
 def validate_configuration(config, *, fixture=False):
     """Reject silent preprocessing/model changes and unsupported precision modes."""
-    models = {"deeplabv3_mobilenet_v3_large"}
+    models = {
+        "deeplabv3_mobilenet_v3_large", "deeplabv3_resnet50",
+        "unet_vgg16", "yolo26n_semantic",
+    }
     if fixture:
         models.add("fixture_conv")
     if (
@@ -230,8 +233,22 @@ def build_optimizer(model, config):
 
 
 def build_model(config, checkpoint=None, *, fixture=False):
-    """Create models without network access; replace only declared class heads."""
+    """Build a declared two-class segmenter without network access.
+
+    DeepLabV3 backbones are MobileNetV3-Large and ResNet-50. Experimental VGG
+    U-Net and YOLO semantic models use their explicit preprocessing/initializer
+    adapters in additional_segmenters. A local pretrained
+    checkpoint must match its SHA256 and every non-output tensor. Only the two
+    main/auxiliary output heads may differ in shape. Unknown models, fixture
+    models outside fixture execution, and incompatible checkpoints raise
+    ValueError rather than falling back to another backbone.
+    """
     import torch
+
+    if config["model"] in {"unet_vgg16", "yolo26n_semantic"}:
+        from src.training.additional_segmenters import build_additional_segmenter
+
+        return build_additional_segmenter(config, checkpoint)
 
     if config["model"] == "fixture_conv" and fixture:
 
@@ -244,9 +261,18 @@ def build_model(config, checkpoint=None, *, fixture=False):
                 return {"out": self.head(inputs)}
 
         return FixtureModel()
-    from torchvision.models.segmentation import deeplabv3_mobilenet_v3_large
+    from torchvision.models.segmentation import (
+        deeplabv3_mobilenet_v3_large,
+        deeplabv3_resnet50,
+    )
 
-    model = deeplabv3_mobilenet_v3_large(
+    builders = {
+        "deeplabv3_mobilenet_v3_large": deeplabv3_mobilenet_v3_large,
+        "deeplabv3_resnet50": deeplabv3_resnet50,
+    }
+    if config.get("model") not in builders:
+        raise ValueError("Unsupported goods model backbone")
+    model = builders[config["model"]](
         weights=None, weights_backbone=None, num_classes=2, aux_loss=True
     )
     if checkpoint is not None:
