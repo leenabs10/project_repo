@@ -15,7 +15,7 @@ class DifferentialRateTests(unittest.TestCase):
         self.config = json.loads(
             (
                 Path(__file__).parents[1]
-                / "configs/benchmarks/warehouse_goods_real_only.json"
+                / "archive/configs/benchmarks/warehouse_goods_real_only.json"
             ).read_text()
         )
         self.model = torch.nn.Module()

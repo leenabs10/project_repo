@@ -1,0 +1,110 @@
+Corrected training references and fresh release control
+=====================================================
+
+Current scope
+All six exact native correction drafts received explicit user confirmation and
+were saved as reviewed versions. The confirmation channel and actual AI-assisted
+annotation origin are retained. Save timestamps record the save operation, not
+an invented time for the preceding visual review. This does not establish
+independent annotation accuracy or approve a future synthetic batch.
+
+A separate complete cohort contains 32 training and 12 development references.
+Six training masks change by a total of 657,904 native pixels. The other 26
+training references and all 12 development references are byte-preserved, including
+their metadata. RGB membership, source hashes, uncertainty policy and task remain
+unchanged. Original cohorts, drafts, reviewed-version history and models remain.
+No held-out test evaluation or model promotion occurred.
+
+Current cohort profile SHA256:
+37ab46daec17a248cc5dc42016113159d42798e64fafbfcafe9ea88a71a36be8
+Previous cohort profile SHA256:
+2ba84460fa9991befdcdbfbba88bda8225eae91d88ec0a943b39d13fd858cda9
+Exact approved draft packet SHA256:
+3394c2b5b9c158ca6db66db51bd8aa73eeffc0eb128ad17df8741a40a69b65eb
+Frozen fresh-control protocol SHA256:
+c53f3e1b69d97c7c983bfcf0ee662fe8786f5bb952e6ac27ec321475cc754ae7
+
+Training coverage refresh
+One visit to all 32 frames at 640x360 contains 800,937 goods pixels, 4,604,145
+background pixels and 1,967,718 ignored pixels. Goods occupy 14.8182% of scorable
+training pixels. Dark display-luminance goods pixels number 80,924.
+Native labels remain uint8 IDs 0/1/255. RGB uses BOX and targets use NEAREST.
+Development references were integrity-checked but no development images were
+decoded to derive these training coverage statistics. No test payload was used.
+The auxiliary class-mass coefficient is recalculated from these training targets;
+the previous reference-dependent value is not silently reused.
+
+Fresh real-only control
+The complete seed-17/29/43 arm uses DeepLabV3 MobileNetV3-Large with the same
+checksum-bound generic initialization. Each seed uses 15 epochs, 120 updates,
+480 primary real and 60 real replay auxiliary inputs, batch four and float32.
+Threshold is 0.5 and checkpoints are fixed to final epoch. Strict reload and
+separate evaluation pass. Native masks are exported without editing predictions.
+Strict deterministic algorithms, explicit_valid_mean loss reduction, CUBLAS
+workspace :4096:8, TF32 disabled, cuDNN disabled and four CPU threads are used.
+This is a new numerical/reference protocol, not a direct historical improvement
+comparison. It does not replace the retained reporting model.
+
+Seed | Goods IoU
+17   | 49.3298%
+29   | 50.1494%
+43   | 50.9960%
+
+Mean metric                       | Fresh real-only
+Goods IoU                         | 50.1584%
+Precision                         | 54.2017%
+Recall                            | 87.0806%
+Frame-mean goods IoU               | 42.6019%
+Background false-positive rate    | 8.0451%
+Dark-goods miss rate               | 36.4834%
+
+Pixels are aggregated within each seed before averaging seed metrics. Frame-mean
+IoU instead weights defined per-frame IoUs equally. Ignored pixels are excluded;
+undefined class rates remain null. Dark means native Pillow display luminance
+below 50 on reference goods, not a calibrated radiance or a tyre annotation.
+All 36 native development predictions independently reproduce both per-frame
+metrics and aggregate confusion counts using two-dimensional histograms.
+
+Frozen matched-candidate acceptance requirements
+- Mean goods IoU at least 53.1584% (+3.00 percentage points).
+- Mean precision strictly above 54.2017%.
+- Mean recall at least 87.0806%.
+- Mean background false-positive rate strictly below 8.0451%.
+- Mean dark-goods miss rate no higher than 18.67171826%, the stricter of the
+  fresh control and historical same-development-reference guard.
+- Mean frame-weighted IoU at least 42.6019%.
+- Positive paired IoU change in at least two of three seeds.
+Displayed values are rounded; exact floating-point gates are stored in the JSON.
+The grouped-cargo candidate has now been tested under this exact cohort,
+numerical policy and matched training budget. It fails the frozen utility gates.
+Existing admissions remain bound to their original reference versions; none was
+automatically rebound to this cohort.
+
+Grouped-cargo candidate result
+The approved eight-capture opaque grouped-cargo batch passed independent geometry
+checks and was admitted with the disclosed empty-RGB byte-match failure preserved.
+Its matched three-seed arm scored 48.42% IoU, 55.88% precision and 78.99% recall,
+versus 50.16%, 54.20% and 87.08% for real-only replay. Dark-goods miss rate rose
+from 36.48% to 54.88%; frame-mean IoU fell from 42.60% to 39.05%. The candidate
+failed the frozen gates and was not promoted. Details and every seed are in
+docs/grouped_cargo_coverage_results.txt and docs/goods_corrected_reference_control.json.
+
+A second candidate requires a specific training-supported hypothesis from this
+result. Transparent wrapping remains outside the supported scene contract.
+
+Verification and limits
+Seventeen reference/editor/cohort-extension/schedule fixture tests and 33 subtests
+pass. This is a focused scope, not a new full-suite count. Operator modules compile.
+The preceding correction/control audit verified all 859 then-protected files.
+No package upgrades, source-data edits, publication or held-out access occurred
+during this candidate comparison; current status-document updates are intentional.
+Hardware: NVIDIA GeForce RTX 5070 Laptop GPU. Training 640x360; scoring 1280x720.
+Per-seed measured training scope and peak allocated memory are in the paired JSON;
+they exclude scene rendering and gallery generation and do not establish throughput.
+Dependent video frames, repeated development use and model-assisted reference
+anchoring remain limitations. Grouped-cargo utility was measured and failed its
+frozen gates; independent held-out confirmation remains pending. Historical
+experiments retain their original bindings.
+
+Source/version bindings and complete numerical results:
+docs/goods_corrected_reference_control.json.

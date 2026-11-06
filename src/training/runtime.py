@@ -2,7 +2,10 @@
 
 from pathlib import Path
 
+from src.core.paths import raw_data_roots, workspace_root
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
+WORKSPACE_ROOT = workspace_root(PROJECT_ROOT)
 
 
 def require_output(path, *, sources=(), allow_existing=False):
@@ -13,7 +16,7 @@ def require_output(path, *, sources=(), allow_existing=False):
     """
     destination = Path(path).resolve()
     protected = [
-        PROJECT_ROOT / "data/raw",
+        *raw_data_roots(PROJECT_ROOT),
         *[Path(source).resolve() for source in sources],
     ]
     if any(

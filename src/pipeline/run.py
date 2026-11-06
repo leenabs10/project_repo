@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 import sys
 
+from src.core.paths import resolve_legacy_path
 from src.adapters.execution.local import LocalExecutor
 
 
@@ -22,14 +23,16 @@ def main():
     job = json.loads(args.job.read_text(encoding="utf-8"))
     runtime = copy.deepcopy(json.loads(args.runtime.read_text(encoding="utf-8")))
     for key in ("root", "manifest"):
-        runtime["dataset"][key] = str((workspace / runtime["dataset"][key]).resolve())
+        runtime["dataset"][key] = str(
+            resolve_legacy_path(runtime["dataset"][key], workspace)
+        )
     if "quality_policy" in runtime:
         runtime["quality_policy"] = str(
-            (workspace / runtime["quality_policy"]).resolve()
+            resolve_legacy_path(runtime["quality_policy"], workspace)
         )
     if "evidence_files" in runtime:
         runtime["evidence_files"] = {
-            key: str((workspace / value).resolve())
+            key: str(resolve_legacy_path(value, workspace))
             for key, value in runtime["evidence_files"].items()
         }
     result = LocalExecutor(args.worker_python, workspace).run(job, runtime, args.output)

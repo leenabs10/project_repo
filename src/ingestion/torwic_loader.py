@@ -58,6 +58,13 @@ CLASSES = [
 ]
 
 
+import sys
+
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from src.core.paths import workspace_root
+
+
 def calibration(root):
     """Parse supplied key/value text; preserve transform names without inverting them."""
     result = {}
@@ -409,7 +416,9 @@ def main():
     """Build the manifest, smoke-test one training frame, and write ingestion reports."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, required=True)
-    parser.add_argument("--output", type=Path, default=Path("reports/ingestion"))
+    parser.add_argument(
+        "--output", type=Path, default=workspace_root() / "reports/ingestion"
+    )
     parser.add_argument(
         "--confirm-planned-dates",
         action="store_true",

@@ -4,7 +4,7 @@
 
 - Maintain a dataset-independent core, simulator-independent generation contracts
   and infrastructure-independent execution. Current specifications are in
-  `docs/pipeline_architecture.txt` and `docs/mvp_scope.txt`.
+  `docs/architecture.md` and `docs/scope.md`.
 - Keep dataset formats, split assignments and sensor conventions in dataset
   adapters. Keep task semantics in task adapters and engine APIs in isolated
   renderer workers. Executable paths, credentials and storage roots are deployment
@@ -96,9 +96,9 @@
   frames and repeated development use; they do not establish unbiased generalization.
 - Freeze the candidate and protocol before final test evaluation. Integrity checks
   on test files do not authorize model evaluation or tuning.
-- The current qualified reference cohort has 30 training and 12 development
+- The current qualified reference cohort has 32 training and 12 development
   samples, bound to profile SHA256
-  `d4928f47f069b0ae29ce1c7dae9282d54e8bbb3a4b8944e291ce8422a4d39468`.
+  `37ab46daec17a248cc5dc42016113159d42798e64fafbfcafe9ea88a71a36be8`.
   Explicitly verify the intended revision for each experiment.
 - Keep empty pallets, empty handling containers and transport equipment background.
   Identifiable loads and stored goods are foreground. Unresolved real regions remain
@@ -173,10 +173,25 @@
   Reuse verified caches; repeat full ingestion only when source/loader changes
   justify the cost.
 - Preserve the verified package versions. Resolve deployment interpreters through
-  `.tools/training_runtime.json`; the ingestion environment is not assumed to
+  `configs/local.json`; the ingestion environment is not assumed to
   include CUDA training packages.
 - Bound CPU workers and GPU batches. Report actual resolution, precision, hardware,
   measured peak memory and timing scope when benchmarking.
-- Current capability/status evidence is in `docs/goods_benchmark_status.txt` and
-  `docs/scene_generation.txt`. Keep published evidence consistent with published
+- Current capability/status evidence is in `docs/status.md` and
+  `archive/docs/scene_generation.txt`. Keep published evidence consistent with published
   code; later local experiments remain separate.
+
+
+## Repository and workspace layout
+
+- Keep maintained code, tests, portable configurations and concise active docs in
+  the source repository. The external workspace is selected in ignored
+  `configs/local.json`; its data, assets, models, reports and local operators are
+  not source files and must remain outside Git.
+- Preserve archived documentation/configuration bytes under `archive/`. Preserve
+  original metadata path strings; resolve deployment paths at maintained entry
+  points and record relocations in the workspace migration ledger.
+- Protect both original and relocated raw-data locations. Migration does not
+  authorize changes to dataset contents, saved reference pixels or past scores.
+- Portable run commands belong in `docs/run.md`. Machine-specific review links,
+  service state and credentials belong in the ignored external workspace.

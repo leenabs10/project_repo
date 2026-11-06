@@ -13,6 +13,7 @@ import shutil
 import numpy as np
 from PIL import Image
 
+from src.core.paths import workspace_root
 from src.adapters.storage.local import file_hash, reserve_output, source_path
 from src.adapters.tasks.goods import load_definition
 from src.adapters.tasks.goods_scene import validate_goods_scene
@@ -313,7 +314,7 @@ def admit_scene_dataset(
             decisions_path,
             references,
             task_path,
-            Path(__file__).parents[2] / "data/raw",
+            workspace_root() / "data/raw",
         ),
     )
     try:

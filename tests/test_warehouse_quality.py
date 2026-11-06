@@ -144,7 +144,9 @@ def planner_inputs():
             ),
         )
     config = json.loads(
-        (Path(__file__).parents[1] / "configs/warehouse_goods_quality.json").read_text()
+        (
+            Path(__file__).parents[1] / "archive/configs/warehouse_goods_quality.json"
+        ).read_text()
     )
     return profile, "d" * 64, camera, catalog, "e" * 64, config
 
@@ -214,7 +216,7 @@ class CheckpointDeclarationTests(unittest.TestCase):
     def test_fixed_final_has_no_selection_metric_and_legacy_evidence_stays_valid(self):
         path = (
             Path(__file__).parents[1]
-            / "configs/benchmarks/warehouse_goods_scene_control.json"
+            / "archive/configs/benchmarks/warehouse_goods_scene_control.json"
         )
         config = json.loads(path.read_text())
         self.assertIsNone(config["selection_metric"])

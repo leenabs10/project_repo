@@ -1,7 +1,7 @@
 """Blender Cycles pilot: paired native RGB, clean axial depth and semantic IDs.
 
 Run with portable Blender --background --factory-startup --python this_file --
---config configs/warehouse_renderer.json --root data/raw/torwic_slam --output
+--config archive/configs/warehouse_renderer.json --root data/raw/torwic_slam --output
 reports/warehouse_renderer_pilot. No TorWIC trajectory images or poses are read.
 """
 

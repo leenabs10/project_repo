@@ -54,10 +54,11 @@ class SceneTrainingTests(unittest.TestCase):
             ),
         )
         job = fixture_job()
+        scene_id = getattr(cls, "fixture_scene_id", "known_plane")
         job["camera"].update(width=32, height=32, intrinsics=[20, 20, 16, 16])
         capture = job["scenes"][0]
         capture.update(
-            sample_id="known_plane",
+            sample_id=scene_id,
             scenario="Known analytic plane split into background and goods",
             optical_camera_to_world=np.eye(4).tolist(),
         )
@@ -76,12 +77,13 @@ class SceneTrainingTests(unittest.TestCase):
         ]
         job["scenes"] = [capture]
         worker = cls.base / "worker"
-        folder = worker / "known_plane"
+        folder = worker / scene_id
         folder.mkdir(parents=True)
         semantic = np.zeros((32, 32), np.uint8)
         semantic[:, 16:] = 1
         rgb = np.full((32, 32, 3), [45, 75, 110], np.uint8)
         rgb[semantic == 1] = [175, 135, 80]
+        rgb[:, :, 0] += getattr(cls, "fixture_color_shift", 0)
         Image.fromarray(rgb).save(folder / "rgb.png")
         for name, array in (
             ("depth_axial_m", np.full((32, 32), 8, np.float32)),
@@ -102,7 +104,7 @@ class SceneTrainingTests(unittest.TestCase):
                 fixture=dict(maximum_error_metres=0),
                 records=[
                     dict(
-                        sample_id="known_plane",
+                        sample_id=scene_id,
                         artifact_sha256={
                             path.relative_to(worker).as_posix(): file_hash(path)
                             for path in folder.iterdir()
@@ -160,7 +162,7 @@ class SceneTrainingTests(unittest.TestCase):
                 assessor=dict(name="Known plane fixture", method="known_fixture"),
                 samples=[
                     dict(
-                        sample_id="known_plane",
+                        sample_id=scene_id,
                         appearance="accept",
                         labels="accept",
                         notes="Known fixture only",

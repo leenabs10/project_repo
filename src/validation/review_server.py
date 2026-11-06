@@ -13,6 +13,7 @@ from threading import RLock
 from urllib.parse import parse_qs, urlsplit
 from uuid import uuid4
 
+from src.core.paths import resolve_legacy_path
 from src.adapters.storage.local import reserve_output
 from src.validation.artifacts import verify_snapshot, write_json
 from src.validation.reference_labels import import_references
@@ -40,10 +41,14 @@ class ReviewStore:
         self.state = Path(state).resolve()
         if self.state.exists():
             existing = json.loads((self.state / "session.json").read_text())
-            if existing != {
-                "packet_sha256": packet_sha,
-                "source_root": str(self.source_root),
-            }:
+            # A recorded deployment relocation changes the directory, not the
+            # raw payload identity. Keep historical session bytes unchanged and
+            # compare their root through the explicit local path resolver.
+            if (
+                set(existing) != {"packet_sha256", "source_root"}
+                or existing["packet_sha256"] != packet_sha
+                or resolve_legacy_path(existing["source_root"]) != self.source_root
+            ):
                 raise ValueError(
                     "Existing review state belongs to another packet/source"
                 )

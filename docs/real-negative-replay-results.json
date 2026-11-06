@@ -1,0 +1,53 @@
+{
+  "status": "FAIL",
+  "client_date": "2026-11-05",
+  "experiment": "synthetic_positives_with_real_negative_replay",
+  "diagnostic_closed": true,
+  "all_utility_gates_passed": false,
+  "reference_profile_sha256": "37ab46daec17a248cc5dc42016113159d42798e64fafbfcafe9ea88a71a36be8",
+  "collection_profile_sha256": "818ca42f7c3518f8cabb8a8da187b2a511584519c866bdfca64e5a15438a502b",
+  "code_snapshot_sha256": "bfdfcbafa1df1b74ded8c3f4cf09adadbfac7282fce2dcde51e69f2d32eeae27",
+  "protocol_profile_sha256": "64f6f58114f7915ff0d841a5580189dfb893db7eb1f4e84c755cdc2b890f76b2",
+  "report_profile_sha256": "6f3136ce54cf93696b1812324ed347ad4d4981e8f0ffd37de5b94051394c3f96",
+  "control_mean": {
+    "goods_iou": 0.5015839999239958,
+    "precision": 0.5420166624894146,
+    "recall": 0.8708055019228623,
+    "background_false_positive_rate": 0.0804510944461645,
+    "dark_goods_miss_rate": 0.3648338648698335,
+    "frame_mean_goods_iou": 0.42601850455616574
+  },
+  "candidate_mean": {
+    "goods_iou": 0.4925304653866551,
+    "precision": 0.5460365782005521,
+    "recall": 0.8408164935685166,
+    "background_false_positive_rate": 0.07866947027966849,
+    "dark_goods_miss_rate": 0.4583363307196125,
+    "frame_mean_goods_iou": 0.40529179800363696
+  },
+  "background_fpr_improves_vs_previous_synthetic_in_seeds": 3,
+  "iou_improves_vs_control_in_seeds": 1,
+  "model_seeds": [17, 29, 43],
+  "optimizer_updates_per_seed": 120,
+  "primary_real_presentations_per_seed": 480,
+  "real_negative_auxiliary_presentations_per_seed": 30,
+  "synthetic_positive_auxiliary_presentations_per_seed": 30,
+  "candidate_total_real_presentations_per_seed": 510,
+  "control_total_real_presentations_per_seed": 540,
+  "total_presentations_per_seed": 540,
+  "fresh_control_matches": {
+    "native_predictions": 36,
+    "model_tensors": 1080,
+    "all_seed_training_histories_exact": true
+  },
+  "training_mean_goods_iou": 0.9296937011964183,
+  "training_mean_background_false_positive_rate": 0.008296673300537705,
+  "native_development_masks_recounted": 108,
+  "native_training_masks_recounted": 288,
+  "protected_historical_files_unchanged": 1882,
+  "full_software_suite": {"tests": 296, "skipped": 1, "passed": true},
+  "annotations_changed": false,
+  "retained_model_changed": false,
+  "model_promoted": false,
+  "held_out_test_evaluated": false
+}

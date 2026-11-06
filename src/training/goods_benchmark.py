@@ -12,6 +12,7 @@ import time
 import numpy as np
 from PIL import Image
 
+from src.core.paths import workspace_root
 from src.adapters.storage.local import file_hash, reserve_output, source_path
 
 # Compatibility exports preserve existing CLI consumers and saved workflows.
@@ -205,7 +206,7 @@ def train_run(
             configuration,
             Path(checkpoint) if checkpoint else references,
             Path(synthetic) if synthetic is not None else references,
-            Path(__file__).parents[2] / "data/raw",
+            workspace_root() / "data/raw",
         ),
     )
     write_json(
@@ -233,6 +234,12 @@ def train_run(
         input_sampling, synthetic_presentations = Counter(), 0
         auxiliary_sampling, auxiliary_presentations = Counter(), 0
         auxiliary_presence_counts = Counter()
+        auxiliary_source_counts = Counter()
+        mixed_source_events = []
+        mixed_auxiliary = (
+            config.get("auxiliary_sampling", {}).get("strategy")
+            == "explicit_mixed_source_sequence"
+        )
         updates, best_score, best_epoch = 0, -1.0, None
         for epoch in range(config["epochs"]):
             model.train()
@@ -333,7 +340,22 @@ def train_run(
                             ] += 1
                         input_sampling[donor_row["sample_id"]] += 1
                         auxiliary_presentations += 1
-                        synthetic_presentations += int(scene_hybrid)
+                        if mixed_auxiliary:
+                            source = donor_row["auxiliary_input_source"]
+                            auxiliary_source_counts[source] += 1
+                            mixed_source_events.append(
+                                dict(
+                                    update=updates + 1,
+                                    sample_id=donor_row["sample_id"],
+                                    target_kind=donor_row["auxiliary_target_kind"],
+                                    input_source=source,
+                                    rgb_sha256=donor_row["source_rgb_sha256"],
+                                    target_sha256=donor_row["target_sha256"],
+                                )
+                            )
+                            synthetic_presentations += int(source == "admitted_scene")
+                        else:
+                            synthetic_presentations += int(scene_hybrid)
                         auxiliary_loss_sum += float(auxiliary_loss.detach())
                         epoch_auxiliary_count += 1
                 if any(
@@ -460,6 +482,8 @@ def train_run(
         write_json(output / "input_sampling.json", dict(input_sampling))
         if auxiliary_settings is not None:
             write_json(output / "auxiliary_sampling.json", dict(auxiliary_sampling))
+        if mixed_auxiliary:
+            write_json(output / "auxiliary_events.json", mixed_source_events)
         write_implementation_snapshot(output)
         report = {
             "status": "passed",
@@ -503,6 +527,11 @@ def train_run(
                     "auxiliary_foreground_fraction": auxiliary_settings[
                         "foreground_fraction"
                     ],
+                    **(
+                        {"auxiliary_source_presentations": dict(auxiliary_source_counts)}
+                        if mixed_auxiliary
+                        else {}
+                    ),
                     **(
                         {
                             "auxiliary_target_presentations": dict(
@@ -630,9 +659,7 @@ def evaluate_run(
         raise ValueError("Checkpoint synthetic provenance differs from its run")
     model = build_model(config, fixture=fixture).to(device)
     model.load_state_dict(saved["state_dict"], strict=True)
-    output = reserve_output(
-        output, (run, references, Path(__file__).parents[2] / "data/raw")
-    )
+    output = reserve_output(output, (run, references, workspace_root() / "data/raw"))
     metrics = native_metrics(
         model,
         references,
@@ -656,7 +683,7 @@ def evaluate_run(
 
 def fixture_run(output, *, production_model=False, checkpoint=None, device="cpu"):
     """Exercise the same train/save/reload/eval engine on generated known labels."""
-    output = reserve_output(output, (Path(__file__).parents[2] / "data/raw",))
+    output = reserve_output(output, (workspace_root() / "data/raw",))
     task = json.loads(
         (
             Path(__file__).parents[2] / "configs/tasks/warehouse_goods_reviewed.json"
@@ -667,7 +694,7 @@ def fixture_run(output, *, production_model=False, checkpoint=None, device="cpu"
     config = json.loads(
         (
             Path(__file__).parents[2]
-            / "configs/benchmarks/warehouse_goods_real_only.json"
+            / "archive/configs/benchmarks/warehouse_goods_real_only.json"
         ).read_text()
     )
     config.update(epochs=1, batch_size=4, model_seeds=[17])

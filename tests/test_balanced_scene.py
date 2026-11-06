@@ -25,7 +25,8 @@ class BalancedSceneTests(unittest.TestCase):
             catalog["assets"][identifier] = entry
         config = json.loads(
             (
-                Path(__file__).parents[1] / "configs/warehouse_goods_balanced.json"
+                Path(__file__).parents[1]
+                / "archive/configs/warehouse_goods_balanced.json"
             ).read_text()
         )
         evidence = dict(training_support=[dict(sample_id="Aisle_CCW_Run_1/000223")])

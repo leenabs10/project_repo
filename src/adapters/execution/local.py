@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 import subprocess
 
+from src.core.paths import workspace_root
 from src.adapters.storage.local import file_hash, reserve_output
 from src.core.contracts import validate_job
 
@@ -42,7 +43,7 @@ class LocalExecutor:
             (
                 Path(dataset["root"]),
                 Path(dataset["manifest"]),
-                self.project_root / "data/raw",
+                workspace_root(self.project_root) / "data/raw",
                 *evidence_paths,
             ),
         )

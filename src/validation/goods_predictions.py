@@ -8,6 +8,7 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 
+from src.core.paths import workspace_root
 from src.adapters.storage.local import file_hash, reserve_output, source_path
 from src.training.goods_benchmark import build_model, input_tensor, load_references
 from src.adapters.tasks.goods import confusion_counts, segmentation_metrics
@@ -87,9 +88,7 @@ def export_predictions(run, run_sha, references, references_sha, output, device=
     model = build_model(config).to(device)
     model.load_state_dict(saved["state_dict"], strict=True)
     model.eval()
-    output = reserve_output(
-        output, (run, references, Path(__file__).parents[2] / "data/raw")
-    )
+    output = reserve_output(output, (run, references, workspace_root() / "data/raw"))
     training = [row for row in rows if row["split"] == "train"]
     selected = {
         training[index]["sample_id"]

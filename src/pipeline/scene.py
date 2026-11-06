@@ -10,6 +10,7 @@ from pathlib import Path
 import shutil
 import subprocess
 
+from src.core.paths import resolve_legacy_path, workspace_root
 from src.adapters.generation.capabilities import BACKENDS
 from src.adapters.generation.material_assets import verify_material_assets
 from src.adapters.storage.local import file_hash, reserve_output
@@ -24,6 +25,9 @@ def run_scene(job, runtime, output, workspace, *, timeout_seconds=1800):
     # The first scene application is goods segmentation; new applications need
     # their own explicit task policy, without changing the shared scene core.
     validate_goods_scene(job)
+    cpu_threads = runtime.get("cpu_threads", 4)
+    if type(cpu_threads) is not int or not 1 <= cpu_threads <= 16:
+        raise ValueError("Scene runtime CPU threads must be an integer from 1 to 16")
     if job["backend"] not in BACKENDS:
         raise NotImplementedError("Unknown generation backend")
     BACKENDS[job["backend"]].require(set(job["required_modalities"]))
@@ -68,7 +72,7 @@ def run_scene(job, runtime, output, workspace, *, timeout_seconds=1800):
     output = reserve_output(
         Path(output),
         (
-            workspace / "data/raw",
+            workspace_root(workspace) / "data/raw",
             executable,
             *evidence.values(),
             *sources,
@@ -88,6 +92,8 @@ def run_scene(job, runtime, output, workspace, *, timeout_seconds=1800):
         str(executable),
         "--background",
         "--factory-startup",
+        "--threads",
+        str(cpu_threads),
         "--python-exit-code",
         "2",
         "--python",
@@ -168,9 +174,11 @@ def main():
     job = json.loads(args.job.read_text(encoding="utf-8"))
     runtime = json.loads(args.runtime.read_text(encoding="utf-8"))
     for key in ("blender_executable", "training_profile", "source_manifest"):
-        runtime[key] = str((args.workspace / runtime[key]).resolve())
+        runtime[key] = str(resolve_legacy_path(runtime[key], args.workspace))
     if runtime.get("asset_root"):
-        runtime["asset_root"] = str((args.workspace / runtime["asset_root"]).resolve())
+        runtime["asset_root"] = str(
+            resolve_legacy_path(runtime["asset_root"], args.workspace)
+        )
     print(json.dumps(run_scene(job, runtime, args.output, args.workspace), indent=2))
 
 

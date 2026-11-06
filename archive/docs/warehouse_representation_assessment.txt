@@ -1,0 +1,127 @@
+Warehouse representation assessment
+===================================
+
+Qualification status
+The training-only assessment is complete. Three paired geometry scouts are
+feasible under the existing scene contract. No new RGB/depth/label batch has
+been rendered, accepted or admitted, and no new model has been trained.
+The preceding two-candidate utility campaign remains closed after its final
+candidate failed the frozen requirements. This assessment does not supersede
+that rejection or establish synthetic usefulness.
+
+Evidence boundary
+The selected cohort contains 32 training and 12 development references, profile
+37ab46daec17a248cc5dc42016113159d42798e64fafbfcafe9ea88a71a36be8.
+All 32 cached training RGB/target pairs were inspected and checked. Development
+and test images were not decoded for this assessment. Existing annotations and
+models remain unchanged. The real references retain human-reviewed,
+model-assisted provenance; the new visual coverage observations are AI-assisted
+assessment notes, not independent object-family annotations.
+
+The source-bound assessment snapshot is
+reports/warehouse_representation_assessment_20261104, profile SHA256
+975e6b63df7582533ebf05204621afecad675fc5dc39082cee197c5931bbe702.
+Its capability matrix binds the relevant scene, conversion, generator, admission
+and training-input source versions. The preceding final experiment remains bound
+to result profile
+684622fddd8f8e721075b74309ea3d66ff96a76354f7df7ea74bc0c942763df8.
+
+Observed representation gaps
+The registered library has eight normalized mesh entries derived from four
+original source objects: a carton, tyre, lattice crate and cement bag. Front/back
+rotations are derivatives of the same source. The final candidate used only the
+carton and tyre families as goods. The crate is handling equipment; the cement
+bag remains exploratory, without a verified customer-inventory match.
+
+Training examples show varied package proportions, close partial crops, adjacent
+mixed stock, wrapping, image blur and distinct load/equipment boundaries. Current
+opaque geometry covers only part of this appearance and content range. Native
+training goods-mask fractions range from 0% to 31.48%, with median 10.22%.
+These are visible class areas, not object sizes, distances, counts or sufficient
+photographic coverage requirements.
+
+The renderer already supports camera changes, source UV materials and mixing
+registered opaque meshes. Earlier experiments also included close viewpoints
+and mixed packaging. Repeating those ideas with the same source objects is not
+a demonstrated new solution. The latest arrangement revision improved on its
+predecessor but still reduced recall against the real-only control.
+
+Verified and proposed capabilities
+- Current verified interface: static opaque metric cuboids and registered meshes,
+  pinhole cameras, RGB, axial depth, validity, semantic and instance outputs.
+  Appearance qualification remains specific to each reviewed batch.
+- Geometry feasibility only: closer carton and tyre views, plus a mixed
+  carton/tyre bay, with corresponding equipment-only negatives. The proposed
+  camera poses are outside older preset bounds; they require an explicit
+  versioned resolver and fresh render/camera/depth/label fixtures.
+- Asset work required: materially different source package designs, appropriate
+  source textures and conversion/scale/UV qualification. Recolouring or rotating
+  one carton does not establish independent source diversity.
+- Support work required for irregular stacks: the current refiner verifies
+  aligned equal-footprint contacts. Object rotation has no scene-field support;
+  baked, registered orientation derivatives need their own geometry checks.
+- Unsupported: transparent or loose wrapping. The material contract is opaque
+  and the restricted glTF converter rejects non-OPAQUE material declarations.
+  An opaque placeholder cannot qualify film, visible surfaces or hidden goods.
+- Not qualified: motion blur and a matched photographic camera response. Current
+  sensor-condition code implements RGB gain and depth-mask transfer; brightness
+  variation does not qualify blur or sensor realism.
+- Collection work required for broader experiments: a scene job permits at most
+  eight captures, and current scene training consumes one admitted dataset/job.
+  A larger collection needs explicit source-bound multi-job admission/input
+  handling. Silent manifest concatenation is not an implemented capability.
+
+Geometry scout result
+Six unrendered resolved captures were prepared: three loaded cases and three
+equipment-only counterparts. All satisfy the scene/task contracts and camera
+containment check. Each received 880 coarse independent nearest-hit probes.
+Close cartons, close tyres and mixed stock exposed 17, 9 and 18 goods instances
+respectively on that grid. Empty counterparts exposed no goods. The mixed
+feasibility scene explicitly adds six registered tyre instances; it is not a
+continuation of the earlier fixed-inventory intervention.
+
+These probes establish geometric feasibility only. They do not compare renderer
+labels or depths, establish appearance, certify physical stability, or qualify
+the proposed camera poses. The original cameras, samples and decisions remain
+preserved in their own experiment snapshots.
+
+Capability milestones for the next approach
+1. Qualify a representative opaque asset library. Initial design needs are
+   tall cartons, flat/wide cartons and worn or irregular opaque packages, grounded
+   in training observations. A shipping-case family is conditional on explicit
+   load/handling-container semantics; hidden contents are not inferred. These
+   categories are proposed coverage requirements, not acquired or accepted assets.
+2. Qualify six small render scouts using the new assets: close cartons, close
+   tyres and mixed occupied bays, each paired with equipment-only context.
+   Require native correspondence, independent geometry, contacts, visible labels
+   and exact-batch human appearance/label decisions. Resolve RGB reproducibility
+   or declare the control policy before execution; prior byte failures stay failed.
+3. Resolve wrapping separately through a versioned feasibility specification,
+   material/label/depth semantics and fixtures. Keep it unsupported until qualified.
+4. Before testing a diversity hypothesis, prepare source-bound admitted-collection
+   support. Thirty distinct loaded donors is a proposed design target matching
+   the existing thirty mixed auxiliary presentations, not an adequacy guarantee.
+   Preserve IDs, approvals, source bindings, split isolation and bounded job sizes.
+5. Freeze a separate new campaign after asset, appearance and admission readiness.
+   A broader representation intervention changes multiple factors and must be
+   reported as such. Match initialization, primary real exposure, update budgets,
+   seeds and selection policy. Retain the established utility requirements and
+   report every seed/frame gain and regression. The previous campaign stays closed.
+6. Complete independent final-reference qualification, frozen held-out evaluation
+   and reproducible delivery only after development utility passes. No locked-test
+   access is authorized or performed by this assessment.
+
+Backend decision
+The evidence does not require a simulator migration or cloud execution. Keep the
+implemented Blender worker for supported opaque geometry while assessing assets
+and fidelity requirements. BlenderProc and Isaac adapters remain unimplemented;
+changing backend would still require asset/material conversion and camera,
+geometry, depth, label and appearance qualification.
+
+Remaining limits
+The observed gaps are hypotheses and coverage limitations, not an isolated
+explanation of the training regression. Neither passing geometry nor matching
+class-area statistics establishes photographic similarity or useful training
+data. Navigation, physical stability, calibrated sensor accuracy and simulated
+LiDAR remain separate requirements. No data-complete or utility-release claim
+is supported by this assessment.

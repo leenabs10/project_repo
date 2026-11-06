@@ -1,0 +1,56 @@
+{
+  "status": "diagnosis_complete",
+  "diagnosis_profile_sha256": "96cf6d10e301abdc12fa587f6d30982a836342e4b64d0d83f6580ece72ef8d04",
+  "source_report_profile_sha256": "60638e4a25ddda3df5006ce3462fcdec58d97621fe276b02b7b614ae3a26b1b4",
+  "reference_profile_sha256": "37ab46daec17a248cc5dc42016113159d42798e64fafbfcafe9ea88a71a36be8",
+  "saved_masks_inspected": 264,
+  "validation_pooled_transitions": {
+    "added_fp": 621842,
+    "removed_fp": 174577,
+    "recovered_fg": 118891,
+    "new_fn": 79904,
+    "net_fp": 447265,
+    "net_fn": -38987,
+    "far_added_fp": 518558,
+    "far_removed_fp": 158867,
+    "dark_recovered_fg": 45978,
+    "dark_new_fn": 10992,
+    "control_fp": 1906759,
+    "candidate_fp": 2354024,
+    "control_fn": 334633,
+    "candidate_fn": 295646,
+    "frames": 12,
+    "saved_predictions_inspected": 72
+  },
+  "boundary_sensitivity": [
+    {
+      "radius_native_pixels": 5,
+      "metric": "Chebyshev distance from labelled goods OR ignored pixels",
+      "far_added_fp": 562322,
+      "far_removed_fp": 166339,
+      "far_share_of_added_fp": 0.9042843680549079
+    },
+    {
+      "radius_native_pixels": 10,
+      "metric": "Chebyshev distance from labelled goods OR ignored pixels",
+      "far_added_fp": 518558,
+      "far_removed_fp": 158867,
+      "far_share_of_added_fp": 0.8339063620662484
+    },
+    {
+      "radius_native_pixels": 20,
+      "metric": "Chebyshev distance from labelled goods OR ignored pixels",
+      "far_added_fp": 450794,
+      "far_removed_fp": 148237,
+      "far_share_of_added_fp": 0.7249333431965033
+    }
+  ],
+  "synthetic_negative_camera_views": 5,
+  "synthetic_equipment_arrangements": 1,
+  "new_training_runs": 0,
+  "new_inference_runs": 0,
+  "labels_changed": false,
+  "held_out_test_evaluated": false,
+  "next_diagnostic_status": "proposed_explicit_mixed_source_contract_required_not_run",
+  "counts_are_correlated_pixel_transitions_not_object_counts": true
+}

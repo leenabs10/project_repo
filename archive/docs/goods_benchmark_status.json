@@ -1,4 +1,23 @@
 {
+  "active_release_preparation": {
+    "status": "final_candidate_rejected_bounded_campaign_closed",
+    "reference_profile_sha256": "37ab46daec17a248cc5dc42016113159d42798e64fafbfcafe9ea88a71a36be8",
+    "reference_counts": {
+      "train": 32,
+      "validation": 12
+    },
+    "replaced_training_references": 6,
+    "unchanged_references": 38,
+    "evidence": "docs/dense_layout_coverage_results.txt",
+    "retained_model_changed": false,
+    "held_out_test_evaluated": false,
+    "scope": "Latest release comparator; older fields below retain historical cohort and experiment bindings",
+    "synthetic_comparison_complete": true,
+    "candidate_utility_profile_sha256": "684622fddd8f8e721075b74309ea3d66ff96a76354f7df7ea74bc0c942763df8",
+    "candidate_accepted": false,
+    "candidate_revisions_used": 2,
+    "campaign_closed": true
+  },
   "status": "retained_model_unchanged_occupied_rack_comparison_complete",
   "reference_counts": {
     "train": 32,
@@ -1528,6 +1547,174 @@
     "gallery_profile_sha256": "bddff0e7fffb0b3281f8554765c6f82206725821d06cb9a1e353b7964371ffc0",
     "independent_delivery_check_sha256": "d081fe05682d33043f4dd2e2ba0c64e768e06f35bf4c8fccc5f5d1fcd4008876"
   },
-  "authoritative_latest_experiment": "occupied_rack_context_comparison",
-  "candidate_acceptance_scope": "Model utility/promotion; separate exact-batch appearance and label acceptance is recorded under occupied_rack_context_preparation"
+  "authoritative_latest_experiment": "dense_layout_coverage_comparison_20261104",
+  "candidate_acceptance_scope": "The grouped-cargo batch has exact-batch human appearance/label approval and admission; its matched development utility candidate failed and was not promoted.",
+  "latest_grouped_cargo_experiment": {
+    "status": "matched_three_seed_comparison_complete_candidate_rejected",
+    "report": "docs/grouped_cargo_coverage_results.txt",
+    "report_sha256": "0ffbf50f160d75e04e372b5bee62d58246fb55e439994b6684a0b3b948aafcc2",
+    "result_profile_sha256": "81ecbae8dd020c551bfe957cfa0bdc5f57e118bc0cc716ba750540faf9b7de9a",
+    "reference_profile_sha256": "37ab46daec17a248cc5dc42016113159d42798e64fafbfcafe9ea88a71a36be8",
+    "job_sha256": "a74d3a83f5e5c90684b58d888c2af2c903b916e6ada5cf1ceb0857a7c3fc87cf",
+    "dataset_profile_sha256": "0db11cc788b274b7120006033eb8cd641b044ca6a8a732a5a4225b868fe322d8",
+    "admission_profile_sha256": "13a13259be3fb7a9af43c999854b9151de49b3fa06f40ce8e5e8a3c758a7203a",
+    "candidate_arm_profile_sha256": "e9b06aa84ad0bbcc383a5faed729d9f41c1b8b4fb66d9574b159b7c34539e160",
+    "comparison_profile_sha256": "a6c3e6b39c558bcdf90c097a6b49ee65168a1223d5f07d2eb90184243ab6e142",
+    "mean_metrics": {
+      "control": {
+        "goods_iou": 0.5015839999239958,
+        "precision": 0.5420166624894146,
+        "recall": 0.8708055019228623,
+        "frame_mean_goods_iou": 0.42601850455616574,
+        "background_false_positive_rate": 0.0804510944461645,
+        "dark_goods_miss_rate": 0.3648338648698335
+      },
+      "candidate": {
+        "goods_iou": 0.484245364955842,
+        "precision": 0.5587804786385354,
+        "recall": 0.7899468331744622,
+        "frame_mean_goods_iou": 0.3905472931771668,
+        "background_false_positive_rate": 0.06912664636528164,
+        "dark_goods_miss_rate": 0.5487561513027307
+      },
+      "delta": {
+        "goods_iou": -0.017338634968153854,
+        "precision": 0.016763816149120814,
+        "recall": -0.08085866874840009,
+        "frame_mean_goods_iou": -0.035471211378998946,
+        "background_false_positive_rate": -0.011324448080882857,
+        "dark_goods_miss_rate": 0.1839222864328972
+      }
+    },
+    "gate_results": {
+      "goods_iou_at_least": {
+        "target": 0.5315839999239959,
+        "actual": 0.484245364955842,
+        "passed": false
+      },
+      "precision_strictly_above": {
+        "target": 0.5420166624894146,
+        "actual": 0.5587804786385354,
+        "passed": true
+      },
+      "recall_at_least": {
+        "target": 0.8708055019228623,
+        "actual": 0.7899468331744622,
+        "passed": false
+      },
+      "background_false_positive_rate_strictly_below": {
+        "target": 0.0804510944461645,
+        "actual": 0.06912664636528164,
+        "passed": true
+      },
+      "dark_goods_miss_rate_at_most": {
+        "target": 0.18671718261675818,
+        "actual": 0.5487561513027307,
+        "passed": false
+      },
+      "frame_mean_goods_iou_at_least": {
+        "target": 0.42601850455616574,
+        "actual": 0.3905472931771668,
+        "passed": false
+      },
+      "positive_paired_iou_gains": {
+        "target": 2,
+        "actual": 1,
+        "passed": false
+      }
+    },
+    "frame_outcomes": {
+      "gain": 3,
+      "regression": 7,
+      "unchanged": 2
+    },
+    "native_predictions_recounted": 72,
+    "exact_empty_rgb_byte_match_gate_passed": false,
+    "exact_batch_explicitly_approved": true,
+    "candidate_promoted": false,
+    "held_out_test_evaluated": false
+  },
+  "latest_dense_layout_experiment": {
+    "status": "final_candidate_rejected_bounded_campaign_closed",
+    "report": "docs/dense_layout_coverage_results.txt",
+    "report_sha256": "a3d0c8e49512b07d682fc94e23ed6cd17702200af71d63df9cc069553a361b05",
+    "result_profile_sha256": "684622fddd8f8e721075b74309ea3d66ff96a76354f7df7ea74bc0c942763df8",
+    "reference_profile_sha256": "37ab46daec17a248cc5dc42016113159d42798e64fafbfcafe9ea88a71a36be8",
+    "protocol_profile_sha256": "9109376a2906225ad62e8d06205a99fbd81ba6c7fdb3919cc1b3324b3499ab34",
+    "admission_profile_sha256": "1c7d9197b5fe45d5bac71b7aa9a6021ecddbf7e245d4ce38325b2b452a9fe41e",
+    "mean_metrics": {
+      "control": {
+        "goods_iou": 0.5015839999239958,
+        "precision": 0.5420166624894146,
+        "recall": 0.8708055019228623,
+        "background_false_positive_rate": 0.0804510944461645,
+        "frame_mean_goods_iou": 0.42601850455616574,
+        "dark_goods_miss_rate": 0.3648338648698335
+      },
+      "candidate": {
+        "goods_iou": 0.5095741301821729,
+        "precision": 0.5703951977047509,
+        "recall": 0.8358565472488263,
+        "background_false_positive_rate": 0.07109408668365677,
+        "frame_mean_goods_iou": 0.4101674413169385,
+        "dark_goods_miss_rate": 0.36152208607427655
+      },
+      "delta": {
+        "goods_iou": 0.007990130258177075,
+        "precision": 0.028378535215336287,
+        "recall": -0.034948954674036026,
+        "background_false_positive_rate": -0.009357007762507724,
+        "frame_mean_goods_iou": -0.015851063239227248,
+        "dark_goods_miss_rate": -0.003311778795556941
+      }
+    },
+    "gate_results": {
+      "goods_iou_at_least": {
+        "actual": 0.5095741301821729,
+        "target": 0.5315839999239959,
+        "passed": false
+      },
+      "precision_strictly_above": {
+        "actual": 0.5703951977047509,
+        "target": 0.5420166624894146,
+        "passed": true
+      },
+      "recall_at_least": {
+        "actual": 0.8358565472488263,
+        "target": 0.8708055019228623,
+        "passed": false
+      },
+      "background_false_positive_rate_strictly_below": {
+        "actual": 0.07109408668365677,
+        "target": 0.0804510944461645,
+        "passed": true
+      },
+      "dark_goods_miss_rate_at_most": {
+        "actual": 0.36152208607427655,
+        "target": 0.18671718261675818,
+        "passed": false
+      },
+      "frame_mean_goods_iou_at_least": {
+        "actual": 0.4101674413169385,
+        "target": 0.42601850455616574,
+        "passed": false
+      },
+      "minimum_seeds_with_iou_gain": {
+        "actual": 2,
+        "target": 2,
+        "passed": true
+      },
+      "dark_goods_miss_nonregression": {
+        "actual": 0.36152208607427655,
+        "target": 0.3648338648698335,
+        "passed": true
+      }
+    },
+    "candidate_accepted": false,
+    "candidate_revision": 2,
+    "campaign_closed": true,
+    "candidate_promoted": false,
+    "held_out_test_evaluated": false,
+    "native_predictions_recounted": 72
+  }
 }

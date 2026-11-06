@@ -39,7 +39,7 @@ def load_scene_inputs(
     real_rows,
     config,
     *,
-    fixture=False
+    fixture=False,
 ):
     """Return exact admitted scene rows with their own renderer-visible targets.
 
@@ -47,6 +47,42 @@ def load_scene_inputs(
     native payload is checked again; an eligibility flag alone is insufficient.
     Fixture snapshots cannot be used for customer experiments.
     """
+    require_snapshot_digest(expected_sha256)
+    profile = verify_snapshot(root, expected_sha256)
+    if profile.get("kind") == "scene_collection":
+        from src.training.scene_collections import load_scene_collection
+
+        return load_scene_collection(
+            root,
+            expected_sha256,
+            references,
+            references_sha256,
+            real_rows,
+            config,
+            fixture=fixture,
+        )
+    return load_admitted_scene_inputs(
+        root,
+        expected_sha256,
+        references,
+        references_sha256,
+        real_rows,
+        config,
+        fixture=fixture,
+    )
+
+
+def load_admitted_scene_inputs(
+    root,
+    expected_sha256,
+    references,
+    references_sha256,
+    real_rows,
+    config,
+    *,
+    fixture=False,
+):
+    """Load a single admitted job; nested collections are rejected."""
     require_snapshot_digest(expected_sha256)
     require_snapshot_digest(references_sha256)
     root = Path(root)

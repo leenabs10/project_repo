@@ -17,7 +17,7 @@ def configuration():
     return json.loads(
         (
             Path(__file__).resolve().parents[1]
-            / "configs/warehouse_goods_coverage.json"
+            / "archive/configs/warehouse_goods_coverage.json"
         ).read_text(encoding="utf-8")
     )
 

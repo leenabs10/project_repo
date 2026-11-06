@@ -8,13 +8,21 @@ import zipfile
 from collections import Counter, defaultdict
 from pathlib import Path
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from src.core.paths import workspace_root
+
 
 def main():
     """Inventory raw files and ZIP contents, save a report, and return an exit code."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--root", type=Path, default=Path("data/raw/torwic_slam"))
     parser.add_argument(
-        "--report", type=Path, default=Path("reports/dataset_inventory.json")
+        "--root", type=Path, default=workspace_root() / "data/raw/torwic_slam"
+    )
+    parser.add_argument(
+        "--report",
+        type=Path,
+        default=workspace_root() / "reports/dataset_inventory.json",
     )
     args = parser.parse_args()
     root = args.root.resolve()

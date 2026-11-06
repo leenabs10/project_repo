@@ -9,6 +9,7 @@ import shutil
 import numpy as np
 from PIL import Image
 
+from src.core.paths import workspace_root
 from src.adapters.storage.local import file_hash, reserve_output, source_path
 from src.training.goods_benchmark import (
     checkpoint_selection_metric,
@@ -83,7 +84,7 @@ def run_arm(
                 configuration,
                 synthetic or references,
                 checkpoint or references,
-                Path(__file__).parents[2] / "data/raw",
+                workspace_root() / "data/raw",
             )
         ),
     )
@@ -403,7 +404,7 @@ def compare_arms(
         and changes["recall"] >= 0
     )
     output = reserve_output(
-        output, (control, scene, references, Path(__file__).parents[2] / "data/raw")
+        output, (control, scene, references, workspace_root() / "data/raw")
     )
     write_json(output / "paired_deltas.json", deltas)
     write_json(output / "native_recounts.json", recounts)

@@ -1,0 +1,154 @@
+{
+  "status": "FAIL",
+  "client_date": "2026-11-05",
+  "experiment": "approved_opaque_diversity",
+  "all_gates_passed": false,
+  "report_profile_sha256": "60638e4a25ddda3df5006ce3462fcdec58d97621fe276b02b7b614ae3a26b1b4",
+  "protocol_profile_sha256": "d33cb52e9839697fb8a692f23ca2fe30c6a8dcd09629ecf62b8e62c0aa8a137e",
+  "code_snapshot_profile_sha256": "9831d67f3f6331ecfde8868ea9836f54fa5bdce2314d0861e3aa7645106ed5c0",
+  "reference_profile_sha256": "37ab46daec17a248cc5dc42016113159d42798e64fafbfcafe9ea88a71a36be8",
+  "collection_profile_sha256": "818ca42f7c3518f8cabb8a8da187b2a511584519c866bdfca64e5a15438a502b",
+  "comparison_profile_sha256": "2a573a2f2faf7bd282e3e4176608bca429edf2d20c226772426a7d9030ae8fe9",
+  "initial_checkpoint_sha256": "fc3c493d68e89cc31ef488c803d5d7dd2f3190fb570598faa49fef69be8e5e70",
+  "checkpoint_sha256": {
+    "control": {
+      "17": "912aac798c1c29b09d1ff5809d96faa79048b45c521b976a794230d981d522d0",
+      "29": "ce2545d72e208e3f36c3746f3ed1e98e7c7ff902fd14a613939443dfa7c15696",
+      "43": "5c9b75f6a16d074121994fd97b25b0bec17f67b43377e3656192cf96b58ff031"
+    },
+    "candidate": {
+      "17": "8fc784afde68ae2dce508522641835dca48434d55a7745a877e6ba2e6a4b2230",
+      "29": "24a80ba3c33ce3e36fa83ee5f0caa3d3b3aa936b22936655e428a5db89132f92",
+      "43": "c7e3ac88da03f8ba19deaf4870afd84572487194b6e9cf4ef235f9be738b7595"
+    }
+  },
+  "model_seeds": [
+    17,
+    29,
+    43
+  ],
+  "control_mean": {
+    "goods_iou": 0.5015839999239958,
+    "precision": 0.5420166624894146,
+    "recall": 0.8708055019228623,
+    "background_false_positive_rate": 0.0804510944461645,
+    "frame_mean_goods_iou": 0.42601850455616574,
+    "dark_goods_miss_rate": 0.3648338648698335
+  },
+  "candidate_mean": {
+    "goods_iou": 0.46686939077548795,
+    "precision": 0.4968490346484617,
+    "recall": 0.8858575317481736,
+    "background_false_positive_rate": 0.09932236174185512,
+    "frame_mean_goods_iou": 0.4081173208139901,
+    "dark_goods_miss_rate": 0.2716191481028543
+  },
+  "gate_results": {
+    "goods_iou_at_least": {
+      "actual": 0.46686939077548795,
+      "target": 0.5315839999239959,
+      "operator": ">=",
+      "passed": false
+    },
+    "precision_strictly_above": {
+      "actual": 0.4968490346484617,
+      "target": 0.5420166624894146,
+      "operator": ">",
+      "passed": false
+    },
+    "recall_at_least": {
+      "actual": 0.8858575317481736,
+      "target": 0.8708055019228623,
+      "operator": ">=",
+      "passed": true
+    },
+    "background_false_positive_rate_strictly_below": {
+      "actual": 0.09932236174185512,
+      "target": 0.0804510944461645,
+      "operator": "<",
+      "passed": false
+    },
+    "dark_goods_miss_rate_at_most": {
+      "actual": 0.2716191481028543,
+      "target": 0.18671718261675818,
+      "operator": "<=",
+      "passed": false
+    },
+    "frame_mean_goods_iou_at_least": {
+      "actual": 0.4081173208139901,
+      "target": 0.42601850455616574,
+      "operator": ">=",
+      "passed": false
+    },
+    "dark_goods_miss_nonregression": {
+      "actual": 0.2716191481028543,
+      "target": 0.3648338648698335,
+      "operator": "<=",
+      "passed": true
+    },
+    "minimum_seeds_with_iou_gain": {
+      "actual": 0,
+      "target": 2,
+      "operator": ">=",
+      "passed": false
+    }
+  },
+  "positive_iou_seeds": 0,
+  "frame_outcomes": {
+    "improved": 3,
+    "regressed": 8,
+    "unchanged": 1,
+    "undefined": 0
+  },
+  "largest_iou_regressions": [
+    {
+      "sample_id": "Aisle_CW_Run_1/000188",
+      "control_iou": 0.6742020309451817,
+      "candidate_iou": 0.5367804825633152,
+      "delta": -0.1374215483818665
+    },
+    {
+      "sample_id": "Aisle_CW_Run_1/000282",
+      "control_iou": 0.7787580404133578,
+      "candidate_iou": 0.6738239013146212,
+      "delta": -0.10493413909873661
+    },
+    {
+      "sample_id": "Aisle_CW_Run_1/000659",
+      "control_iou": 0.7617249674646475,
+      "candidate_iou": 0.7357546416898438,
+      "delta": -0.025970325774803626
+    },
+    {
+      "sample_id": "Aisle_CW_Run_1/001036",
+      "control_iou": 0.08673461575108,
+      "candidate_iou": 0.07653110378657348,
+      "delta": -0.010203511964506529
+    }
+  ],
+  "native_predictions_recounted": 72,
+  "fresh_control_historical_prediction_matches": 36,
+  "preflight_tests_passed": 14,
+  "training_resolution": [
+    640,
+    360
+  ],
+  "evaluation_resolution": [
+    1280,
+    720
+  ],
+  "precision": "float32",
+  "hardware": "NVIDIA GeForce RTX 5070 Laptop GPU",
+  "cpu_threads": 4,
+  "max_cuda_allocated_bytes": 1415031296,
+  "summed_seed_run_elapsed_seconds": 397.36408680013847,
+  "arms_and_comparison_wall_seconds": 614.399205,
+  "timing_scope": "Seed-run elapsed sums and whole two-arm comparison envelope; excludes preparation and report generation",
+  "held_out_test_evaluated": false,
+  "model_promoted": false,
+  "campaign_closed": true,
+  "configuration_sha256": {
+    "control": "1479c70fd61f77f0cd881a9bf0857a508f3735da229df4425de7a5f5fbb1c785",
+    "candidate": "706f5cc7ed6093f8bf90d1a656483bfcfc61e6d23ab0dbc64fad3e12e4047baf"
+  }
+}

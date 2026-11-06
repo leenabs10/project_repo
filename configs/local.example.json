@@ -1,0 +1,9 @@
+{
+  "workspace_root": "C:/path/to/amr-synthetic-workspace",
+  "python_executable": "C:/path/to/environment/Scripts/python.exe",
+  "report_workspace": {
+    "port": 8810,
+    "summary": "No report selection is configured.",
+    "links": []
+  }
+}

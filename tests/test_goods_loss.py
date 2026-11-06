@@ -19,6 +19,46 @@ from src.training.goods_benchmark import (
 
 
 class GoodsLossTests(unittest.TestCase):
+    def test_explicit_reduction_preserves_weighted_objective_and_gradients(self):
+        targets = torch.tensor([[[0, 1, 255], [1, 0, 1]]])
+        for weights in (None, [0.7, 2.3]):
+            with self.subTest(weights=weights):
+                base = torch.tensor(
+                    [[[[0.2, 1.4, 30.0], [0.8, -0.4, 0.2]],
+                      [[0.7, 0.3, -30.0], [-0.1, 0.5, 0.9]]]],
+                    dtype=torch.float64,
+                    requires_grad=True,
+                )
+                explicit = base.detach().clone().requires_grad_()
+                settings = {"name": "cross_entropy", "ignore_index": 255}
+                if weights is not None:
+                    settings["class_weights"] = weights
+                expected, expected_mass = segmentation_loss(base, targets, settings)
+                actual, actual_mass = segmentation_loss(
+                    explicit, targets,
+                    {**settings, "reduction_policy": "explicit_valid_mean"},
+                )
+                expected.backward()
+                actual.backward()
+                self.assertEqual(actual_mass, expected_mass)
+                torch.testing.assert_close(actual, expected, rtol=1e-12, atol=1e-12)
+                torch.testing.assert_close(explicit.grad, base.grad, rtol=1e-12, atol=1e-12)
+                self.assertTrue(torch.equal(explicit.grad[:, :, 0, 2], torch.zeros((1, 2))))
+
+    def test_explicit_reduction_rejects_empty_supervision_and_unknown_policy(self):
+        with self.assertRaisesRegex(ValueError, "no supervised pixels"):
+            segmentation_loss(
+                torch.zeros((1, 2, 1, 1)), torch.full((1, 1, 1), 255),
+                {"name": "cross_entropy", "ignore_index": 255,
+                 "reduction_policy": "explicit_valid_mean"},
+            )
+        for policy in ("mean", None, True, 3):
+            with self.subTest(policy=policy), self.assertRaises(ValueError):
+                validate_loss_configuration(
+                    {"name": "cross_entropy", "ignore_index": 255,
+                     "reduction_policy": policy}
+                )
+
     def test_default_is_exact_existing_cross_entropy(self):
         logits = torch.tensor([[[[0.2, 1.4]], [[0.7, 0.3]]]])
         targets = torch.tensor([[[0, 1]]])

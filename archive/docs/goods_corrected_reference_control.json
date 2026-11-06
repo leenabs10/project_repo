@@ -1,0 +1,381 @@
+{
+  "status": "approved_cohort_fresh_control_and_grouped_cargo_comparison_complete_candidate_rejected",
+  "reference_profile_sha256": "37ab46daec17a248cc5dc42016113159d42798e64fafbfcafe9ea88a71a36be8",
+  "prior_reference_profile_sha256": "2ba84460fa9991befdcdbfbba88bda8225eae91d88ec0a943b39d13fd858cda9",
+  "protocol_sha256": "c53f3e1b69d97c7c983bfcf0ee662fe8786f5bb952e6ac27ec321475cc754ae7",
+  "control_profile_sha256": "fe47670f56e68745546467452fed1411bff12c681b06d3da3a1cf903c60dfa2e",
+  "reference_counts": {
+    "train": 32,
+    "validation": 12
+  },
+  "human_confirmations_saved": 6,
+  "native_pixels_changed": 657904,
+  "unchanged_references": 38,
+  "native_development_predictions_recounted": 36,
+  "mean_metrics": {
+    "goods_iou": 0.5015839999239958,
+    "precision": 0.5420166624894146,
+    "recall": 0.8708055019228623,
+    "frame_mean_goods_iou": 0.42601850455616574,
+    "background_false_positive_rate": 0.0804510944461645,
+    "dark_goods_miss_rate": 0.3648338648698335
+  },
+  "future_candidate_acceptance_targets": {
+    "goods_iou_at_least": 0.5315839999239959,
+    "precision_strictly_above": 0.5420166624894146,
+    "recall_at_least": 0.8708055019228623,
+    "background_false_positive_rate_strictly_below": 0.0804510944461645,
+    "dark_goods_miss_rate_at_most": 0.18671718261675818,
+    "frame_mean_goods_iou_at_least": 0.42601850455616574,
+    "minimum_seeds_with_iou_gain": 2
+  },
+  "seeds": [
+    {
+      "seed": 17,
+      "goods_iou": 0.49329780372629994,
+      "precision": 0.540881385259655,
+      "recall": 0.8486523362169512,
+      "background_false_positive_rate": 0.07872516449412818,
+      "frame_mean_goods_iou": 0.40656062231359974,
+      "dark_goods_miss_rate": 0.43872942793883735,
+      "confusion": {
+        "true_positive": 732712,
+        "false_positive": 621951,
+        "false_negative": 130671,
+        "true_negative": 7278331,
+        "valid_pixels": 8763665
+      },
+      "elapsed_seconds": 77.49930140003562,
+      "peak_cuda_allocated_bytes": 1415031296
+    },
+    {
+      "seed": 29,
+      "goods_iou": 0.5014941067420384,
+      "precision": 0.5344685430486595,
+      "recall": 0.8904530202702624,
+      "background_false_positive_rate": 0.08476153129723724,
+      "frame_mean_goods_iou": 0.4487596834689216,
+      "dark_goods_miss_rate": 0.32872934800853654,
+      "confusion": {
+        "true_positive": 768802,
+        "false_positive": 669640,
+        "false_negative": 94581,
+        "true_negative": 7230642,
+        "valid_pixels": 8763665
+      },
+      "elapsed_seconds": 71.63249680004083,
+      "peak_cuda_allocated_bytes": 1410834944
+    },
+    {
+      "seed": 43,
+      "goods_iou": 0.5099600893036493,
+      "precision": 0.550700059159929,
+      "recall": 0.8733111492813734,
+      "background_false_positive_rate": 0.07786658754712807,
+      "frame_mean_goods_iou": 0.4227352078859758,
+      "dark_goods_miss_rate": 0.32704281866212664,
+      "confusion": {
+        "true_positive": 754002,
+        "false_positive": 615168,
+        "false_negative": 109381,
+        "true_negative": 7285114,
+        "valid_pixels": 8763665
+      },
+      "elapsed_seconds": 69.56470920005813,
+      "peak_cuda_allocated_bytes": 1410834944
+    }
+  ],
+  "fixture_checks": {
+    "tests_passed": 17,
+    "subtests_passed": 33,
+    "elapsed_seconds": 10.37,
+    "scope": "reference import, native editor, cohort extension and explicit schedule fixtures"
+  },
+  "numerical_policy": "strict_deterministic_explicit_valid_mean",
+  "hardware": "NVIDIA GeForce RTX 5070 Laptop GPU",
+  "precision": "float32",
+  "training_resolution": [
+    640,
+    360
+  ],
+  "scoring_resolution": [
+    1280,
+    720
+  ],
+  "batch_size": 4,
+  "cpu_threads": 4,
+  "synthetic_comparison_complete": true,
+  "candidate_promoted": false,
+  "locked_test_evaluated": false,
+  "limitations": [
+    "Matched grouped-cargo utility was measured; this candidate failed the frozen gates and was not promoted.",
+    "Three seeds and one repeatedly used development trajectory do not establish independent generalization or statistical significance.",
+    "References remain human-reviewed and AI-assisted, not independent ground truth.",
+    "The exact approved batch retained a disclosed empty-RGB byte-match gate failure; depth and categorical arrays matched exactly.",
+    "The static opaque scene does not establish transparent wrapping, sensor fidelity or physical stability."
+  ],
+  "audit_profile_sha256": "a70f2a0608d7fa68c2d604a91821db6ab21b8ad9711d5e499abdbcfa00dace23",
+  "annotation_origin": "human_reviewed_model_assisted",
+  "approval_channel": "explicit_user_chat_confirmation_of_all_six_exact_drafts",
+  "client_date": "2026-11-03",
+  "reported_control_is_retained_model_replacement": false,
+  "historical_synthetic_admission_automatically_rebound": false,
+  "source_version_sha256": {
+    "src/training/goods_model.py": "074febe9979ea24c790b3c478cb86c54fce61e9925bee3979f273762b03c0b34",
+    "src/training/goods_benchmark.py": "3f5cfa507f6703db4e2f48751a3c340846f8b0fdf6b7ab2b4f0d7ecc3013aeb0",
+    "src/pipeline/scene_benchmark.py": "81244c212ce2f485d094f46344e5e3d3b5f363d39b9e5c961a487339b0e7c167",
+    "src/synthesis/grouped_cargo.py": "b1359058d753e34792780675acf1bd73f73a518585c6908dad9affb034d17ec2",
+    "src/pipeline/scene.py": "053d703313ac8d2fbaf4b82bd473750213b4229e4443c0da1a0fe136aeb12eb2"
+  },
+  "synthetic_utility_measured": true,
+  "candidate_passed_acceptance": false,
+  "candidate_profile_sha256": "e9b06aa84ad0bbcc383a5faed729d9f41c1b8b4fb66d9574b159b7c34539e160",
+  "candidate_comparison_profile_sha256": "a6c3e6b39c558bcdf90c097a6b49ee65168a1223d5f07d2eb90184243ab6e142",
+  "candidate_utility_summary_profile_sha256": "81ecbae8dd020c551bfe957cfa0bdc5f57e118bc0cc716ba750540faf9b7de9a",
+  "candidate_mean_metrics": {
+    "goods_iou": 0.484245364955842,
+    "precision": 0.5587804786385354,
+    "recall": 0.7899468331744622,
+    "frame_mean_goods_iou": 0.3905472931771668,
+    "background_false_positive_rate": 0.06912664636528164,
+    "dark_goods_miss_rate": 0.5487561513027307
+  },
+  "mean_deltas": {
+    "goods_iou": -0.017338634968153854,
+    "precision": 0.016763816149120814,
+    "recall": -0.08085866874840009,
+    "frame_mean_goods_iou": -0.035471211378998946,
+    "background_false_positive_rate": -0.011324448080882857,
+    "dark_goods_miss_rate": 0.1839222864328972
+  },
+  "candidate_gate_results": {
+    "goods_iou_at_least": {
+      "target": 0.5315839999239959,
+      "actual": 0.484245364955842,
+      "passed": false
+    },
+    "precision_strictly_above": {
+      "target": 0.5420166624894146,
+      "actual": 0.5587804786385354,
+      "passed": true
+    },
+    "recall_at_least": {
+      "target": 0.8708055019228623,
+      "actual": 0.7899468331744622,
+      "passed": false
+    },
+    "background_false_positive_rate_strictly_below": {
+      "target": 0.0804510944461645,
+      "actual": 0.06912664636528164,
+      "passed": true
+    },
+    "dark_goods_miss_rate_at_most": {
+      "target": 0.18671718261675818,
+      "actual": 0.5487561513027307,
+      "passed": false
+    },
+    "frame_mean_goods_iou_at_least": {
+      "target": 0.42601850455616574,
+      "actual": 0.3905472931771668,
+      "passed": false
+    },
+    "positive_paired_iou_gains": {
+      "target": 2,
+      "actual": 1,
+      "passed": false
+    }
+  },
+  "candidate_seed_metrics": [
+    {
+      "seed": 17,
+      "control": {
+        "goods_iou": 0.49329780372629994,
+        "precision": 0.540881385259655,
+        "recall": 0.8486523362169512,
+        "frame_mean_goods_iou": 0.40656062231359974,
+        "background_false_positive_rate": 0.07872516449412818,
+        "dark_goods_miss_rate": 0.43872942793883735,
+        "confusion": {
+          "true_positive": 732712,
+          "false_positive": 621951,
+          "false_negative": 130671,
+          "true_negative": 7278331,
+          "valid_pixels": 8763665
+        },
+        "elapsed_seconds": 77.49930140003562,
+        "peak_cuda_allocated_bytes": 1415031296,
+        "optimizer_updates": 120,
+        "primary_real_presentations": 480,
+        "auxiliary_presentations": 60,
+        "synthetic_presentations": 0
+      },
+      "candidate": {
+        "goods_iou": 0.5056361448570035,
+        "precision": 0.5988540969300465,
+        "recall": 0.7646131554593963,
+        "frame_mean_goods_iou": 0.3704402767495238,
+        "background_false_positive_rate": 0.055973698154065894,
+        "dark_goods_miss_rate": 0.6512880767970329,
+        "confusion": {
+          "true_positive": 660154,
+          "false_positive": 442208,
+          "false_negative": 203229,
+          "true_negative": 7458074,
+          "valid_pixels": 8763665
+        },
+        "elapsed_seconds": 65.71406640007626,
+        "peak_cuda_allocated_bytes": 1415031296,
+        "optimizer_updates": 120,
+        "primary_real_presentations": 480,
+        "auxiliary_presentations": 60,
+        "synthetic_presentations": 60
+      },
+      "deltas": {
+        "goods_iou": 0.012338341130703534,
+        "precision": 0.05797271167039153,
+        "recall": -0.0840391807575549,
+        "frame_mean_goods_iou": -0.03612034556407595,
+        "background_false_positive_rate": -0.02275146634006229,
+        "dark_goods_miss_rate": 0.2125586488581956
+      }
+    },
+    {
+      "seed": 29,
+      "control": {
+        "goods_iou": 0.5014941067420384,
+        "precision": 0.5344685430486595,
+        "recall": 0.8904530202702624,
+        "frame_mean_goods_iou": 0.44875968346892153,
+        "background_false_positive_rate": 0.08476153129723724,
+        "dark_goods_miss_rate": 0.32872934800853654,
+        "confusion": {
+          "true_positive": 768802,
+          "false_positive": 669640,
+          "false_negative": 94581,
+          "true_negative": 7230642,
+          "valid_pixels": 8763665
+        },
+        "elapsed_seconds": 71.63249680004083,
+        "peak_cuda_allocated_bytes": 1410834944,
+        "optimizer_updates": 120,
+        "primary_real_presentations": 480,
+        "auxiliary_presentations": 60,
+        "synthetic_presentations": 0
+      },
+      "candidate": {
+        "goods_iou": 0.46375264735643723,
+        "precision": 0.5561442633506942,
+        "recall": 0.7362537830835214,
+        "frame_mean_goods_iou": 0.38425111564687287,
+        "background_false_positive_rate": 0.06421593558305894,
+        "dark_goods_miss_rate": 0.611922403664005,
+        "confusion": {
+          "true_positive": 635669,
+          "false_positive": 507324,
+          "false_negative": 227714,
+          "true_negative": 7392958,
+          "valid_pixels": 8763665
+        },
+        "elapsed_seconds": 61.320860199979506,
+        "peak_cuda_allocated_bytes": 1410834944,
+        "optimizer_updates": 120,
+        "primary_real_presentations": 480,
+        "auxiliary_presentations": 60,
+        "synthetic_presentations": 60
+      },
+      "deltas": {
+        "goods_iou": -0.037741459385601195,
+        "precision": 0.021675720302034684,
+        "recall": -0.154199237186741,
+        "frame_mean_goods_iou": -0.06450856782204867,
+        "background_false_positive_rate": -0.0205455957141783,
+        "dark_goods_miss_rate": 0.28319305565546843
+      }
+    },
+    {
+      "seed": 43,
+      "control": {
+        "goods_iou": 0.5099600893036493,
+        "precision": 0.550700059159929,
+        "recall": 0.8733111492813734,
+        "frame_mean_goods_iou": 0.42273520788597585,
+        "background_false_positive_rate": 0.07786658754712807,
+        "dark_goods_miss_rate": 0.32704281866212664,
+        "confusion": {
+          "true_positive": 754002,
+          "false_positive": 615168,
+          "false_negative": 109381,
+          "true_negative": 7285114,
+          "valid_pixels": 8763665
+        },
+        "elapsed_seconds": 69.56470920005813,
+        "peak_cuda_allocated_bytes": 1410834944,
+        "optimizer_updates": 120,
+        "primary_real_presentations": 480,
+        "auxiliary_presentations": 60,
+        "synthetic_presentations": 0
+      },
+      "candidate": {
+        "goods_iou": 0.48334730265408504,
+        "precision": 0.5213430756348653,
+        "recall": 0.8689735609804687,
+        "frame_mean_goods_iou": 0.4169504871351038,
+        "background_false_positive_rate": 0.0871903053587201,
+        "dark_goods_miss_rate": 0.3830579734471541,
+        "confusion": {
+          "true_positive": 750257,
+          "false_positive": 688828,
+          "false_negative": 113126,
+          "true_negative": 7211454,
+          "valid_pixels": 8763665
+        },
+        "elapsed_seconds": 60.47710320004262,
+        "peak_cuda_allocated_bytes": 1410834944,
+        "optimizer_updates": 120,
+        "primary_real_presentations": 480,
+        "auxiliary_presentations": 60,
+        "synthetic_presentations": 60
+      },
+      "deltas": {
+        "goods_iou": -0.02661278664956429,
+        "precision": -0.029356983525063773,
+        "recall": -0.004337588300904693,
+        "frame_mean_goods_iou": -0.005784720750872052,
+        "background_false_positive_rate": 0.009323717811592039,
+        "dark_goods_miss_rate": 0.05601515478502744
+      }
+    }
+  ],
+  "candidate_auxiliary_exposure": {
+    "control_real_replay": {
+      "goods_pixels": 800937,
+      "background_pixels": 10755157,
+      "ignored_pixels": 2267906,
+      "dark_goods_fraction": 0.10103666081102508,
+      "goods_fraction_of_scorable": 0.06930862625381898
+    },
+    "candidate_synthetic": {
+      "goods_pixels": 508108,
+      "background_pixels": 13315892,
+      "ignored_pixels": 0,
+      "dark_goods_fraction": 0.17866870822738473,
+      "goods_fraction_of_scorable": 0.036755497685185184
+    },
+    "candidate_foreground_pixel_change_fraction": -0.3656080315929967,
+    "actual_kind_counts": {
+      "background_only": 30,
+      "mixed": 30,
+      "tyres": 14,
+      "cartons": 16
+    },
+    "interpretation": "Pixel exposure differs and is a measured confound; it is not gradient contribution or a proven cause."
+  },
+  "candidate_frame_iou_outcomes": {
+    "gain": 3,
+    "regression": 7,
+    "unchanged": 2
+  },
+  "candidate_approval_profile_sha256": "d7c0670452d313bfa630c1dbf9a73e1bd5fdfc34eb229dce84780b106e36931b",
+  "exact_batch_rgb_byte_gate_exception_approved": true,
+  "held_out_test_evaluated": false
+}

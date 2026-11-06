@@ -1,0 +1,50 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DubaiDATA MVP workspace</title>
+  <style>
+    body {
+      font: 17px/1.65 system-ui, sans-serif;
+      color: #17263b;
+      background: #f5f7fa;
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+    h1 { font-size: 30px; }
+    ul { list-style: none; padding: 0; }
+    li {
+      background: white;
+      border: 1px solid #d9e0e8;
+      border-radius: 8px;
+      margin: 14px 0;
+      padding: 18px 22px;
+    }
+    a { color: #14539b; font-weight: 650; }
+    p { margin: 6px 0; }
+    aside {
+      border-left: 4px solid #8b5c18;
+      background: #fff8e9;
+      padding: 14px 20px;
+    }
+    small { color: #536174; }
+  </style>
+</head>
+<body>
+  <h1>DubaiDATA MVP workspace</h1>
+  <p>Open the selected local evidence.</p>
+  <aside>
+    <strong>Qualification status</strong>
+    <p>{{summary}}</p>
+  </aside>
+  <ul>
+{{navigation}}
+  </ul>
+  <small>
+    Historical reports, masks and checkpoints retain their original versions.
+    Use mvp.cmd status for capability status and mvp.cmd stop to stop this server.
+  </small>
+</body>
+</html>

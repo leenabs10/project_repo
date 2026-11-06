@@ -45,7 +45,8 @@ def validate_auxiliary_sampling(config):
     sampling = config["auxiliary_sampling"]
     if (
         isinstance(sampling, dict)
-        and sampling.get("strategy") == "explicit_update_sequence"
+        and sampling.get("strategy")
+        in {"explicit_update_sequence", "explicit_mixed_source_sequence"}
     ):
         _validate_explicit_sampling(config)
         return
@@ -85,10 +86,12 @@ def validate_auxiliary_sampling(config):
 def _validate_explicit_sampling(config):
     """Check sequence syntax without reading data or consuming random state."""
     sampling = config["auxiliary_sampling"]
+    mixed_sources = sampling["strategy"] == "explicit_mixed_source_sequence"
     if (
         set(sampling) != {"strategy", "events"}
         or not isinstance(sampling["events"], list)
         or config.get("experiment_kind") not in ("real_only", "real_plus_scene")
+        or (mixed_sources and config.get("experiment_kind") != "real_plus_scene")
         or config.get("auxiliary_training") is None
         or (
             config.get("experiment_kind") == "real_plus_scene"
@@ -103,21 +106,33 @@ def _validate_explicit_sampling(config):
     validate_auxiliary_settings(config["auxiliary_training"])
     interval = config["auxiliary_training"]["interval_updates"]
     previous_update = 0
+    event_fields = {"update", "sample_id", "target_kind"}
+    if mixed_sources:
+        event_fields.add("input_source")
     for event in sampling["events"]:
         if (
             not isinstance(event, dict)
-            or set(event) != {"update", "sample_id", "target_kind"}
+            or set(event) != event_fields
             or type(event["update"]) is not int
             or event["update"] <= previous_update
             or event["update"] % interval
             or not isinstance(event["sample_id"], str)
             or not event["sample_id"]
             or event["target_kind"] not in ("mixed", "background_only")
+            or (
+                mixed_sources
+                and event["input_source"]
+                not in ("real_training_reference", "admitted_scene")
+            )
         ):
             raise ValueError(
                 "Explicit auxiliary events must be ordered, unique and on cadence"
             )
         previous_update = event["update"]
+    if mixed_sources and {
+        event["input_source"] for event in sampling["events"]
+    } != {"real_training_reference", "admitted_scene"}:
+        raise ValueError("Mixed-source sequences must explicitly use both input sources")
 
 
 def _validate_explicit_target(image):
@@ -155,6 +170,11 @@ def _explicit_donors_by_id(donors, events):
             raise ValueError(
                 "Explicit auxiliary event has an unknown donor or wrong target kind"
             )
+        if (
+            "input_source" in event
+            and donor[1].get("auxiliary_input_source") != event["input_source"]
+        ):
+            raise ValueError("Explicit auxiliary event selects the wrong input source")
     return by_id
 
 
@@ -187,16 +207,29 @@ def prepare_auxiliary_donors(references, real_rows, scene_root, scenes, config):
     real frames still participate in the unchanged primary training stream.
     Explicit sequences additionally verify native uint8 IDs (0, 1, 255), donor
     identity and kind, and complete epoch/batch coverage before any model is fit.
+    Mixed-source sequences bind each event to either a qualified real training
+    reference or an already admitted scene. Each returned pair retains its own
+    root and RGB/target paths; validation/development rows cannot be selected.
     """
     settings = config["auxiliary_training"]
     validate_auxiliary_settings(settings)
     sampling = config.get("auxiliary_sampling")
     explicit = (
         isinstance(sampling, dict)
-        and sampling.get("strategy") == "explicit_update_sequence"
+        and sampling.get("strategy")
+        in {"explicit_update_sequence", "explicit_mixed_source_sequence"}
+    )
+    mixed_sources = (
+        explicit and sampling["strategy"] == "explicit_mixed_source_sequence"
     )
     if explicit:
         validate_auxiliary_sampling(config)
+    if mixed_sources and (
+        scene_root is None or Path(scene_root).resolve() == Path(references).resolve()
+    ):
+        raise ValueError(
+            "Mixed-source donors require distinct real and admitted-scene roots"
+        )
     allow_negative = (
         settings.get("missing_class_policy") == "background_only_zero_foreground_mass"
     )
@@ -218,6 +251,8 @@ def prepare_auxiliary_donors(references, real_rows, scene_root, scenes, config):
         background += bg
         if bg and (fg or allow_negative):
             donor_row = dict(row)
+            if mixed_sources:
+                donor_row["auxiliary_input_source"] = "real_training_reference"
             if allow_negative or explicit:
                 donor_row["auxiliary_target_kind"] = (
                     "mixed" if fg else "background_only"
@@ -249,6 +284,8 @@ def prepare_auxiliary_donors(references, real_rows, scene_root, scenes, config):
                 )
             if np.any(target == 0) and (np.any(target == 1) or allow_negative):
                 donor_row = dict(row)
+                if mixed_sources:
+                    donor_row["auxiliary_input_source"] = "admitted_scene"
                 if allow_negative or explicit:
                     donor_row["auxiliary_target_kind"] = (
                         "mixed" if np.any(target == 1) else "background_only"
@@ -258,6 +295,8 @@ def prepare_auxiliary_donors(references, real_rows, scene_root, scenes, config):
             raise ValueError(
                 "An auxiliary scene lacks foreground or background supervision"
             )
+        if mixed_sources:
+            donors.extend(real_candidates)
     if not donors:
         raise ValueError("No eligible auxiliary RGB/target donors")
     if config.get("auxiliary_sampling") == {"strategy": "balanced_presence_cycle"} and {
@@ -293,7 +332,7 @@ def select_auxiliary_donor(donors, config, update):
         return None
     if (
         config.get("auxiliary_sampling", {}).get("strategy")
-        == "explicit_update_sequence"
+        in {"explicit_update_sequence", "explicit_mixed_source_sequence"}
     ):
         events = config["auxiliary_sampling"]["events"]
         by_id = _explicit_donors_by_id(donors, events)

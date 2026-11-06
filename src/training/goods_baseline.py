@@ -12,6 +12,7 @@ import statistics
 import numpy as np
 from PIL import Image
 
+from src.core.paths import workspace_root
 from src.adapters.storage.local import file_hash, reserve_output, source_path
 from src.adapters.tasks.goods import confusion_counts, segmentation_metrics
 from src.training.goods_benchmark import (
@@ -127,7 +128,7 @@ def run_baseline(
             task,
             configuration,
             checkpoint,
-            Path(__file__).parents[2] / "data/raw",
+            workspace_root() / "data/raw",
         ),
     )
     write_json(

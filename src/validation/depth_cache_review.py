@@ -21,6 +21,7 @@ import torch
 from torch import nn
 from torch.utils.data import DataLoader
 
+from src.core.paths import workspace_root
 from src.adapters.datasets.torwic_splits import evaluation_records
 from src.training import depth_baseline, depth_context, depth_quality
 from src.training.runtime import PROJECT_ROOT, require_cached_ids, require_output
@@ -586,7 +587,7 @@ def reuse_cache_evidence(project, raw, manifest, evidence_directory, output):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--project", type=Path, default=PROJECT_ROOT)
+    parser.add_argument("--project", type=Path, default=workspace_root(PROJECT_ROOT))
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument(
         "--cache-evidence",

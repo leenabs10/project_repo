@@ -45,3 +45,6 @@ models/
 *.egg-info/
 build/
 dist/
+
+# Machine-local external workspace selection
+/configs/local.json

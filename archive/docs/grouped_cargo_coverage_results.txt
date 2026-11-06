@@ -1,0 +1,73 @@
+Grouped cargo coverage comparison
+=================================
+
+Decision
+The rendered, explicitly approved batch completed structural, native-array and
+independent geometry checks, then entered a separate source-bound admission.
+The matched three-seed development comparison is complete. The candidate fails
+the frozen utility gates and is rejected; the retained reporting model is
+unchanged. The locked test was not evaluated.
+
+Bindings
+- Corrected cohort: 32 train / 12 development, profile
+  37ab46daec17a248cc5dc42016113159d42798e64fafbfcafe9ea88a71a36be8.
+- Scene job: a74d3a83f5e5c90684b58d888c2af2c903b916e6ada5cf1ceb0857a7c3fc87cf.
+- Canonical rendered dataset: 0db11cc788b274b7120006033eb8cd641b044ca6a8a732a5a4225b868fe322d8.
+- Admission profile: 13a13259be3fb7a9af43c999854b9151de49b3fa06f40ce8e5e8a3c758a7203a.
+- Real-only control: fe47670f56e68745546467452fed1411bff12c681b06d3da3a1cf903c60dfa2e.
+- Candidate arm: e9b06aa84ad0bbcc383a5faed729d9f41c1b8b4fb66d9574b159b7c34539e160.
+- Matched comparison: reports/goods_grouped_cargo_comparison_20261104.
+- Prediction/exposure audit: reports/goods_grouped_cargo_training_audit_20261104.
+
+Mean development metrics (three seeds)
+
+| Metric | Real-only control | Real + grouped cargo | Change | Gate |
+| --- | ---: | ---: | ---: | --- |
+| Goods IoU | 50.16% | 48.42% | -1.73 pp | Fail; needs >=53.16% |
+| Precision | 54.20% | 55.88% | +1.68 pp | Pass |
+| Recall | 87.08% | 78.99% | -8.09 pp | Fail; no regression allowed |
+| Background false-positive rate | 8.05% | 6.91% | -1.13 pp | Pass |
+| Dark-goods miss rate | 36.48% | 54.88% | +18.39 pp | Fail; ceiling 18.67% |
+| Frame-mean goods IoU | 42.60% | 39.05% | -3.55 pp | Fail |
+
+Paired goods IoU improved for seed 17 only. Seeds 29 and 43 regressed. Across
+the twelve development frames, three gained, seven regressed and two were
+unchanged. All 72 saved native predictions were independently recounted.
+
+The candidate used 480 primary real presentations and 60 synthetic auxiliary
+presentations per seed, within the same 120 optimizer updates and total 540
+presentations as the control. The control used 60 real auxiliary replays. At
+640x360, the executed control replay targets contained 800,937 goods pixels and
+2,267,906 ignored pixels. The candidate targets contained 508,108 goods pixels
+and no ignored pixels: 36.6% fewer goods pixels. The candidate did contain
+90,783 dark goods pixels versus 80,924 in the control schedule. These counts
+measure pixel exposure, not loss or gradient influence. More dark-pixel exposure
+coincided with worse dark-goods recall; the comparison does not isolate a cause.
+
+Batch qualification and exception
+Eight captures were admitted after explicit user approval. Independent checks
+matched 2,048 rays to rendered instance IDs at 100% agreement; the largest
+capture's axial-depth p95 error was 0.000048 m. All four unchanged empty scenes
+had exact depth, depth-validity and categorical label arrays. Their RGB files
+did not meet the frozen byte-exact gate: each differed from the source at a very
+small number of pixels by at most one intensity level. This was disclosed before
+the user's approval and remains a recorded failed gate; approval did not rewrite
+that measurement.
+
+Training used seeds 17/29/43, fixed final-epoch selection, matched initialization,
+strict deterministic execution and identical real references. Development
+results are dependent video frames and have been used repeatedly. The approved
+references remain human-reviewed and model-assisted, not independent ground
+truth. No model was promoted and no test data was opened.
+
+Next work
+Preserve this rejection. Any second candidate should test a specific hypothesis
+derived from the executed exposure and per-frame errors, with design support
+drawn from training references only. The measured goods-pixel shortfall and
+losses on frames 000753, 000282, 000376 and 000188 are useful diagnostic leads,
+not proof of a cause. Keep the frozen schedule, references and acceptance gates
+unless a new protocol is explicitly versioned before training. Transparent
+wrapping remains unsupported; do not simulate it with opaque materials.
+
+Full per-seed metrics, exact gates, frame deltas, approval provenance and
+version bindings are stored under reports/goods_grouped_cargo_utility_20261104.

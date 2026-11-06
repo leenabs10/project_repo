@@ -1,0 +1,97 @@
+Warehouse package asset qualification
+====================================
+
+Status
+A separate six-capture quality scout has completed native-array and independent
+geometry checks. Exact-batch appearance and visible-label review is pending.
+The scout is not admitted for training and is not a third utility candidate.
+The preceding two-candidate campaign remains closed. No model was trained,
+promoted or replaced, and the existing real references remain unchanged.
+
+Source screening
+Three small source archives and their individual publisher pages were retained
+with byte counts and SHA256 receipts. The two displayed source pages identify
+their assets as CC0. Their authors and original source bindings are preserved.
+
+- Yughues, Cardboards Pack:
+  https://opengameart.org/content/cardboards-pack
+  One additional closed-carton mesh is a goods candidate in the authored scout.
+  The source-declared FBX extents are approximately 0.817 x 0.766 x 0.500 metres.
+- Jhan Gutierrez, Card board box:
+  https://opengameart.org/content/card-board-box
+  Native inspection shows an open empty carton. It is background handling
+  equipment, including in the loaded scenes. Its file imports with a maximum
+  extent of 6.63 metres; a declared uniform 0.1 derivative gives an approximately
+  0.635 x 0.663 x 0.300 metre preview. These authored dimensions are not an
+  independently measured warehouse item.
+- Yethiel, Cardboard Box:
+  https://opengameart.org/content/cardboard-box
+  The archive contains an opened/damaged box. It was not counted as an additional
+  closed-goods design and was not used as goods in the qualified scout.
+
+Other screened candidates were excluded when they repeated the existing source,
+were stylistically unsuitable, had unavailable downloads, or had conflicting
+licence/ML-use terms. Their reasons remain in the local source-screening record.
+The original asset library and earlier datasets are preserved separately.
+
+Conversion and semantic checks
+The pinned Blender 4.5.3 FBX importer ran in a separate background process with
+automatic script execution disabled. Downloaded .blend files and source scripts
+were not loaded. FBX texture loading was replaced in that isolated process by
+placeholders; explicitly selected local image files were bound separately.
+
+Object transforms were baked into world-space triangles, split UV corners were
+preserved, and source unit declarations were recorded. Both converted surfaces
+have finite positive bounds, valid UVs, nondegenerate triangles and manifold
+edges. Normalized NPZ meshes pass the existing contained-path/checksum/dtype
+loader. RGB/TGA-to-PNG conversion preserves the decoded colour pixels.
+
+Manifold topology does not establish that a container has a closed lid or holds
+goods. An initial scout incorrectly assigned the open Jhan carton to goods.
+It was stopped and quarantined before appearance qualification, admission or
+training. The separately versioned corrected scout assigns the visible empty
+container to background. The initial scene, logs and rejection evidence remain
+preserved rather than being rewritten as successful evidence.
+
+The supplied maps do not establish physical roughness. Both new assets use an
+explicitly authored constant roughness of 0.8. Source specular maps were not
+silently interpreted as roughness, and source normal maps were not applied.
+These are declared material limitations requiring appearance review.
+
+Qualified technical scope
+The corrected scout contains close-carton, close-tyre and mixed-stock views,
+each paired with equipment-only context. RGB, axial depth, validity, semantic
+and instance payloads are native 1280x720 exports from the same resolved scene.
+All six captures pass structural and categorical export checks. All 1,536
+independent sampled instance hits agree; the maximum per-view axial-depth p95
+residual is approximately 0.000043 metres.
+
+All three equipment-only captures have zero goods pixels. The open carton has
+31,142 or 33,954 visible instance pixels in its paired contexts; every one is
+background. New closed-carton instances have 61,066 visible goods pixels in the
+close-carton view and 43,713 in the mixed-stock view. These counts establish
+declared visible-label correspondence, not independent annotation accuracy or
+photographic realism.
+
+Bindings
+Real reference profile:
+37ab46daec17a248cc5dc42016113159d42798e64fafbfcafe9ea88a71a36be8
+Corrected scout job:
+9422432974a4e0e0925164af5e946efc3436a5bb841acbea5561821a71e2c8c7
+Canonical dataset profile:
+dd55c0fa2fe58ddbe642c0fbf2f2c41ef8e6315d24c2684adaabcaa65bdb0240
+Independent geometry profile:
+a9d9ca5b88b63fca7ace66df62bf5f5f94cc2e854f0b29865ff3a241f2124c80
+Pending review profile:
+37ac6a7e8d25aa97f185d937c47c7cf546165ebba79880f21c1af93b6c6a4f6c
+Local evidence snapshot:
+reports/warehouse_asset_qualification_20261104/semantic_revision_v2
+
+Remaining qualification
+The trial library adds one closed-goods carton source and one empty-container
+source. Tall-carton variety, transparent wrapping, material fidelity and broader
+warehouse appearance remain incomplete. No batch-volume, realism, physical
+stability, calibrated sensor, LiDAR or utility claim follows from these checks.
+Human acceptance must identify the exact new batch; earlier approvals do not
+qualify it. A broader collection and any subsequent utility campaign require
+their own coverage, admission, frozen comparison and stopping rules.

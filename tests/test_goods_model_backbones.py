@@ -15,7 +15,7 @@ class GoodsBackboneTests(unittest.TestCase):
         self.config = json.loads(
             (
                 Path(__file__).parents[1]
-                / "configs/benchmarks/warehouse_goods_negative_replay.json"
+                / "archive/configs/benchmarks/warehouse_goods_negative_replay.json"
             ).read_text()
         )
 

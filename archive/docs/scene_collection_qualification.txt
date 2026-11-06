@@ -1,0 +1,54 @@
+Source-bound scene collections
+==============================
+
+Capability
+The scene training input path now accepts a versioned collection of separately
+admitted jobs, as well as the existing single-job admission. Each member retains
+its complete bound source artifacts, exact-batch assessor decisions, native
+RGB/targets, task, reference cohort and geometry evidence. No renderer job limit
+is increased and no new appearance acceptance is inferred from assembly.
+
+Contract
+dubaidata.scene-collection/1.0 copies the checksum-bound artifacts of each input
+admission into a self-contained snapshot. Source files are not modified. Rows
+preserve their IDs, groups, label origin, job identity, native geometry and image
+hashes. Only the relative RGB and target paths acquire a member-directory prefix.
+Members and rows have deterministic ordering. The saved flattened manifest must
+exactly reproduce the individually verified member manifests on every load.
+
+The loader requires the current task, cohort, training manifest, native resolution
+and completed admission for every member. It rejects empty collections, repeated
+admissions/jobs, repeated sample IDs, byte-identical RGB payloads, nested
+collections, pending admissions, changed artifacts, escaping paths and fixtures
+used as customer data. Existing real-reference split/identity/hash checks remain
+active. Collection creation refuses overlapping source/output trees and raw-data
+destinations. Failed copying is recorded as ineligible; no inputs are discarded.
+
+Admission and usefulness
+The qualification status accepted_members_only means every included member has
+passed its own admission. It does not approve new imagery or assert independent
+scene variety. Similar views and correlated captures can still pass identity
+checks; count source families and visual coverage separately. Geometry and source
+approval do not establish realism, sensor calibration or downstream utility.
+
+The existing sampler can consume these rows without adding optimizer updates or
+changing its RNG policy. A collection changes donor selection when it changes
+the donor list; that intervention must be frozen and disclosed in a new protocol.
+The earlier two-candidate layout campaign remains closed. No collection of the
+pending six-view asset scout has been admitted or used for customer training.
+
+Verification scope
+Analytic fixtures exercise two distinct jobs through collection creation,
+relocation, native target loading, training and strict checkpoint reload. Checks
+cover deterministic input ordering, duplicate RGBs, stale cohort bindings,
+pending decisions, nested collections, checksum/manifest tampering, path escape,
+output overlap, fixture isolation and the unchanged optimizer budget. Existing
+single-job admission/training and three-seed comparison checks are also run.
+These are software fixtures; they are not warehouse-model utility evidence.
+
+Remaining work
+Broader opaque package/source coverage, exact-batch appearance review, wrapping
+feasibility and a genuinely varied admitted collection remain prerequisites for
+the next utility campaign. Thirty loaded donors remains a proposed coverage
+target, not a proven adequate dataset size. Final held-out evaluation and a
+data-complete declaration require the separate frozen qualification gates.

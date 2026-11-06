@@ -1,0 +1,93 @@
+Goods dataset release preflight
+===============================
+
+Current result
+The bounded repeatability gate passes under an explicit strict numerical policy.
+Training-only coverage measurements are complete; semantic coverage qualification
+and candidate generation remain pending. No synthetic-utility comparison, model
+promotion, held-out evaluation or publication is part of this preflight.
+
+Reference and implementation binding
+Selected references: 32 training / 12 development, profile SHA256
+2ba84460fa9991befdcdbfbba88bda8225eae91d88ec0a943b39d13fd858cda9.
+The eight previously admitted occupied-rack scenes are inventoried, not reapproved.
+Exact code and evidence hashes are recorded in goods_release_preflight.json.
+
+Observed repeatability issue
+Two fresh seed-17 controls using the recorded historical runtime policy produced
+47.9081% and 45.5538% development goods IoU: a 2.3542 percentage-point difference.
+They used matching configurations, initialization, reference files and input order.
+The saved historical seed-17 control remains 43.8622%; none of these new controls
+replace its evidence. The diagnostic demonstrates within-policy variation; it does
+not isolate every source of historical checkpoint differences.
+
+Strict deterministic mode rejected CUDA NLL mean reduction in the installed
+PyTorch runtime. An opt-in loss setting, reduction_policy=explicit_valid_mean,
+uses unreduced cross-entropy and explicit valid target-weight normalization.
+Its mathematical objective and weighted gradients agree with the original loss
+in focused fixtures. Floating-point reduction order can change the trajectory.
+Omitting the setting retains the historical implementation exactly.
+
+With this reduction and strict deterministic algorithms, CUBLAS workspace
+:4096:8, float32, TF32 disabled, four CPU threads and cuDNN disabled, two fresh
+seed-17 controls produced exactly equal values for all 360 saved model tensors,
+complete loss histories and saved metrics. Both scored 43.0848% development IoU.
+All 24 native development prediction masks agree across the repeats. Independent
+two-dimensional confusion histograms reproduce both saved confusion totals.
+Strict checkpoint reload passes. This is reproducibility evidence, not improved
+model accuracy. A future experiment needs fresh matched arms under the new policy.
+
+Hardware and measurement scope
+NVIDIA GeForce RTX 5070 Laptop GPU; existing Python 3.12.15,
+PyTorch 2.9.1+cu128 / torchvision 0.24.1+cu128. RGB training is 640x360;
+native scoring is 1280x720; float32, batch four, 120 updates, 480 primary plus
+60 auxiliary presentations per seed. Strict diagnostic training scopes took
+66.18 and 64.60 seconds; peak allocated CUDA tensor memory was 1,415,031,296 bytes.
+These exclude interpreter startup, inventory, rendering and independent recounts.
+They are not end-to-end throughput or scalability measurements.
+
+Training coverage findings
+All 32 selected training pairs and eight admitted synthetic pairs were decoded.
+Development payloads were integrity-checked but not decoded for coverage; no test
+image was decoded. Native and training-resolution counts preserve ignore ID 255.
+At 640x360, the real cohort contains 792,999 goods pixels in one visit per sample;
+the synthetic batch contains 23,425. These totals have different sample counts
+and are not directly comparable exposure budgets. Real goods occupy 15.02% of
+scorable pixels, versus 1.27% in the synthetic batch. Two real frames and four
+synthetic captures contain no labelled goods.
+
+Under the actual completed 540-presentation schedule, hybrid goods pixel exposure
+is 4.88% lower and dark-goods exposure is 3.46% lower than the matched control.
+Those are observations, not gradient measurements or causal explanations.
+Four-connected regions at training resolution include 274/214/108 real regions
+in area bins 1-64 / 65-1024 / above 1024 pixels; synthetic counts are 9/9/4.
+These are binary regions, not annotated instances or physical-distance estimates.
+
+Visual triage of the training contact sheets and selected native views shows
+densely grouped carton stock, wrapped surfaces and equipment occlusion alongside
+the sparse authored synthetic aisle. This motivates a focused source-bound review
+of grouped/wrapped-load representation. It does not certify category coverage,
+physical realism or the unique cause of the previous recall regressions.
+
+Next gate
+Review the selected training-source coverage categories, establish explicit
+per-condition quotas and verify asset/material feasibility. Freeze one supported
+appearance/coverage intervention before rendering. Transparent wrapping cannot
+be assumed supported by the current static opaque-scene contract. Any extension
+needs explicit implementation and geometry/visible-label qualification.
+New exact-batch appearance/label decisions are required before admission/training.
+Preserve the old targets, accepted exports, checkpoints and completed experiments.
+Release gates and stopping rules are in goods_dataset_release_plan.txt.
+
+Verification
+Full current suite: 270 tests passed, one skipped, 210 subtests passed, 107.56 s.
+Focused loss checks: eight tests and 12 subtests passed; this overlaps the full
+suite and is not an additional combined count. Changed modules compile and
+whitespace checks pass. No environment/package upgrades were made.
+
+Limits
+Strict repeatability is verified for seed 17 twice on one hardware/runtime setup,
+not all possible systems or full multi-seed experiments. Development has been
+repeatedly used and contains dependent video frames. References remain reviewed
+model-assisted annotations. Qualified held-out reference coverage, final utility,
+simulated LiDAR and broader customer-domain fidelity remain open.

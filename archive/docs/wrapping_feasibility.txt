@@ -1,0 +1,58 @@
+Wrapping representation feasibility: proposed requirements
+=========================================================
+
+Current status
+Unsupported. The implemented scene contract and independent nearest-hit checks
+assume static opaque surfaces. No transparency, loose-film rendering or sensor
+response has been qualified. This document declares an investigation boundary;
+it does not enable a renderer feature or change existing goods labels.
+
+Separate two cases
+Opaque outer packaging around an identifiable stored load may be a goods surface
+under the existing task semantics. Detached loose film, empty wrapping and film
+on an empty handling container do not establish goods. Unknown contents remain
+unknown. Transparent film needs its own visibility/depth contract; neither a
+solid transparent-looking box nor a bright texture qualifies that case.
+
+Questions to settle before implementation
+1. Define the label rule for identifiable goods seen through film, film extending
+   beyond the load, and ambiguous reflective/opaque regions. Keep unresolved
+   annotation regions ignored (255); never fill hidden goods surfaces. Record
+   an explicit task revision if these decisions change existing task semantics.
+2. Distinguish rendered geometric surface depth from the task-visible semantic
+   surface. A transparent ray may encounter film before identifiable goods.
+   Define both surfaces explicitly if needed. Do not call either one measured
+   RGB-D response without source-bound sensor evidence. Axial Z stays in metres.
+3. Specify transmission, film thickness, roughness, refractive index and layered
+   geometry in a versioned portable contract. Declare authored versus measured
+   parameters and supported backend behavior. Reject unknown fields/backends;
+   the current opaque contract continues to reject transparency requests.
+4. Define instance ownership through film and around film edges. Exclude rack,
+   pallet and handling-container surfaces even when wrapped. Do not use renderer
+   object membership alone as proof of a correct goods target.
+
+Minimum fixture matrix
+- A visible opaque carton: unchanged baseline semantics and axial depth.
+- The same carton with one film layer: declared goods/film surface separation.
+- An empty wrapped handling container: no inferred foreground contents.
+- Detached loose film beside goods: explicit ownership and ignored regions.
+- Film over rack/pallet boundaries: visible support stays background.
+- Two film layers, folds, holes and grazing views: bounded supported behavior,
+  with rejection where the material/visibility rule is not implemented.
+- Opaque or highly reflective portions hiding the load: no hidden target fill.
+
+Required evidence
+Compare RGB, visible semantic IDs, instance ownership, axial depth and validity
+at native resolution on every fixture. Use independent geometric checks for
+the declared surfaces; the existing opaque first-hit test cannot certify
+transmission. Preserve categorical export round trips and task-version bindings.
+After technical checks, require explicit exact-batch human appearance/label
+acceptance. Rejected outputs remain quarantined.
+
+Decision rule
+Keep wrapping outside admitted training data until the semantics and fixtures
+pass. First test whether opaque wrapped loads can be represented honestly with
+the existing backend; transparent loose film may require new contract/worker
+work. A backend change is justified only by a demonstrated fidelity need and
+still requires full qualification. No timetable or utility gain is established
+by this feasibility specification.

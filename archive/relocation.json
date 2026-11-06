@@ -1,0 +1,396 @@
+{
+  "schema_version": "dubaidata.repository-layout/1.0",
+  "workspace_setting": "configs/local.json:workspace_root",
+  "moves": [
+    {
+      "from": "data",
+      "to": "workspace:data",
+      "purpose": "local artifacts"
+    },
+    {
+      "from": "reports",
+      "to": "workspace:reports",
+      "purpose": "local artifacts"
+    },
+    {
+      "from": "models",
+      "to": "workspace:models",
+      "purpose": "local artifacts"
+    },
+    {
+      "from": "outputs",
+      "to": "workspace:outputs",
+      "purpose": "local artifacts"
+    },
+    {
+      "from": ".tools/scene_assets",
+      "to": "workspace:assets/scene_assets",
+      "purpose": "registered assets"
+    },
+    {
+      "from": ".tools/materials",
+      "to": "workspace:assets/materials",
+      "purpose": "registered assets"
+    },
+    {
+      "from": ".tools",
+      "to": "workspace:archive/tools",
+      "purpose": "historical local operators and runtime records"
+    },
+    {
+      "from": "docs/adapter_foundation.json",
+      "to": "project:archive/docs/adapter_foundation.json",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/additional_model_trial_results.txt",
+      "to": "project:archive/docs/additional_model_trial_results.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/data_quality_review.json",
+      "to": "project:archive/docs/data_quality_review.json",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/data_quality_review.txt",
+      "to": "project:archive/docs/data_quality_review.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/dataset_characterization.json",
+      "to": "project:archive/docs/dataset_characterization.json",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/dataset_characterization.txt",
+      "to": "project:archive/docs/dataset_characterization.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/dataset_notes.txt",
+      "to": "project:archive/docs/dataset_notes.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/dataset_readiness.json",
+      "to": "project:archive/docs/dataset_readiness.json",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/dataset_readiness.txt",
+      "to": "project:archive/docs/dataset_readiness.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/dense_layout_coverage_results.txt",
+      "to": "project:archive/docs/dense_layout_coverage_results.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/depth_cache_verification.json",
+      "to": "project:archive/docs/depth_cache_verification.json",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/depth_cache_verification.txt",
+      "to": "project:archive/docs/depth_cache_verification.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/development.md",
+      "to": "project:archive/docs/development.md",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/development_workflow.txt",
+      "to": "project:archive/docs/development_workflow.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/equipment_pair_protocol.txt",
+      "to": "project:archive/docs/equipment_pair_protocol.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/equipment_pair_results.txt",
+      "to": "project:archive/docs/equipment_pair_results.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/equipment_precision_experiment.txt",
+      "to": "project:archive/docs/equipment_precision_experiment.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/equipment_precision_failure_analysis.txt",
+      "to": "project:archive/docs/equipment_precision_failure_analysis.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/equipment_precision_results.txt",
+      "to": "project:archive/docs/equipment_precision_results.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/goods_benchmark_status.json",
+      "to": "project:archive/docs/goods_benchmark_status.json",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/goods_benchmark_status.txt",
+      "to": "project:archive/docs/goods_benchmark_status.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/goods_corrected_reference_control.json",
+      "to": "project:archive/docs/goods_corrected_reference_control.json",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/goods_corrected_reference_control.txt",
+      "to": "project:archive/docs/goods_corrected_reference_control.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/goods_dataset_release_plan.txt",
+      "to": "project:archive/docs/goods_dataset_release_plan.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/goods_failure_analysis.txt",
+      "to": "project:archive/docs/goods_failure_analysis.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/goods_reference_reassessment.txt",
+      "to": "project:archive/docs/goods_reference_reassessment.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/goods_release_preflight.json",
+      "to": "project:archive/docs/goods_release_preflight.json",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/goods_release_preflight.txt",
+      "to": "project:archive/docs/goods_release_preflight.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/goods_threshold_diagnostic_results.txt",
+      "to": "project:archive/docs/goods_threshold_diagnostic_results.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/grouped_cargo_coverage_results.txt",
+      "to": "project:archive/docs/grouped_cargo_coverage_results.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/imu_ingestion_review.json",
+      "to": "project:archive/docs/imu_ingestion_review.json",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/imu_ingestion_review.txt",
+      "to": "project:archive/docs/imu_ingestion_review.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/ingestion_validation.json",
+      "to": "project:archive/docs/ingestion_validation.json",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/label_quality_findings.json",
+      "to": "project:archive/docs/label_quality_findings.json",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/mvp_delivery_plan.txt",
+      "to": "project:archive/docs/mvp_delivery_plan.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/mvp_scope.txt",
+      "to": "project:archive/docs/mvp_scope.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/occupied_rack_context_preparation.txt",
+      "to": "project:archive/docs/occupied_rack_context_preparation.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/occupied_rack_context_results.txt",
+      "to": "project:archive/docs/occupied_rack_context_results.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/package_asset_qualification.txt",
+      "to": "project:archive/docs/package_asset_qualification.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/pipeline_architecture.txt",
+      "to": "project:archive/docs/pipeline_architecture.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/pipeline_integration.json",
+      "to": "project:archive/docs/pipeline_integration.json",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/pipeline_integration.txt",
+      "to": "project:archive/docs/pipeline_integration.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/preparation_readiness.json",
+      "to": "project:archive/docs/preparation_readiness.json",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/preparation_readiness.txt",
+      "to": "project:archive/docs/preparation_readiness.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/README.md",
+      "to": "project:archive/docs/README.md",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/resnet_backbone_results.txt",
+      "to": "project:archive/docs/resnet_backbone_results.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/reviewed_training_coverage_results.txt",
+      "to": "project:archive/docs/reviewed_training_coverage_results.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/sampling_benchmark_results.txt",
+      "to": "project:archive/docs/sampling_benchmark_results.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/scene_benchmark_results.txt",
+      "to": "project:archive/docs/scene_benchmark_results.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/scene_contact_review.txt",
+      "to": "project:archive/docs/scene_contact_review.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/scene_generation.txt",
+      "to": "project:archive/docs/scene_generation.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/sensor_condition_evidence.json",
+      "to": "project:archive/docs/sensor_condition_evidence.json",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/sensor_condition_generation.txt",
+      "to": "project:archive/docs/sensor_condition_generation.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/sensor_metadata_review.json",
+      "to": "project:archive/docs/sensor_metadata_review.json",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/sensor_metadata_review.txt",
+      "to": "project:archive/docs/sensor_metadata_review.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/supported_scene_protocol.txt",
+      "to": "project:archive/docs/supported_scene_protocol.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/tech_stack.txt",
+      "to": "project:archive/docs/tech_stack.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/tyre_appearance_qualification.txt",
+      "to": "project:archive/docs/tyre_appearance_qualification.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "docs/warehouse_representation_assessment.txt",
+      "to": "project:archive/docs/warehouse_representation_assessment.txt",
+      "purpose": "historical documentation"
+    },
+    {
+      "from": "configs/benchmarks",
+      "to": "project:archive/configs/benchmarks",
+      "purpose": "historical experiment specifications"
+    },
+    {
+      "from": "configs/synthesis",
+      "to": "project:archive/configs/synthesis",
+      "purpose": "historical experiment specifications"
+    },
+    {
+      "from": "configs/augmentation_policy.json",
+      "to": "project:archive/configs/augmentation_policy.json",
+      "purpose": "historical experiment specifications"
+    },
+    {
+      "from": "configs/checkpoint_registry.json",
+      "to": "project:archive/configs/checkpoint_registry.json",
+      "purpose": "historical experiment specifications"
+    },
+    {
+      "from": "configs/image_geometry.json",
+      "to": "project:archive/configs/image_geometry.json",
+      "purpose": "historical experiment specifications"
+    },
+    {
+      "from": "configs/imu_measurements.json",
+      "to": "project:archive/configs/imu_measurements.json",
+      "purpose": "historical experiment specifications"
+    },
+    {
+      "from": "configs/warehouse_goods_balanced.json",
+      "to": "project:archive/configs/warehouse_goods_balanced.json",
+      "purpose": "historical experiment specifications"
+    },
+    {
+      "from": "configs/warehouse_goods_coverage.json",
+      "to": "project:archive/configs/warehouse_goods_coverage.json",
+      "purpose": "historical experiment specifications"
+    },
+    {
+      "from": "configs/warehouse_goods_quality.json",
+      "to": "project:archive/configs/warehouse_goods_quality.json",
+      "purpose": "historical experiment specifications"
+    },
+    {
+      "from": "configs/warehouse_goods_surfaces.json",
+      "to": "project:archive/configs/warehouse_goods_surfaces.json",
+      "purpose": "historical experiment specifications"
+    },
+    {
+      "from": "configs/warehouse_renderer.json",
+      "to": "project:archive/configs/warehouse_renderer.json",
+      "purpose": "historical experiment specifications"
+    },
+    {
+      "from": "DubaiDATA.code-workspace",
+      "to": "workspace:archive/tools/DubaiDATA.code-workspace",
+      "purpose": "superseded presentation workspace"
+    }
+  ]
+}

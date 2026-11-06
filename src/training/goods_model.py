@@ -21,15 +21,23 @@ def validate_loss_configuration(settings):
 
     Optional weights are ordered [background, goods]. Both must be finite and
     positive. Ignore ID 255 never receives a weight or contributes supervision.
+    Explicit valid-mean reduction is an opt-in numerical implementation for
+    strict deterministic execution; omitted policy preserves historical behavior.
     """
     if (
         not isinstance(settings, dict)
-        or set(settings) - {"name", "ignore_index", "class_weights"}
+        or set(settings)
+        - {"name", "ignore_index", "class_weights", "reduction_policy"}
         or settings.get("name") != "cross_entropy"
         or type(settings.get("ignore_index")) is not int
         or settings["ignore_index"] != 255
     ):
         raise ValueError("Unsupported goods loss configuration")
+    if settings.get("reduction_policy", "torch_default") not in (
+        "torch_default",
+        "explicit_valid_mean",
+    ):
+        raise ValueError("Unsupported goods loss reduction policy")
     if "class_weights" in settings:
         weights = settings["class_weights"]
         if (
@@ -51,7 +59,11 @@ def segmentation_loss(logits, targets, settings):
     Logits are N x 2 x H x W; targets are N x H x W integer IDs 0/1/255.
     Weighted CE divides by the sum of valid target-class weights. Record that
     same denominator when aggregating batches; ignored logits have zero gradient.
-    Missing weights preserve the existing unweighted objective exactly.
+    Default reduction preserves historical execution. ``explicit_valid_mean``
+    sums unreduced valid losses and divides by valid target-weight mass, avoiding
+    the CUDA NLL mean-reduction kernel rejected by strict deterministic mode.
+    This preserves the mathematical objective, with possible rounding changes;
+    it requires a fresh matched protocol rather than reusing historical controls.
     """
     import torch
     from torch.nn import functional
@@ -71,12 +83,14 @@ def segmentation_loss(logits, targets, settings):
         if weight_tensor is None
         else float(weight_tensor[targets[valid]].sum())
     )
-    return (
-        functional.cross_entropy(
-            logits, targets, weight=weight_tensor, ignore_index=255
-        ),
-        mass,
-    )
+    if settings.get("reduction_policy", "torch_default") == "explicit_valid_mean":
+        pixels = functional.cross_entropy(
+            logits, targets, weight=weight_tensor, ignore_index=255, reduction="none"
+        )
+        return pixels[valid].sum() / mass, mass
+    return functional.cross_entropy(
+        logits, targets, weight=weight_tensor, ignore_index=255
+    ), mass
 
 
 def checkpoint_selection_metric(config):

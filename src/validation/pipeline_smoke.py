@@ -15,7 +15,12 @@ import torch
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from src.training.runtime import PROJECT_ROOT, require_cached_ids, require_output
+from src.training.runtime import (
+    PROJECT_ROOT,
+    WORKSPACE_ROOT,
+    require_cached_ids,
+    require_output,
+)
 from src.training.depth_baseline import Refiner, inputs
 from src.training.depth_context import ContextModel, LocalModel, build_input
 from src.training.depth_quality import QualityModel, corrupt
@@ -56,7 +61,7 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     output = require_output(
-        args.output, sources=[PROJECT_ROOT / "models", PROJECT_ROOT / "data/caches"]
+        args.output, sources=[WORKSPACE_ROOT / "models", WORKSPACE_ROOT / "data/caches"]
     )
     output.mkdir(parents=True)
     torch.set_num_threads(4)
@@ -81,10 +86,10 @@ def main():
     with ThreadPoolExecutor(max_workers=2) as workers:
         cli_results = list(workers.map(lambda path: cli_check(path, output), scripts))
     registry = []
-    for path in sorted((PROJECT_ROOT / "models").rglob("*.pt")):
+    for path in sorted((WORKSPACE_ROOT / "models").rglob("*.pt")):
         before = file_hash(path)
         checkpoint = torch.load(path, map_location="cpu", weights_only=True)
-        family = path.relative_to(PROJECT_ROOT / "models").parts[0]
+        family = path.relative_to(WORKSPACE_ROOT / "models").parts[0]
         if family == "depth_baseline":
             model = Refiner()
             channels, resolution = 6, [160, 90]
@@ -112,7 +117,7 @@ def main():
         assert file_hash(path) == before
         registry.append(
             {
-                "path": path.relative_to(PROJECT_ROOT).as_posix(),
+                "path": path.relative_to(WORKSPACE_ROOT).as_posix(),
                 "sha256": before,
                 "family": family,
                 "resolution": resolution,
@@ -130,7 +135,7 @@ def main():
         del model, checkpoint, prediction, sample
     samples = {}
     for name, resolution in (("depth_160", [160, 90]), ("depth_320", [320, 180])):
-        directory = PROJECT_ROOT / "data/caches" / name
+        directory = WORKSPACE_ROOT / "data/caches" / name
         for split in ("train", "validation"):
             with np.load(directory / f"{split}.npz", allow_pickle=False) as cached:
                 ids = require_cached_ids(cached["sample_ids"].tolist(), split)
@@ -183,7 +188,7 @@ def main():
             }
         )
     candidate = torch.load(
-        PROJECT_ROOT / "models/depth_quality/research_candidate.pt",
+        WORKSPACE_ROOT / "models/depth_quality/research_candidate.pt",
         map_location=device,
         weights_only=True,
     )
@@ -193,7 +198,7 @@ def main():
     completed, observed = restore(model, depth)
     np.testing.assert_allclose(completed[observed], depth[observed], atol=1e-5)
     for entry in registry:
-        assert file_hash(PROJECT_ROOT / entry["path"]) == entry["sha256"]
+        assert file_hash(WORKSPACE_ROOT / entry["path"]) == entry["sha256"]
     report = {
         "status": "passed",
         "python_executable": sys.executable,

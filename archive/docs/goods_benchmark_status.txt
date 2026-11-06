@@ -1,6 +1,35 @@
 Goods benchmark status
 ======================
 
+Latest dense-layout comparison (2026-11-04)
+The second and final bounded candidate failed the frozen utility gates. This two-candidate campaign is closed; reconsider the synthesis approach before another campaign.
+Real-only -> revised synthetic: IoU 50.16% -> 50.96%; precision 54.20% -> 57.04%; recall 87.08% -> 83.59%.
+Both arms ran fresh with three seeds. All 72 native development masks were recounted; the fresh control reproduced the earlier 36 masks exactly. The retained reporting model and locked test are unchanged. See docs/dense_layout_coverage_results.txt. Earlier sections retain their original versions and decisions.
+
+Latest grouped-cargo experiment (2026-11-04)
+The approved eight-capture batch completed a matched three-seed comparison on
+the corrected 32/12 cohort. Real-only -> grouped cargo: IoU 50.16% -> 48.42%,
+precision 54.20% -> 55.88%, recall 87.08% -> 78.99%; dark-goods misses
+36.48% -> 54.88%, frame-mean IoU 42.60% -> 39.05%. Precision and mean
+background false-positive rate improved, but the candidate failed the frozen
+utility gates and is not promoted. All 72 native predictions were independently
+recounted. The strict empty-RGB byte-match gate failed at tiny one-level pixel
+differences; this was disclosed and explicitly approved without changing that
+measurement. The test trajectory remains untouched. See
+docs/grouped_cargo_coverage_results.txt and reports/goods_grouped_cargo_utility_20261104.
+
+Latest release preparation
+Six training correction drafts are explicitly confirmed and saved. A separate
+32-training/12-development cohort is bound to profile
+37ab46daec17a248cc5dc42016113159d42798e64fafbfcafe9ea88a71a36be8.
+The other 38 references, including all development targets, are unchanged.
+A fresh strict three-seed real-only control scores mean IoU 50.16%, precision
+54.20% and recall 87.08%. It was the matched comparator for the grouped-cargo
+candidate, not a promoted model. All 36 control predictions are recounted.
+See docs/goods_corrected_reference_control.txt for the frozen protocol and gates.
+The retained reporting model is unchanged. Earlier sections below retain their
+original cohort, numerical policy and experiment bindings.
+
 Current reference and cargo-placement revision
 The localized 000376 person correction passed validation: 4,380 pixels changed;
 the other 43 references and all 32 training targets remain unchanged. The current

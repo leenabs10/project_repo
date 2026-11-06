@@ -1,0 +1,115 @@
+Warehouse goods dataset release qualification
+============================================
+
+Release objective
+Qualify a versioned synthetic dataset for visible warehouse goods segmentation.
+Demonstrate at least three percentage points mean goods IoU improvement under
+a matched training budget, preserving precision and recall on qualified real
+evaluation references. This is a task-specific release, not universal realism,
+navigation qualification or completion of the same-scene LiDAR requirement.
+
+Current campaign result (2026-11-04)
+The second and final bounded candidate failed the frozen utility gates. This two-candidate campaign is closed; reconsider the synthesis approach before another campaign.
+Both allowed candidate revisions have been used. The first grouped-cargo experiment remains rejected. The second tested cargo positions with the same object inventory and settings, after exact-batch review and source-bound admission. Both fresh comparison arms used the frozen protocol and three seeds. The RGB byte-control exception remains recorded.
+See docs/dense_layout_coverage_results.txt for the final candidate result and docs/grouped_cargo_coverage_results.txt for the first candidate. All acceptance criteria below remain unchanged.
+
+Source and reference boundary
+Use the explicitly selected corrected cohort of 32 training and 12 development
+references, profile SHA256
+37ab46daec17a248cc5dc42016113159d42798e64fafbfcafe9ea88a71a36be8.
+Earlier 30/12 cohorts, targets, models and decisions remain preserved. References
+are human-reviewed model-assisted annotations, with their original provenance
+and uncertainty masks. Structural checks are not independent semantic accuracy.
+Derive generation parameters and coverage requirements from training sources only.
+The locked test trajectory remains excluded from development and model selection.
+
+Gate A: reproducible measurement
+Verify reference/task/configuration/initialization/code bindings and record the
+complete runtime policy. Repeat seed 17 in fresh processes using the same inputs
+and ordered schedule. Compare model tensors, loss histories, counts and native
+predictions; file-container hashes alone do not establish tensor equality.
+Investigate material differences before claiming a small improvement. If an
+explicit numerical implementation or runtime policy is introduced, bind it to
+a new protocol and run both comparison arms under that policy. Do not reinterpret
+historical candidates or replace their controls. No package upgrade is implied.
+
+Gate B: declared coverage
+Inventory the complete selected training cohort and the admitted synthetic batch
+at native 1280x720 and training 640x360 geometry. RGB resampling is BOX; categorical
+targets use NEAREST. Report ignore masks, foreground and background counts,
+display-luminance strata, connected-region areas and executed input exposure.
+Connected regions are not objects; display darkness is not calibrated radiance.
+Human review is required for object-family, wrapping, placement and occlusion tags.
+Required categories include training-supported load families, apparent sizes,
+occupied-rack and pallet context, partial occlusion, lighting and equipment negatives.
+Record distinct source assets/layouts and prevent repeated views from implying
+independent diversity. Set per-category quotas after the source inventory and
+before rendering. Until those quotas and semantic tags exist, coverage is pending.
+
+Gate C: focused candidate qualification
+Use the measured inventory and training-source appearance review to select one
+primary representation gap. Large grouped/wrapped loads are a current review
+priority, not a proven cause of model errors. Prepare a bounded pilot before
+expansion. Preserve source asset proportions, licenses, metric geometry, visible
+labels, ignored real targets, clean references and original accepted batches.
+Check depth, support/contact, relevant occlusion and RGB/target correspondence.
+Keep unsupported material/sensor requests blocked rather than approximating them.
+Require explicit appearance/label decisions bound to the exact dataset/job.
+Admit only a separate verified snapshot. Approval of this plan is not approval
+of images that have not been rendered or reviewed.
+
+Gate D: frozen matched development comparison
+Use fresh real-only replay and hybrid arms, seeds 17/29/43, matched per-seed
+initialization, optimizer updates, primary real exposure and checkpoint policy.
+Freeze the source-bound schedule and all presentation counts before fitting.
+Preserve the declared model, loss objective, normalization, input geometry and
+fixed-final checkpoint rule. Disclose the real replay replaced by synthetic inputs,
+class exposure and all numerical implementation changes. Score native real
+development outputs and independently recount confusion counts after strict reload.
+
+Acceptance contract for this campaign
+- Mean goods IoU gain: at least +3.00 percentage points versus the matched control.
+- Mean precision: strictly increases.
+- Mean recall: does not decrease.
+- Mean background false-positive rate: strictly decreases.
+- Mean dark-goods miss rate: no worse than the matched control and the current
+  same-reference historical ceiling of 0.18671718261675818.
+- Mean frame-weighted goods IoU: does not decrease.
+- IoU improves on at least two of the three paired seeds.
+The frame-weighted and seed-consistency gates are additions for this campaign;
+they do not change past experiment decisions. Undefined class rates remain null.
+Report all seeds, frames and gains/regressions. A higher aggregate score or one
+passing seed cannot override a failed guard. Three seeds and dependent frames
+alone do not establish statistical significance or independent generalization.
+
+Campaign stopping rule
+Allow at most two candidate dataset revisions. Start a second revision only
+when the complete first result supports a specific new hypothesis. A repeatability
+diagnostic is not a candidate dataset revision. If both candidates fail, close
+the campaign with its failure evidence and reconsider synthesis before expansion.
+Do not change references, thresholds, gates or report subsets to recover a pass.
+Model promotion and Git publication are separate decisions.
+
+Gate E: held-out confirmation
+Prepare a source-bound reference qualification and sampling protocol separately
+from generation. Select evaluation membership using predefined temporal/coverage
+rules, not candidate prediction errors. Prefer reference review blinded to model
+outputs. Establish sufficient independent temporal groups and condition denominators
+before declaring the reference sample sufficient; frame count alone is inadequate.
+Final evaluation additionally requires the candidate, trained arms, numerical
+policy and all acceptance rules to be frozen before locked-test access.
+Require the same relative overall utility gates; the historical development
+dark-miss ceiling is population-bound and cannot be copied to held-out data.
+Define its held-out condition guards before evaluation. Report uncertainty and
+recording dependence. Insufficient reference coverage means incomplete evidence.
+A final failure closes this release attempt. Exposed test results cannot become
+another tuning set; later work needs a new independent evaluation strategy.
+
+Gate F: delivery and completion
+Deliver accepted samples, checksummed manifests, labels/ignore rules, calibration,
+actual annotation/assessor provenance, generation settings/seeds, quality and
+coverage/rejection evidence, model comparison results, runtime versions and a
+reproduction guide. Verify payload round-trips and the final code/config snapshot.
+Separate package completion from utility qualification. A utility-qualified release
+requires technical integrity, exact-batch acceptance, coverage, development utility,
+held-out utility and reproducible packaging all to pass. Publish remaining limits.

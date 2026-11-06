@@ -13,6 +13,7 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 
+from src.core.paths import workspace_root
 from src.adapters.storage.local import file_hash, reserve_output, source_path
 from src.validation.goods_references import load_references
 from src.training.scene_inputs import load_scene_inputs
@@ -382,8 +383,7 @@ def run_audit(
         verify_snapshot(root, digest)
     output = reserve_output(
         output,
-        tuple(root for root, _ in roots.values())
-        + (Path(__file__).parents[2] / "data/raw",),
+        tuple(root for root, _ in roots.values()) + (workspace_root() / "data/raw",),
     )
     write_json(output / "training_profiles.json", profiles)
     write_json(output / "rendered_family_profiles.json", families)

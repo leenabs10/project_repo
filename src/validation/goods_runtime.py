@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 import time
 
+from src.core.paths import workspace_root
 from src.adapters.storage.local import file_hash, reserve_output
 from src.validation.artifacts import write_json
 
@@ -27,7 +28,7 @@ def check_runtime(configuration: Path, checkpoint: Path, output: Path) -> dict:
     }:
         raise ValueError("Unsupported goods runtime configuration")
     output = reserve_output(
-        output, (configuration, checkpoint, Path(__file__).parents[2] / "data/raw")
+        output, (configuration, checkpoint, workspace_root() / "data/raw")
     )
     write_json(
         output / "profile.json", {"status": "running", "benchmark_complete": False}

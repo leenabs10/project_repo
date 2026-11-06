@@ -1,0 +1,50 @@
+Dense warehouse cargo arrangement comparison
+===========================================
+
+The second and final bounded candidate failed the frozen utility gates. This two-candidate campaign is closed; reconsider the synthesis approach before another campaign.
+No model was promoted and the locked test was not evaluated.
+
+The exact eight-capture preview received explicit user appearance/label acceptance, including the previously disclosed small empty-RGB byte exception. Admission and the protocol were frozen before two fresh three-seed arms. The source export and preview remain immutable.
+
+Intervention: positions of 60 existing carton/tyre instances only. Counts, IDs, dimensions, mesh/material/UV bindings, original cargo/equipment, cameras, lights and render settings were preserved. Four loaded images changed; four empty control scenes were fixed. Local bay coverage increased in all four loaded views, while whole-image goods pixels increased in three and decreased slightly in one.
+
+Mean development metrics (three seeds)
+
+| Metric | Fresh real-only control | Revised synthetic | Change |
+| --- | ---: | ---: | ---: |
+| goods_iou | 50.1584% | 50.9574% | +0.7990 pp |
+| precision | 54.2017% | 57.0395% | +2.8379 pp |
+| recall | 87.0806% | 83.5857% | -3.4949 pp |
+| background_false_positive_rate | 8.0451% | 7.1094% | -0.9357 pp |
+| frame_mean_goods_iou | 42.6019% | 41.0167% | -1.5851 pp |
+| dark_goods_miss_rate | 36.4834% | 36.1522% | -0.3312 pp |
+
+Positive paired IoU seeds: 2/3. Image outcomes: {'improved': 4, 'regressed': 7, 'unchanged': 1, 'undefined': 0}.
+Each seed used 120 updates, 480 primary real presentations and 60 auxiliary presentations. Candidate auxiliary inputs were 30 empty and 30 loaded scenes, with 14 tyre and 16 carton presentations. Real-only controls replayed the corresponding 60 real auxiliary inputs. Initialization, normalization, valid-target masks, loss, optimizer, numerical policy and final-epoch selection matched.
+
+All 72 saved native development masks were independently recounted. Fresh control predictions exactly reproduced all 36 previous development masks. Ignored target ID 255 remained excluded. All 32 primary real references were seen 15 times per seed in both arms.
+
+Executed auxiliary target exposure at 640x360 (counts are not gradient influence):
+control: {'goods': 800937, 'background': 10755157, 'ignored': 2267906, 'dark_goods': 80924}.
+candidate: {'goods': 570774, 'background': 13253226, 'ignored': 0, 'dark_goods': 100412}.
+
+Bindings
+Reference cohort: 37ab46daec17a248cc5dc42016113159d42798e64fafbfcafe9ea88a71a36be8
+Frozen protocol: 9109376a2906225ad62e8d06205a99fbd81ba6c7fdb3919cc1b3324b3499ab34
+Admission: 1c7d9197b5fe45d5bac71b7aa9a6021ecddbf7e245d4ce38325b2b452a9fe41e
+User approval: 44a67dd4be1e77e669b701f35cdba5357fe49fb134e8de2a0185be5da65c1921
+Matched comparison: 6357439a30c49812f8be6b5a735efc92b0d2ef34d4889013b5f00056e0c53866
+Result snapshot: 684622fddd8f8e721075b74309ea3d66ff96a76354f7df7ea74bc0c942763df8
+
+Runtime: torch 2.9.1+cu128, NVIDIA GeForce RTX 5070 Laptop GPU, float32, four CPU threads, deterministic algorithms, CUBLAS :4096:8, cudnn/TF32 off. Training used 640x360 BOX RGB and nearest categorical targets; evaluation masks were 1280x720. Timing and peak allocated CUDA memory are bound per seed in the result snapshot.
+
+Limits
+- One repeatedly used development trajectory; dependent frames and three seeds do not establish independent generalization or statistical significance.
+- Scores measure labelled visible pixels, not the number of complete cartons or tyres recognised.
+- Real reference labels remain human-reviewed model-assisted, not independent ground truth.
+- Same four loaded synthetic views, repeated auxiliary inputs, opaque assets and one aisle family; transparent wrapping and sensor fidelity unsupported.
+- Arrangement also changes visible area and occlusion; pixel exposure does not measure gradients or prove a training cause.
+- Strict empty RGB byte equality remains failed; at most one intensity level differs on fewer than 0.014% of pixels. Depth and categorical controls are byte-exact.
+- No image score or aggregate improvement establishes navigation, physical stability, calibrated sensor accuracy or the separate simulated-LiDAR requirement.
+
+Decision details, exact gates, all seeds, frame changes, figures and exposure evidence remain in the versioned local result snapshot.

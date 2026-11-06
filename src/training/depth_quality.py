@@ -9,6 +9,7 @@ import sys
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from src.core.paths import workspace_root
 from src.training.runtime import PROJECT_ROOT, require_output, require_cached_ids
 import time
 import torch
@@ -259,7 +260,9 @@ def main():
     p.add_argument("--data", type=Path, required=True)
     p.add_argument("--output", type=Path, required=True)
     p.add_argument(
-        "--warm-start-root", type=Path, default=PROJECT_ROOT / "models/depth_context"
+        "--warm-start-root",
+        type=Path,
+        default=workspace_root(PROJECT_ROOT) / "models/depth_context",
     )
     p.add_argument("--epochs", type=int, default=6)
     p.add_argument("--resume-completed-training", action="store_true")

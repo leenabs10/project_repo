@@ -1,0 +1,59 @@
+{
+  "status": "bounded_repeatability_verified_coverage_review_pending",
+  "client_date": "2026-11-03",
+  "reference_counts": {
+    "train": 32,
+    "validation": 12
+  },
+  "reference_profile_sha256": "2ba84460fa9991befdcdbfbba88bda8225eae91d88ec0a943b39d13fd858cda9",
+  "accepted_synthetic_samples_in_inventory": 8,
+  "inventory_profile_sha256": "9bfc11bbbbad67767e9e49f501ff2773f717151b3cec4374b41c3d1e5237f3b2",
+  "repeatability_audit_profile_sha256": "47ec1634bb85e96b004462032b923b85676e797f9dfa4435d693db2180431276",
+  "code_sha256": {
+    "src/training/goods_model.py": "074febe9979ea24c790b3c478cb86c54fce61e9925bee3979f273762b03c0b34",
+    "tests/test_goods_loss.py": "682bdffb8d0bcebdd783bd2eeca1b3928ab2d9fb7f57aede1b85a7eb4f047e19"
+  },
+  "old_policy_same_seed_iou": [
+    0.4790805388617904,
+    0.45553825080216914
+  ],
+  "old_policy_same_seed_iou_difference_pp": 2.3542288059621272,
+  "strict_policy_same_seed_iou": [
+    0.43084766786450446,
+    0.43084766786450446
+  ],
+  "strict_tensor_count": 360,
+  "strict_changed_tensors": 0,
+  "independently_recounted_native_masks": 24,
+  "inventory_training_images": 32,
+  "inventory_development_images_decoded": 0,
+  "inventory_test_images_decoded": 0,
+  "hybrid_vs_control_goods_pixel_exposure_change_percent": -4.8804128378472145,
+  "hybrid_vs_control_dark_goods_pixel_exposure_change_percent": -3.4557784060788133,
+  "next_candidate": {
+    "status": "not_generated_not_frozen",
+    "review_focus": "large grouped and wrapped goods versus sparse authored synthetic cargo",
+    "semantic_tags": "human_review_pending",
+    "source_asset_material_feasibility": "must_be_checked_before_rendering",
+    "training_eligible": false
+  },
+  "verification": {
+    "tests_passed": 270,
+    "tests_skipped": 1,
+    "subtests_passed": 210,
+    "elapsed_seconds": 107.56,
+    "scope": "full current tests/ suite after loss implementation change",
+    "compilation": "passed",
+    "whitespace": "passed"
+  },
+  "synthetic_utility_experiment_performed": false,
+  "held_out_test_evaluated": false,
+  "candidate_promoted": false,
+  "published": false,
+  "limitations": [
+    "Strict repeatability evidence covers seed 17 twice on one hardware/runtime setup",
+    "Diagnostic scores are not synthetic utility or model improvement",
+    "Historical loss/runtime paths remain available and historical results remain unchanged",
+    "Coverage metrics do not prove the cause of prior recall regressions"
+  ]
+}

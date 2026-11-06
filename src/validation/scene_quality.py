@@ -13,6 +13,7 @@ import shutil
 import numpy as np
 from PIL import Image
 
+from src.core.paths import workspace_root
 from src.adapters.storage.local import file_hash, reserve_output
 from src.validation.artifacts import artifact_hashes, verify_snapshot, write_json
 from src.validation.mesh_geometry import scene_intersections
@@ -170,7 +171,7 @@ def verify_scene_quality(
     verify_snapshot(Path(references), references_sha256)
     output = reserve_output(
         output,
-        (dataset, asset_root, Path(references), Path(__file__).parents[2] / "data/raw"),
+        (dataset, asset_root, Path(references), workspace_root() / "data/raw"),
     )
     write_json(output / "independent_geometry.json", evidence)
     write_json(output / "coverage.json", coverage)

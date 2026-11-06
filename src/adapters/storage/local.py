@@ -3,6 +3,8 @@
 import hashlib
 from pathlib import Path, PurePosixPath
 
+from src.core.paths import raw_data_roots
+
 
 def file_hash(path: Path) -> str:
     """Hash bytes in bounded blocks, including large caches and source files."""
@@ -32,9 +34,13 @@ def source_path(root: Path, relative: str) -> Path:
 
 
 def reserve_output(output: Path, protected: tuple[Path, ...]) -> Path:
-    """Reserve a new derivative directory outside all input trees and their parents."""
+    """Reserve a fresh derivative outside inputs and both raw-data locations.
+
+    Raw-data protection is unconditional so callers cannot accidentally drop the
+    original raw location when moving their deployment workspace.
+    """
     output = Path(output).resolve()
-    for source in protected:
+    for source in (*protected, *raw_data_roots()):
         source = Path(source).resolve()
         if (
             output == source

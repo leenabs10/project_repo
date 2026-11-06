@@ -19,7 +19,7 @@ def inputs():
     configuration = json.loads(
         (
             Path(__file__).parents[1]
-            / "configs/synthesis/warehouse_rack_composition.json"
+            / "archive/configs/synthesis/warehouse_rack_composition.json"
         ).read_text()
     )
     source_sha = "2" * 64
